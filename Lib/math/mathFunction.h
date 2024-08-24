@@ -19,6 +19,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
+Matrix4x4 MakeRotateMatrix(const Vector3& rotate);
 
 Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);

@@ -3,18 +3,42 @@
 #include "ImGuiCommon.h"
 void GameScene::Init()
 {
-	
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Init();
 
+	player_ = std::make_unique<Player>();
+	player_->Init();
+	player_->SetCamera(followCamera_->GetCamera());
+	// 自キャラのワールドトランスフォームを追従カメラにセット
+	followCamera_->SetTarget(player_->GetWorldTransform());
+
+
+
+	ground_ = std::make_unique<Ground>();
+	ground_->Init();
+	ground_->SetCamera(followCamera_->GetCamera());
+
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Init();
+
+	postProcess_ = new PostProcess();
+	postProcess_->Init();
+	postProcess_->SetCamera(followCamera_->GetCamera());
+	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
 }
 
 void GameScene::Update()
 {
-	
-	}
+	player_->Update();
+	ground_->Update();
+	skydome_->Update();
+	followCamera_->Upadate();
+}
 void GameScene::Draw()
 {
-	
-	
+	player_->Draw();
+	ground_->Draw();
+	skydome_->Draw(followCamera_->GetCamera());
 }
 
 void GameScene::Draw2d()
@@ -24,7 +48,7 @@ void GameScene::Draw2d()
 
 void GameScene::PostDraw()
 {
-	
+	postProcess_->Draw();
 	
 	
 }

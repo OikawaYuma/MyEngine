@@ -191,6 +191,19 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
 	return result;
 }
 
+Matrix4x4 MakeRotateMatrix(const Vector3& rotate)
+{
+
+	Matrix4x4 m1 = MakeRotateXMatrix(rotate.x);
+
+	Matrix4x4 m2 = MakeRotateYMatrix(rotate.y);
+
+	Matrix4x4 m3 = MakeRotateZMatrix(rotate.z);
+
+	Matrix4x4 xyz = Multiply(m1, Multiply(m2, m3));
+	return xyz;
+}
+
 // 1. X軸回転行列
 Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 m4;
