@@ -55,6 +55,7 @@ void Player::Draw()
 void Player::Move()
 {
 	Vector3 move{0,0,0};
+	float preAngle = worldTransform_.rotation_.y;
 	if (Input::GetInstance()->GetJoystickState()) {
 
 		move.x += Input::GetInstance()->JoyStickParmLX(0.2f);
@@ -67,9 +68,16 @@ void Player::Move()
 		move.z *= 1.4f;
 		move = TransformNormal(move, camera_->GetCameraMatrix());
 		// Y軸周り角度（Θy）
-		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+		preAngle = std::atan2(move.x, move.z);
+		
 	}
 
+	angletime += 0.05f;
+	if (1.0f <= angletime ) {
+		angletime = 0.0f;
+	}
+	worldTransform_.rotation_.y = 
+		LerpShortAngle(worldTransform_.rotation_.y, preAngle, angletime);
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 
 	

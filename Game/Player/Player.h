@@ -27,5 +27,7 @@ private:
 	std::unique_ptr<Object3d> L_arm_;
 	std::unique_ptr<Object3d> head_;
 	uint32_t skinTex_;
+
+	float angletime = 0.0f;
 };
 
