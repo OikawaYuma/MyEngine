@@ -54,9 +54,24 @@ void Player::Draw()
 
 void Player::Move()
 {
+	Vector3 move{0,0,0};
 	if (Input::GetInstance()->GetJoystickState()) {
-		worldTransform_.translation_.x += (float)Input::GetInstance()->GetJoyState().Gamepad.sThumbLX / SHRT_MAX * 0.4f;
-		worldTransform_.translation_.z += (float)Input::GetInstance()->GetJoyState().Gamepad.sThumbLY / SHRT_MAX * 0.4f;
+
+		move.x += Input::GetInstance()->JoyStickParmLX(0.2f);
+		move.z += Input::GetInstance()->JoyStickParmLY(0.2f);
 	}
+	if (!(move.x == 0 && move.y == 0 && move.z == 0)) {
+		move = Normalize(move);
+		move.x *= 1.4f;
+		move.y *= 1.4f;
+		move.z *= 1.4f;
+		move = TransformNormal(move, camera_->GetCameraMatrix());
+		// Y軸周り角度（Θy）
+		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+	}
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+
+	
 
 }

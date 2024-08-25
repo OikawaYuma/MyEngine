@@ -39,6 +39,11 @@ public:
 
 	bool GetJoystickState();
 
+	float JoyStickParmLX(float num);
+	float JoyStickParmLY(float num);
+	float JoyStickParmRX(float num);
+	float JoyStickParmRY(float num);
+
 	bool PushJoyButton(uint32_t button);
 
 	bool TriggerJoyButton(uint32_t button);
@@ -54,6 +59,7 @@ private:
 
 	XINPUT_STATE joyState;
 	XINPUT_STATE preJoyState;
-	
+	// デッドゾーンの閾値を定義
+	const static float DEADZONE_THRESHOLD;
 };
 

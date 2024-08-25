@@ -12,7 +12,7 @@ void FollowCamera::Upadate()
 
 	Vector3 cameraRotate = camera_->GetRotate();
 	if (Input::GetInstance()->GetJoystickState()) {
-		cameraRotate.y += (float)Input::GetInstance()->GetJoyState().Gamepad.sThumbRX / SHRT_MAX * 0.05f;
+		cameraRotate.y += Input::GetInstance()->JoyStickParmRX(0.05f);
 	}
 	camera_->SetRotate(cameraRotate);
 

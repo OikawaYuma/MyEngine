@@ -1,5 +1,7 @@
 #include "Input.h"
 #include "WinAPI.h"
+#include <iostream>
+const float Input::DEADZONE_THRESHOLD = 0.5f;
 //Xinput.lib; Xinput9_1_0.lib
 
 
@@ -76,10 +78,57 @@ bool Input::GetJoystickState()
 	result = XInputGetState(0, &joyState);
 
 	if (result == ERROR_SUCCESS) {
+		
 		return true;
 	}
 	return false;
 }
+
+float Input::JoyStickParmLX(float num)
+{
+	// スティックの入力値を取得
+	float lx = (float)joyState.Gamepad.sThumbLX / SHRT_MAX;
+
+	// デッドゾーンの適用
+	if (fabs(lx) < DEADZONE_THRESHOLD) lx = 0.0f;
+
+
+	lx = lx * num;
+
+	return lx;
+}
+
+float Input::JoyStickParmLY(float num)
+{
+	float ly = (float)joyState.Gamepad.sThumbLY / SHRT_MAX;
+	
+	// デッドゾーンの適用
+	if (fabs(ly) < DEADZONE_THRESHOLD) ly = 0.0f;
+	
+	ly = ly * num;
+
+	return ly;
+}
+
+float Input::JoyStickParmRX(float num)
+{
+	float rx = (float)joyState.Gamepad.sThumbRX / SHRT_MAX;
+
+	if (fabs(rx) < DEADZONE_THRESHOLD) rx = 0.0f;
+	rx = rx * num;
+
+	return rx;
+}
+float Input::JoyStickParmRY(float num)
+{
+	float ry = (float)joyState.Gamepad.sThumbRY / SHRT_MAX;
+
+	if (fabs(ry) < DEADZONE_THRESHOLD) ry = 0.0f;
+	ry = ry * num;
+
+	return ry;
+}
+
 
 bool Input::PushJoyButton(uint32_t button)
 {
