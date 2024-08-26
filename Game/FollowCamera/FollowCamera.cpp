@@ -24,7 +24,9 @@ void FollowCamera::Upadate()
 		
 		offset = Transform1(offset, MakeRotateMatrix(camera_->GetRotate()));
 		// 座標をコピーしてオフセット分ずらす
+		
 		camera_->SetTranslate(Add(target_->translation_, offset));
+		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z});
 
 	}
 	

@@ -4,7 +4,7 @@
 #include "CollisionManager.h"	
 #include <vector>
 #include <memory>
-#include "Player/Player.h"
+#include "Character/Player/Player.h"
 #include "Ground/Ground.h"
 #include "Skydome/Skydome.h"
 #include "FollowCamera/FollowCamera.h"

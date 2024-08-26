@@ -36,7 +36,7 @@ void GameScene::Update()
 }
 void GameScene::Draw()
 {
-	player_->Draw();
+	player_->Draw(followCamera_->GetCamera());
 	ground_->Draw();
 	skydome_->Draw(followCamera_->GetCamera());
 }

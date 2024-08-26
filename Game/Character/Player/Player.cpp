@@ -5,51 +5,76 @@
 
 void Player::Init()
 {
+	BaseCharacter::Init();
 	ModelManager::GetInstance()->LoadModel("Resources/float_Body", "float_Body.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/float_Head", "float_Head.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/float_L_arm", "float_L_arm.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/float_R_arm", "float_R_arm.obj");
-	worldTransform_.Initialize();
-	worldTransform_.translation_.y = 2.0f;
+
+	worldTransform_.translation_.y = 3.0f;
 	worldTransform_.translation_.z = 30.0f;
-	worldTransform_2.Initialize();
-	worldTransform_2.translation_.y = 1.5f;
-	worldTransform_2.parent_ = &worldTransform_;
+
+	worldTransform_body.Initialize();
+	worldTransform_body.translation_.y = 0;
+	worldTransform_body.parent_ = &worldTransform_;
+
+	worldTransform_head.Initialize();
+	worldTransform_head.translation_.y = 1.5f;
+	worldTransform_head.parent_ = &worldTransform_;
+
+	worldTransform_right.Initialize();
+	worldTransform_right.translation_.x = 2.0f;
+	worldTransform_right.translation_.y = 1.5f;
+	worldTransform_right.parent_ = &worldTransform_;
+
+	worldTransform_left.Initialize();
+	worldTransform_left.translation_.x = -2.0f;
+	worldTransform_left.translation_.y = 1.5f;
+	worldTransform_left.parent_ = &worldTransform_;
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("float_Body.obj");
+	objects_.push_back(object_.get());
 
 	head_ = std::make_unique<Object3d>();
 	head_->Init();
 	head_->SetModel("float_Head.obj");
+	objects_.push_back(head_.get());
 
 	L_arm_ = std::make_unique<Object3d>();
 	L_arm_->Init();
 	L_arm_->SetModel("float_L_arm.obj");
+	objects_.push_back(L_arm_.get());
 
 	R_arm_ = std::make_unique<Object3d>();
 	R_arm_->Init();
 	R_arm_->SetModel("float_R_arm.obj");
+	objects_.push_back(R_arm_.get());
+
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/float_Body/tex.png");
+	InitFloatingGimmmick();
 }
 
 void Player::Update()
 {
+	BaseCharacter::Update();
 	Move();
+	UpdateFloatingGimmmick();
 	worldTransform_.UpdateMatrix();
-	worldTransform_2.UpdateMatrix();
-	object_->SetWorldTransform(worldTransform_);
-	L_arm_->SetWorldTransform(worldTransform_2);
-	R_arm_->SetWorldTransform(worldTransform_2);
-	head_->SetWorldTransform(worldTransform_2);
+	worldTransform_body.UpdateMatrix();
+	worldTransform_right.UpdateMatrix();
+	worldTransform_left.UpdateMatrix();
+	worldTransform_head.UpdateMatrix();
+	object_->SetWorldTransform(worldTransform_body);
+	L_arm_->SetWorldTransform(worldTransform_left);
+	R_arm_->SetWorldTransform(worldTransform_right);
+	head_->SetWorldTransform(worldTransform_head);
 }
 
-void Player::Draw()
+void Player::Draw(Camera* camera)
 {
-	object_->Draw(skinTex_,camera_);
-	L_arm_->Draw(skinTex_,camera_);
-	R_arm_->Draw(skinTex_,camera_);
-	head_->Draw(skinTex_, camera_);
+	BaseCharacter::Draw(camera);
+	
 }
 
 void Player::Move()
@@ -82,4 +107,18 @@ void Player::Move()
 
 	
 
+}
+
+void Player::InitFloatingGimmmick()
+{
+	floatingparam_ = 0.0f;
+}
+
+void Player::UpdateFloatingGimmmick()
+{
+	floatingparam_ += step;
+
+	floatingparam_ = std::fmod(floatingparam_, 2.0f * (float)std::numbers::pi);
+	const float floathingWidth = 0.5f;
+	worldTransform_.translation_.y = std::sin(floatingparam_) * floathingWidth;
 }
