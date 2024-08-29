@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "Loder.h"
 #include "ImGuiCommon.h"
+#include "GlobalVariables/GlobalVariables.h"	
 void GameScene::Init()
 {
 	followCamera_ = std::make_unique<FollowCamera>();
@@ -12,6 +13,8 @@ void GameScene::Init()
 	// 自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(player_->GetWorldTransform());
 
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Init();
 
 
 	ground_ = std::make_unique<Ground>();
@@ -29,7 +32,9 @@ void GameScene::Init()
 
 void GameScene::Update()
 {
+	GlobalVariables::GetInstance()->Update();
 	player_->Update();
+	enemy_->Update();
 	ground_->Update();
 	skydome_->Update();
 	followCamera_->Upadate();
@@ -37,6 +42,7 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	player_->Draw(followCamera_->GetCamera());
+	enemy_->Draw(followCamera_->GetCamera());
 	ground_->Draw();
 	skydome_->Draw(followCamera_->GetCamera());
 }

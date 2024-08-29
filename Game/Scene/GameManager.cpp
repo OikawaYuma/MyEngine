@@ -31,6 +31,8 @@
 #include "Transform.h"
 #include "mathFunction.h"
 
+#include "GlobalVariables/GlobalVariables.h"
+
 // コンストラクタ
 GameManager::GameManager() {
 	// 各シーンの排列
@@ -93,6 +95,8 @@ int GameManager::Run() {
 	PSOPostEffect* pSOPostEffect = PSOPostEffect::GatInstance();
 	pSOPostEffect->Init();
 	
+	// グローバル変数の読み込み
+	GlobalVariables::GetInstance()->LoadFiles();
 	//post->Init();
 	sceneArr_[currentSceneNo_]->Init();
 

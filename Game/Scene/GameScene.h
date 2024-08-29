@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include "Character/Player/Player.h"
+#include "Character/Enemy/Enemy.h"
 #include "Ground/Ground.h"
 #include "Skydome/Skydome.h"
 #include "FollowCamera/FollowCamera.h"
@@ -29,6 +30,7 @@ private:
 
 
 	std::unique_ptr<Player> player_;
+	std::unique_ptr<Enemy> enemy_;
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<FollowCamera> followCamera_;

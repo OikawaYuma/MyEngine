@@ -3,13 +3,23 @@
 #include "ModelManager.h"
 #include "Input.h"
 
+
+
 void Player::Init()
 {
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	// グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
+	globalVariables->AddItme(groupName, "head Translation",worldTransform_head.translation_);
+	
 	BaseCharacter::Init();
 	ModelManager::GetInstance()->LoadModel("Resources/float_Body", "float_Body.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/float_Head", "float_Head.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/float_L_arm", "float_L_arm.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/float_R_arm", "float_R_arm.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/hammer", "hammer.obj");
 
 	worldTransform_.translation_.y = 3.0f;
 	worldTransform_.translation_.z = 30.0f;
@@ -31,6 +41,11 @@ void Player::Init()
 	worldTransform_left.translation_.x = -2.0f;
 	worldTransform_left.translation_.y = 1.5f;
 	worldTransform_left.parent_ = &worldTransform_;
+
+	worldTransform_weapon.Initialize();
+	worldTransform_weapon.translation_.x ;
+	worldTransform_weapon.translation_.y;
+	worldTransform_weapon.parent_ = &worldTransform_;
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("float_Body.obj");
@@ -51,24 +66,76 @@ void Player::Init()
 	R_arm_->SetModel("float_R_arm.obj");
 	objects_.push_back(R_arm_.get());
 
+	weapon_ = std::make_unique<Object3d>();
+	weapon_->Init();
+	weapon_->SetModel("hammer.obj");
+	objects_.push_back(weapon_.get());
+
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/float_Body/tex.png");
 	InitFloatingGimmmick();
 }
 
 void Player::Update()
 {
+	ApplyGlobalVariables();
+	if (behaviorRequest_) {
+		// 振る舞いを変更する
+		behavior_ = behaviorRequest_.value();
+		// 各振る舞いごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInit();
+		
+			break;
+		case Behavior::kAttack:
+			BehaviorRootAttackInit();
+			break;
+		case Behavior::kDash:
+			BehaviorRootDashInit();
+			break;
+		}
+		// 振る舞いリクエストをリセット
+		behaviorRequest_ = std::nullopt;
+	}
+
+	
+	switch (behavior_) {
+		// 通常行動
+	case Behavior::kRoot:
+		
+	default:
+		BehaviorRootUpdate();
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X)) {
+			behaviorRequest_ = Behavior::kAttack;
+		}
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
+			behaviorRequest_ = Behavior::kDash;
+		}
+		break;
+	case Behavior::kAttack:
+		BehaviorRootAttackUpdate();
+		break;
+	case Behavior::kDash:
+		BehaviorRootDashUpdate();
+		break;
+
+	}
+	
+	
 	BaseCharacter::Update();
-	Move();
-	UpdateFloatingGimmmick();
+	
 	worldTransform_.UpdateMatrix();
 	worldTransform_body.UpdateMatrix();
 	worldTransform_right.UpdateMatrix();
 	worldTransform_left.UpdateMatrix();
 	worldTransform_head.UpdateMatrix();
+	worldTransform_weapon.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_body);
 	L_arm_->SetWorldTransform(worldTransform_left);
 	R_arm_->SetWorldTransform(worldTransform_right);
 	head_->SetWorldTransform(worldTransform_head);
+	weapon_->SetWorldTransform(worldTransform_weapon);
 }
 
 void Player::Draw(Camera* camera)
@@ -80,7 +147,7 @@ void Player::Draw(Camera* camera)
 void Player::Move()
 {
 	Vector3 move{0,0,0};
-	float preAngle = worldTransform_.rotation_.y;
+	preAngle_ = worldTransform_.rotation_.y;
 	if (Input::GetInstance()->GetJoystickState()) {
 
 		move.x += Input::GetInstance()->JoyStickParmLX(0.2f);
@@ -93,7 +160,7 @@ void Player::Move()
 		move.z *= 1.4f;
 		move = TransformNormal(move, camera_->GetCameraMatrix());
 		// Y軸周り角度（Θy）
-		preAngle = std::atan2(move.x, move.z);
+		preAngle_ = std::atan2(move.x, move.z);
 		
 	}
 
@@ -102,12 +169,14 @@ void Player::Move()
 		angletime = 0.0f;
 	}
 	worldTransform_.rotation_.y = 
-		LerpShortAngle(worldTransform_.rotation_.y, preAngle, angletime);
+		LerpShortAngle(worldTransform_.rotation_.y, preAngle_, angletime);
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 
 	
 
 }
+
+
 
 void Player::InitFloatingGimmmick()
 {
@@ -121,4 +190,67 @@ void Player::UpdateFloatingGimmmick()
 	floatingparam_ = std::fmod(floatingparam_, 2.0f * (float)std::numbers::pi);
 	const float floathingWidth = 0.5f;
 	worldTransform_.translation_.y = std::sin(floatingparam_) * floathingWidth;
+}
+
+void Player::BehaviorRootUpdate()
+{
+	Move();
+	UpdateFloatingGimmmick();
+}
+
+void Player::BehaviorRootAttackUpdate()
+{
+	worldTransform_weapon.rotation_.x += 0.1f;
+	if (((float)std::numbers::pi / 2.0f) <= worldTransform_weapon.rotation_.x) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+
+}
+
+void Player::BehaviorRootInit()
+{
+	worldTransform_weapon.rotation_.x = 0.0f;
+}
+
+void Player::BehaviorRootAttackInit()
+{
+	worldTransform_weapon.rotation_.x = 0.0f;
+}
+
+void Player::BehaviorRootDashInit()
+{
+	workDash_.dashparam_ = 0;
+	worldTransform_.rotation_.y = preAngle_;
+}
+
+void Player::BehaviorRootDashUpdate()
+{
+	// ダッシュの時間
+	const uint32_t behaviorDashTime = 60;
+
+	Vector3 move{ 0,0,2 };
+	if (!(move.x == 0 && move.y == 0 && move.z == 0)) {
+		move = Normalize(move);
+		move.x *= 2.0f;
+		move.y *= 2.0f;
+		move.z *= 2.0f;
+		move = TransformNormal(move, worldTransform_.matWorld_);
+		// Y軸周り角度（Θy）
+		//preAngle = std::atan2(move.x, move.z);
+		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+
+	}
+
+	// 既定の時間経過で通常行動に戻る
+	if (++workDash_.dashparam_ >= behaviorDashTime) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+
+void Player::ApplyGlobalVariables()
+{
+	GlobalVariables* gVes = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	worldTransform_.translation_ = gVes->GetVector3Value(groupName, "main Translation");
+	worldTransform_head.translation_ = gVes->GetVector3Value(groupName, "head Translation");
 }

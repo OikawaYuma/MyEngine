@@ -213,7 +213,8 @@
     <ClCompile Include="Game\Skydome\Skydome.cpp" />
     <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\GlobalVariables\GlobalVariables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -415,7 +416,8 @@
     <ClInclude Include="Game\Skydome\Skydome.h" />
     <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Game\Character\base\BaseCharacter.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Game\Character\Enemy\Enemy.h" />
+    <ClInclude Include="Game\GlobalVariables\GlobalVariables.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
