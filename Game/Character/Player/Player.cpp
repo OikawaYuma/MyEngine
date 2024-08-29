@@ -3,16 +3,16 @@
 #include "ModelManager.h"
 #include "Input.h"
 
-
+#include "ImGuiCommon.h"
 
 void Player::Init()
 {
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "Player";
-	// グループを追加
-	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
-	globalVariables->AddItme(groupName, "head Translation",worldTransform_head.translation_);
+	//GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	//const char* groupName = "Player";
+	//// グループを追加
+	//GlobalVariables::GetInstance()->CreateGroup(groupName);
+	//globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
+	//globalVariables->AddItme(groupName, "head Translation",worldTransform_head.translation_);
 	
 	BaseCharacter::Init();
 	ModelManager::GetInstance()->LoadModel("Resources/float_Body", "float_Body.obj");
@@ -21,7 +21,7 @@ void Player::Init()
 	ModelManager::GetInstance()->LoadModel("Resources/float_R_arm", "float_R_arm.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/hammer", "hammer.obj");
 
-	worldTransform_.translation_.y = 3.0f;
+	worldTransform_.translation_.y = 1.0f;
 	worldTransform_.translation_.z = 30.0f;
 
 	worldTransform_body.Initialize();
@@ -77,7 +77,7 @@ void Player::Init()
 
 void Player::Update()
 {
-	ApplyGlobalVariables();
+	//ApplyGlobalVariables();
 	if (behaviorRequest_) {
 		// 振る舞いを変更する
 		behavior_ = behaviorRequest_.value();
@@ -94,12 +94,17 @@ void Player::Update()
 		case Behavior::kDash:
 			BehaviorRootDashInit();
 			break;
+		case Behavior::kJump:
+			BehaviorRootJumpInit();
+			break;
 		}
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
 	}
 
-	
+	ImGui::Begin("ttt");
+	ImGui::Text("t%f",worldTransform_.translation_.y);
+	ImGui::End();
 	switch (behavior_) {
 		// 通常行動
 	case Behavior::kRoot:
@@ -112,6 +117,9 @@ void Player::Update()
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
 			behaviorRequest_ = Behavior::kDash;
 		}
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_B)) {
+			behaviorRequest_ = Behavior::kJump;
+		}
 		break;
 	case Behavior::kAttack:
 		BehaviorRootAttackUpdate();
@@ -119,13 +127,13 @@ void Player::Update()
 	case Behavior::kDash:
 		BehaviorRootDashUpdate();
 		break;
-
+	case Behavior::kJump:
+		BehaviorRootJumpUpdate();
+		break;
 	}
 	
-	
+
 	BaseCharacter::Update();
-	
-	worldTransform_.UpdateMatrix();
 	worldTransform_body.UpdateMatrix();
 	worldTransform_right.UpdateMatrix();
 	worldTransform_left.UpdateMatrix();
@@ -146,21 +154,21 @@ void Player::Draw(Camera* camera)
 
 void Player::Move()
 {
-	Vector3 move{0,0,0};
+	velo_ = {0,0,0};
 	preAngle_ = worldTransform_.rotation_.y;
 	if (Input::GetInstance()->GetJoystickState()) {
 
-		move.x += Input::GetInstance()->JoyStickParmLX(0.2f);
-		move.z += Input::GetInstance()->JoyStickParmLY(0.2f);
+		velo_.x += Input::GetInstance()->JoyStickParmLX(0.2f);
+		velo_.z += Input::GetInstance()->JoyStickParmLY(0.2f);
 	}
-	if (!(move.x == 0 && move.y == 0 && move.z == 0)) {
-		move = Normalize(move);
-		move.x *= 1.4f;
-		move.y *= 1.4f;
-		move.z *= 1.4f;
-		move = TransformNormal(move, camera_->GetCameraMatrix());
+	if (!(velo_.x == 0 && velo_.y == 0 && velo_.z == 0)) {
+		velo_ = Normalize(velo_);
+		velo_.x *= 1.4f;
+		velo_.y *= 1.4f;
+		velo_.z *= 1.4f;
+		velo_ = TransformNormal(velo_, camera_->GetCameraMatrix());
 		// Y軸周り角度（Θy）
-		preAngle_ = std::atan2(move.x, move.z);
+		preAngle_ = std::atan2(velo_.x, velo_.z);
 		
 	}
 
@@ -170,7 +178,7 @@ void Player::Move()
 	}
 	worldTransform_.rotation_.y = 
 		LerpShortAngle(worldTransform_.rotation_.y, preAngle_, angletime);
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velo_);
 
 	
 
@@ -188,8 +196,8 @@ void Player::UpdateFloatingGimmmick()
 	floatingparam_ += step;
 
 	floatingparam_ = std::fmod(floatingparam_, 2.0f * (float)std::numbers::pi);
-	const float floathingWidth = 0.5f;
-	worldTransform_.translation_.y = std::sin(floatingparam_) * floathingWidth;
+	const float floathingWidth = 0.05f;
+	worldTransform_.translation_.y = worldTransform_.translation_.y  + std::sin(floatingparam_) * floathingWidth;
 }
 
 void Player::BehaviorRootUpdate()
@@ -228,21 +236,52 @@ void Player::BehaviorRootDashUpdate()
 	// ダッシュの時間
 	const uint32_t behaviorDashTime = 60;
 
-	Vector3 move{ 0,0,2 };
-	if (!(move.x == 0 && move.y == 0 && move.z == 0)) {
-		move = Normalize(move);
-		move.x *= 2.0f;
-		move.y *= 2.0f;
-		move.z *= 2.0f;
-		move = TransformNormal(move, worldTransform_.matWorld_);
+	velo_ = { 0,0,2 };
+	if (!(velo_.x == 0 && velo_.y == 0 && velo_.z == 0)) {
+		velo_ = Normalize(velo_);
+		velo_.x *= 2.0f;
+		velo_.y *= 2.0f;
+		velo_.z *= 2.0f;
+		velo_ = TransformNormal(velo_, worldTransform_.matWorld_);
 		// Y軸周り角度（Θy）
 		//preAngle = std::atan2(move.x, move.z);
-		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velo_);
 
 	}
 
 	// 既定の時間経過で通常行動に戻る
 	if (++workDash_.dashparam_ >= behaviorDashTime) {
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+
+void Player::BehaviorRootJumpInit()
+{
+	worldTransform_.translation_.y = 2.0;
+	worldTransform_right.rotation_.x = 0;
+	worldTransform_left.rotation_.x = 0;
+
+	// ジャンプ初速
+	const float kJumpFirstSpeed = 1.0f;
+	// ジャンプ初速を与える
+	velo_.y = kJumpFirstSpeed;
+}
+
+void Player::BehaviorRootJumpUpdate()
+{
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velo_);
+	// 重量加速度
+	const float kGravityAcceleration = 0.1f;
+	// 加速度ベクトル
+	Vector3 accelerationVector = {0, -kGravityAcceleration, 0};
+	// 加速する
+	velo_ = Add(velo_,accelerationVector);
+
+	// 着地
+	if (worldTransform_.translation_.y <= 2.0f) {
+		worldTransform_.translation_.y = 2.0;
+		// ジャンプ終了
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }

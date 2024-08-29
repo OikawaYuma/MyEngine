@@ -12,7 +12,8 @@
 enum class Behavior {
 	kRoot, // 通常状態
 	kAttack, // 攻撃中
-	kDash
+	kDash, // ダッシュ中
+	kJump
 };
 class Player : public BaseCharacter
 {
@@ -46,6 +47,9 @@ public:
 	// ダッシュ行動
 	void BehaviorRootDashInit();
 	void BehaviorRootDashUpdate();
+	// ジャンプ行動
+	void BehaviorRootJumpInit();
+	void BehaviorRootJumpUpdate();
 
 	// 調整項目の適用
 	void ApplyGlobalVariables();
@@ -87,5 +91,8 @@ private:
 	WorkDash workDash_;
 
 	using json = nlohmann::json;
+
+	// 速度
+	Vector3 velo_;
 };
 
