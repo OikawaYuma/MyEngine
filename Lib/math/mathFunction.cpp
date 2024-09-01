@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <algorithm>
+#include <numbers>
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	Vector3 result{
 		v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0],
@@ -677,4 +678,22 @@ bool IsCollisionAABB(const Vector3& AABBPos, const Vector3& AABBMin, const Vecto
 	}
 	else { g = false; }
 	return g;
+}
+
+float LerpShortAngle(float a, float b, float t)
+{
+	// 角度差分を求める
+	float diff = b - a;
+
+	float Pi2 = fmod(diff, (float)std::numbers::pi * 2.0f);
+
+	if (Pi2 <= -(float)std::numbers::pi) {
+		Pi2 += (float)std::numbers::pi * 2.0f;
+	}
+	else if ((float)std::numbers::pi <= Pi2) {
+		Pi2 -= (float)std::numbers::pi * 2.0f;
+	}
+
+	float afterAngle = a + Pi2 * t;
+	return afterAngle;
 }

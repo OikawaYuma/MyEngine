@@ -64,3 +64,6 @@ Vector3 Transform1(const Vector3& vector, const Matrix4x4& matrix);
 float Length(const Vector3& v);
 
 bool IsCollisionAABB(const Vector3& AABBPos, const Vector3& AABBMin, const Vector3& AABBMax, const Vector3& spherePos, const float& radius);
+
+// 最短角度補間
+float LerpShortAngle(float a, float b, float t);

@@ -208,6 +208,9 @@
     <ClCompile Include="Engine\Interface\PSO\PSOSkybox.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\Bloom.cpp" />
     <ClCompile Include="Game\Scene\GameOverScene.cpp" />
+    <ClCompile Include="..\Users\レン\Downloads\FollowCamera.cpp" />
+    <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
+    <ClCompile Include="Game\GlobalVariables\GlobalVariables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -404,6 +407,9 @@
     <ClInclude Include="Game\Utilty\Loder.h" />
     <ClInclude Include="Game\Scene\GameOverScene.h" />
     <ClInclude Include="Game\IBullet.h" />
+    <ClInclude Include="..\Users\レン\Downloads\FollowCamera.h" />
+    <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
+    <ClInclude Include="Game\GlobalVariables\GlobalVariables.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
