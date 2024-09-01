@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
 #include "Sprite.h"
-#include "Enemy/Enemy.h"
-#include "Player/Player.h"
+#include "Character/Enemy/Enemy.h"
+#include "Character/Player/Player.h"
 #include "Camera.h"
 class LockOn
 {

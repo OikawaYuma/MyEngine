@@ -208,8 +208,14 @@
     <ClCompile Include="Engine\Interface\PSO\PSOSkybox.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\Bloom.cpp" />
     <ClCompile Include="Game\Scene\GameOverScene.cpp" />
-    <ClCompile Include="..\Users\レン\Downloads\FollowCamera.cpp" />
     <ClCompile Include="Game\GlobalVariables\GlobalVariables.cpp" />
+    <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\Character\Player\Player.cpp" />
+    <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
+    <ClCompile Include="Game\LockOn\LockOn.cpp" />
+    <ClCompile Include="Game\Ground\Ground.cpp" />
+    <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
+    <ClCompile Include="Game\Skydome\Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -406,8 +412,14 @@
     <ClInclude Include="Game\Utilty\Loder.h" />
     <ClInclude Include="Game\Scene\GameOverScene.h" />
     <ClInclude Include="Game\IBullet.h" />
-    <ClInclude Include="..\Users\レン\Downloads\FollowCamera.h" />
     <ClInclude Include="Game\GlobalVariables\GlobalVariables.h" />
+    <ClInclude Include="Game\Character\Enemy\Enemy.h" />
+    <ClInclude Include="Game\Character\Player\Player.h" />
+    <ClInclude Include="Game\Character\base\BaseCharacter.h" />
+    <ClInclude Include="Game\LockOn\LockOn.h" />
+    <ClInclude Include="Game\Ground\Ground.h" />
+    <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
+    <ClInclude Include="Game\Skydome\Skydome.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
