@@ -120,7 +120,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Users\レン\Downloads\FollowCamera.cpp" />
-    <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Game\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="Game\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\Bloom.cpp" />
@@ -189,7 +188,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Users\レン\Downloads\FollowCamera.h" />
-    <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Game\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="Game\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\Bloom.h" />
