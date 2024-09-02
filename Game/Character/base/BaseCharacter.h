@@ -4,7 +4,8 @@
 #include "Object3d.h"
 #include "WorldTransform.h"
 #include "Camera.h"
-class BaseCharacter
+#include "Collider.h"
+class BaseCharacter 
 {
 public:
 	virtual void Init();

@@ -122,9 +122,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
     <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
+    <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp" />
+    <ClCompile Include="Game\Character\Player\PlayerRazer\PlayerRazer.cpp" />
     <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Game\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="Game\Ground\Ground.cpp" />
+    <ClCompile Include="Game\Item\PlayerItem.cpp" />
     <ClCompile Include="Game\LockOn\LockOn.cpp" />
     <ClCompile Include="Game\Scene\GameOverScene.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\Bloom.cpp" />
@@ -196,9 +199,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Character\base\BaseCharacter.h" />
     <ClInclude Include="Game\Character\Enemy\Enemy.h" />
     <ClInclude Include="Game\Character\Player\Player.h" />
+    <ClInclude Include="Game\Character\Player\PlayerBullet\PlayerBullet.h" />
+    <ClInclude Include="Game\Character\Player\PlayerRazer\PlayerRazer.h" />
     <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Game\GlobalVariables\GlobalVariables.h" />
     <ClInclude Include="Game\Ground\Ground.h" />
+    <ClInclude Include="Game\Item\PlayerItem.h" />
     <ClInclude Include="Game\LockOn\LockOn.h" />
     <ClInclude Include="Game\Scene\GameOverScene.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\Bloom.h" />

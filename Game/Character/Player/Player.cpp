@@ -4,6 +4,7 @@
 #include "Input.h"
 
 #include "ImGuiCommon.h"
+#include "LockOn/LockOn.h"
 
 void Player::Init()
 {
@@ -13,65 +14,76 @@ void Player::Init()
 	//GlobalVariables::GetInstance()->CreateGroup(groupName);
 	//globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
 	//globalVariables->AddItme(groupName, "head Translation",worldTransform_head.translation_);
-	
-	BaseCharacter::Init();
-	ModelManager::GetInstance()->LoadModel("Resources/float_Body", "float_Body.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/float_Head", "float_Head.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/float_L_arm", "float_L_arm.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/float_R_arm", "float_R_arm.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/hammer", "hammer.obj");
+	playerReticleTex_ = TextureManager::GetInstance()->StoreTexture("Resources/Reticle.png");
+	playerHpUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/HpUI.png");
+	normalBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/NormalBulletUI.png");
+	hommingBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/HommingBulletUI.png");
+	razerBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/RazerBeam.png");
 
+	hp_ = 1.0f;
+
+	reticleNear_ = std::make_unique<Sprite>();
+	reticleNear_->Init(
+		{ 720.0f ,360.0f },
+		{ 64.0f, 64.0f },
+		{ 0.5f , 0.5f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		"Resources/Reticle.png");
+	reticleFar_ = std::make_unique<Sprite>();
+	reticleFar_->Init(
+		{ 720.0f ,360.0f },
+		{ 48.0f, 48.0f },
+		{ 0.5f , 0.5f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		"Resources/Reticle.png");
+
+	hpUIBlue_ = std::make_unique<Sprite>();
+	hpUIBlue_->Init(
+		{ hp_ * 200.0f / 2.0f + 50.0f ,25.0f },
+		{ hp_ * 200.0f, 50.0f },
+		{ 0.5f , 0.5f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		"Resources/player.png");
+	hpUI_ = std::make_unique<Sprite>();
+	hpUI_->Init(
+		{ 25.0f ,25.0f },
+		{ 50.0f, 50.0f },
+		{ 0.5f , 0.5f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		"Resources/HpUI.png");
+
+	bulletModeUI = std::make_unique<Sprite>();
+	bulletModeUI->Init(
+		{ 1180.0f ,620.0f },
+		{ 100.0f, 100.0f },
+		{ 0.5f , 0.5f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		"Resources/bulletUI/NormalBulletUI.png");
+
+
+	worldTransform3DReticleNear_.Initialize();
+	worldTransform3DReticleFar_.Initialize();
+
+	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
+
+	worldTransform_.Initialize();
 	worldTransform_.translation_.y = 1.0f;
 	worldTransform_.translation_.z = 30.0f;
 
-	worldTransform_body.Initialize();
-	worldTransform_body.translation_.y = 0;
-	worldTransform_body.parent_ = &worldTransform_;
-
-	worldTransform_head.Initialize();
-	worldTransform_head.translation_.y = 1.5f;
-	worldTransform_head.parent_ = &worldTransform_;
-
-	worldTransform_right.Initialize();
-	worldTransform_right.translation_.x = 2.0f;
-	worldTransform_right.translation_.y = 1.5f;
-	worldTransform_right.parent_ = &worldTransform_;
-
-	worldTransform_left.Initialize();
-	worldTransform_left.translation_.x = -2.0f;
-	worldTransform_left.translation_.y = 1.5f;
-	worldTransform_left.parent_ = &worldTransform_;
-
-	worldTransform_weapon.Initialize();
-	worldTransform_weapon.translation_.x ;
-	worldTransform_weapon.translation_.y;
-	worldTransform_weapon.parent_ = &worldTransform_;
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
-	object_->SetModel("float_Body.obj");
-	objects_.push_back(object_.get());
+	object_->SetModel("player.obj");
 
-	head_ = std::make_unique<Object3d>();
-	head_->Init();
-	head_->SetModel("float_Head.obj");
-	objects_.push_back(head_.get());
+	nearReticleObj_ = std::make_unique<Object3d>();
+	nearReticleObj_->Init();
+	nearReticleObj_->SetModel("player.obj");
 
-	L_arm_ = std::make_unique<Object3d>();
-	L_arm_->Init();
-	L_arm_->SetModel("float_L_arm.obj");
-	objects_.push_back(L_arm_.get());
+	farReticleObj_ = std::make_unique<Object3d>();
+	farReticleObj_->Init();
+	farReticleObj_->SetModel("player.obj");
 
-	R_arm_ = std::make_unique<Object3d>();
-	R_arm_->Init();
-	R_arm_->SetModel("float_R_arm.obj");
-	objects_.push_back(R_arm_.get());
 
-	weapon_ = std::make_unique<Object3d>();
-	weapon_->Init();
-	weapon_->SetModel("hammer.obj");
-	objects_.push_back(weapon_.get());
-
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/float_Body/tex.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
 	InitFloatingGimmmick();
 }
 
@@ -101,7 +113,23 @@ void Player::Update()
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;
 	}
-
+	// HPを元に基準となる大きさを決定する
+	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	//SetRadius(hp_);
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+	razers_.remove_if([](PlayerRazer* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
 	ImGui::Begin("ttt");
 	ImGui::Text("t%f",worldTransform_.translation_.y);
 	ImGui::End();
@@ -132,24 +160,169 @@ void Player::Update()
 		break;
 	}
 	
+	reticleNear_->Update();
+	reticleFar_->Update();
 
-	BaseCharacter::Update();
-	worldTransform_body.UpdateMatrix();
-	worldTransform_right.UpdateMatrix();
-	worldTransform_left.UpdateMatrix();
-	worldTransform_head.UpdateMatrix();
-	worldTransform_weapon.UpdateMatrix();
-	object_->SetWorldTransform(worldTransform_body);
-	L_arm_->SetWorldTransform(worldTransform_left);
-	R_arm_->SetWorldTransform(worldTransform_right);
-	head_->SetWorldTransform(worldTransform_head);
-	weapon_->SetWorldTransform(worldTransform_weapon);
+	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+		switch (bulletMode_) {
+		case BulletMode::NormalBullet:
+			bulletMode_ = HommingBullet;
+			break;
+		case BulletMode::HommingBullet:
+			bulletMode_ = LaserBeam;
+			break;
+		case BulletMode::LaserBeam:
+			bulletMode_ = NormalBullet;
+			break;
+		}
+	}
+	else if (Input::GetInstance()->TriggerKey(DIK_K)) {
+
+		switch (bulletMode_) {
+		case BulletMode::NormalBullet:
+			bulletMode_ = HommingBullet;
+			break;
+		case BulletMode::HommingBullet:
+			bulletMode_ = LaserBeam;
+			break;
+		case BulletMode::LaserBeam:
+			bulletMode_ = NormalBullet;
+			break;
+		}
+	}
+
+	Aim();
+
+
+	// ビューポート
+	Matrix4x4 matViewport =
+		MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
+
+	/*--------合成行列の逆行列--------------*/
+		// ビュープロジェクションビューポート合成行列
+	Matrix4x4 matVPV =
+		Multiply(Multiply(camera_->GetViewMatrix(), camera_->GetProjectionMatrix()), matViewport);
+	// 合成行列の逆行列を計算する
+
+	Matrix4x4 matInverseVPV = Inverse(matVPV);
+	/////////////////////以下はデバック用//////////////////////////////////
+	Matrix4x4 matInverseVPVReturn = Inverse(matInverseVPV);
+	ImGui::Begin("camera keisan");
+	MatrixScreenPrintf(matVPV, "matvpv");
+	MatrixScreenPrintf(matInverseVPV, "matvpv");
+	MatrixScreenPrintf(matVPV, "matvpv");
+	ImGui::Text("matvpv", matVPV);
+	ImGui::Text("%matinversevpv", matInverseVPV);
+	ImGui::Text("%matinversevpvinverse", matInverseVPVReturn);
+	ImGui::End();
+
+
+	/*--------2点のワールド行列--------------*/
+	// スクリーン座標
+	Vector3 posNear = Vector3(static_cast<float>(reticleNear_->GetPosition().x), (float)reticleNear_->GetPosition().y, 0);
+	Vector3 posFar = Vector3(static_cast<float>(reticleNear_->GetPosition().x), float(reticleNear_->GetPosition().y), 1);
+	// スクリーン座標系からワールド座標系へ
+	posNear = Transform1(posNear, matInverseVPV);
+	posFar = Transform1(posFar, matInverseVPV);
+
+	/*---------3Dレティクルの座標系さん-------*/
+	// スティックレイの方向
+	Vector3 spriteDierection;
+	spriteDierection.x = posFar.x - posNear.x;
+	spriteDierection.y = posFar.y - posNear.y;
+	spriteDierection.z = posFar.z - posNear.z;
+	spriteDierection = Normalize(spriteDierection);
+	// カメラから照準オブジェクトの距離
+	const float kDistanceTextObjectNear = 50.0f;
+	const float kDistanceTextObjectFar = 75.0f;
+	worldTransform3DReticleNear_.translation_.x = posNear.x + spriteDierection.x * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.translation_.y = posNear.y + spriteDierection.y * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.translation_.z = posNear.z + spriteDierection.z * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.UpdateMatrix();
+
+	worldTransform3DReticleFar_.translation_.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+	worldTransform3DReticleFar_.translation_.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+	worldTransform3DReticleFar_.translation_.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+	worldTransform3DReticleFar_.translation_ = Normalize(worldTransform3DReticleFar_.translation_);
+
+	worldTransform3DReticleFar_.translation_.x = GetWorldPosition().x + worldTransform3DReticleFar_.translation_.x * kDistanceTextObjectFar;
+	worldTransform3DReticleFar_.translation_.y = GetWorldPosition().y + worldTransform3DReticleFar_.translation_.y * kDistanceTextObjectFar;
+	worldTransform3DReticleFar_.translation_.z = GetWorldPosition().z + worldTransform3DReticleFar_.translation_.z * kDistanceTextObjectFar;
+	worldTransform3DReticleFar_.UpdateMatrix();
+
+	{
+		Vector3 posReti = {
+			worldTransform3DReticleFar_.matWorld_.m[3][0],
+			worldTransform3DReticleFar_.matWorld_.m[3][1],
+			worldTransform3DReticleFar_.matWorld_.m[3][2],
+		};
+
+		// ビューポート行列
+		Matrix4x4 matView = MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
+
+		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+		Matrix4x4 matViewProjectionViewport =
+			Multiply(camera_->GetViewprojectionMatrix(), matView);
+
+		// ワールド→スクリーン座標変換(ここで3Dから2dになる)
+		posReti = Transform1(posReti, matViewProjectionViewport);
+
+		// スプライトのレティクルに座標返還
+		reticleFar_->SetPosition(Vector2(posReti.x, posReti.y));
+	}
+
+	nearReticleObj_->SetWorldTransform(worldTransform3DReticleNear_);
+	farReticleObj_->SetWorldTransform(worldTransform3DReticleFar_);
+	nearReticleObj_->Update();
+	farReticleObj_->Update();
+
+	Attack();
+	// 弾更新
+	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
+		(*itr)->Update();
+	}
+	// 弾更新
+	for (std::list<PlayerRazer*>::iterator itr = razers_.begin(); itr != razers_.end(); itr++) {
+		(*itr)->Update();
+	}
+	worldTransform_.UpdateMatrix();
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	
 }
 
 void Player::Draw(Camera* camera)
 {
-	BaseCharacter::Draw(camera);
-	
+	object_->Draw(skinTex_, camera);
+	nearReticleObj_->Draw(skinTex_, camera);
+	farReticleObj_->Draw(skinTex_, camera);
+	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
+		(*itr)->Draw(camera);
+	}
+	for (std::list<PlayerRazer*>::iterator itr = razers_.begin(); itr != razers_.end(); itr++) {
+		(*itr)->Draw(camera);
+	}
+
+}
+
+void Player::DrawUI()
+{
+	reticleNear_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
+	reticleFar_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
+	hpUI_->Draw(playerHpUITex_, { 1.0f,1.0f,1.0f,1.0f });
+	hpUIBlue_->Draw(skinTex_, { 1.0f,1.0f,1.0f,1.0f });
+
+	switch (bulletMode_) {
+	case BulletMode::NormalBullet:
+		bulletModeUI->Draw(normalBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
+		break;
+	case BulletMode::HommingBullet:
+		bulletModeUI->Draw(hommingBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
+		break;
+	case BulletMode::LaserBeam:
+		bulletModeUI->Draw(razerBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
+		break;
+	}
 }
 
 void Player::Move()
@@ -184,7 +357,258 @@ void Player::Move()
 
 }
 
+void Player::Aim()
+{
+	// スプライトの現在座標を取得
+	Vector2 spritePosition = reticleNear_->GetPosition();
+	Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A);
+	// ゲームパッド状態取得
+	if (Input::GetInstance()->GetJoystickState()) {
+		spritePosition.x += Input::GetInstance()->JoyStickParmRX(12.0f);
+		spritePosition.y -= Input::GetInstance()->JoyStickParmRY(12.0f);
+	}
+	else {
 
+		if (Input::GetInstance()->PushKey(DIK_RIGHTARROW)) {
+			spritePosition.x += 5;
+		}
+		if (Input::GetInstance()->PushKey(DIK_LEFTARROW)) {
+			spritePosition.x -= 5;
+		}
+		if (Input::GetInstance()->PushKey(DIK_UPARROW)) {
+			spritePosition.y -= 5;
+		}
+		if (Input::GetInstance()->PushKey(DIK_DOWNARROW)) {
+			spritePosition.y += 5;
+		}
+	}
+	reticleNear_->SetPosition(spritePosition);
+}
+
+
+
+void Player::Attack()
+{
+	switch (bulletMode_) {
+	case BulletMode::NormalBullet:
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+			// 自キャラの座標をコピー
+			Vector3 position = {
+				worldTransform_.matWorld_.m[3][0],
+				worldTransform_.matWorld_.m[3][1],
+				worldTransform_.matWorld_.m[3][2] };
+
+			// 弾の速度
+			const float kBulletSpeed = 1.0f;
+			Vector3 velocity(0, 0, kBulletSpeed);
+			// 自機から照準オブジェクトへのベクトル
+			velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+			velocity.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+			velocity.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+
+
+
+			velocity = Normalize(velocity);
+			velocity.x *= kBulletSpeed;
+			velocity.y *= kBulletSpeed;
+			velocity.z *= kBulletSpeed;;
+
+			// 速度ベクトルを自機の向きに合わせて回転させる
+			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			// 弾を生成し、初期化
+			PlayerBullet* newBullet = new PlayerBullet();
+			newBullet->Init(GetWorldPosition(), velocity);
+			//newBullet->SetParent(worldTransform_.parent_);
+			// 弾を登録する
+			bullets_.push_back(newBullet);
+		}
+
+		else if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+
+			// 自キャラの座標をコピー
+			Vector3 position = {
+				worldTransform_.matWorld_.m[3][0],
+				worldTransform_.matWorld_.m[3][1],
+				worldTransform_.matWorld_.m[3][2] };
+
+			// 弾の速度
+			const float kBulletSpeed = 1.0f;
+			Vector3 velocity(0, 0, kBulletSpeed);
+			// 自機から照準オブジェクトへのベクトル
+			velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+			velocity.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+			velocity.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+
+
+
+			velocity = Normalize(velocity);
+			velocity.x *= kBulletSpeed;
+			velocity.y *= kBulletSpeed;
+			velocity.z *= kBulletSpeed;;
+
+			// 速度ベクトルを自機の向きに合わせて回転させる
+			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			// 弾を生成し、初期化
+			PlayerBullet* newBullet = new PlayerBullet();
+			newBullet->Init(GetWorldPosition(), velocity);
+			//newBullet->SetParent(worldTransform_.parent_);
+			// 弾を登録する
+			bullets_.push_back(newBullet);
+
+		}
+		break;
+	case BulletMode::HommingBullet:
+		if (lockOn_->GetTarget()) {
+			if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+				// 自キャラの座標をコピー
+				Vector3 position = {
+					worldTransform_.matWorld_.m[3][0],
+					worldTransform_.matWorld_.m[3][1],
+					worldTransform_.matWorld_.m[3][2] };
+
+				// 弾の速度
+				const float kBulletSpeed = 1.0f;
+				Vector3 velocity(0, 0, kBulletSpeed);
+				// 自機から照準オブジェクトへのベクトル
+				velocity.x = lockOn_->GetTarget()->GetWorldPosition().x - GetWorldPosition().x;
+				velocity.y = lockOn_->GetTarget()->GetWorldPosition().y - GetWorldPosition().y;
+				velocity.z = lockOn_->GetTarget()->GetWorldPosition().z - GetWorldPosition().z;
+
+
+
+				velocity = Normalize(velocity);
+				velocity.x *= kBulletSpeed;
+				velocity.y *= kBulletSpeed;
+				velocity.z *= kBulletSpeed;;
+
+				// 速度ベクトルを自機の向きに合わせて回転させる
+				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+				// 弾を生成し、初期化
+				PlayerBullet* newBullet = new PlayerBullet();
+				newBullet->Init(GetWorldPosition(), velocity);
+				//newBullet->SetParent(worldTransform_.parent_);
+				// 弾を登録する
+				bullets_.push_back(newBullet);
+			}
+
+			else if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+
+				// 自キャラの座標をコピー
+				Vector3 position = {
+					worldTransform_.matWorld_.m[3][0],
+					worldTransform_.matWorld_.m[3][1],
+					worldTransform_.matWorld_.m[3][2] };
+
+				// 弾の速度
+				const float kBulletSpeed = 1.0f;
+				Vector3 velocity(0, 0, kBulletSpeed);
+				// 自機から照準オブジェクトへのベクトル
+				velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+				velocity.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+				velocity.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+
+
+
+				velocity = Normalize(velocity);
+				velocity.x *= kBulletSpeed;
+				velocity.y *= kBulletSpeed;
+				velocity.z *= kBulletSpeed;;
+
+				// 速度ベクトルを自機の向きに合わせて回転させる
+				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+				// 弾を生成し、初期化
+				PlayerBullet* newBullet = new PlayerBullet();
+				newBullet->Init(GetWorldPosition(), velocity);
+				//newBullet->SetParent(worldTransform_.parent_);
+				// 弾を登録する
+				bullets_.push_back(newBullet);
+
+			}
+		}
+		break;
+
+	case BulletMode::LaserBeam:
+
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+			// 自キャラの座標をコピー
+			Vector3 position = {
+				worldTransform_.matWorld_.m[3][0],
+				worldTransform_.matWorld_.m[3][1],
+				worldTransform_.matWorld_.m[3][2] };
+
+			// 弾の速度
+			const float kBulletSpeed = 1.0f;
+			Vector3 velocity(0, 0, kBulletSpeed);
+			// 自機から照準オブジェクトへのベクトル
+			velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+			velocity.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+			velocity.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+
+
+
+			velocity = Normalize(velocity);
+			velocity.x *= kBulletSpeed;
+			velocity.y *= kBulletSpeed;
+			velocity.z *= kBulletSpeed;;
+
+			// 速度ベクトルを自機の向きに合わせて回転させる
+			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			PlayerRazer* newBullet = new PlayerRazer();
+			newBullet->Init(GetWorldPosition(), velocity);
+			//newBullet->SetParent(&worldTransform_);
+			//newBullet->SetParent(worldTransform_.parent_);
+			// 弾を登録する
+			razers_.push_back(newBullet);
+		}
+
+		else if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+
+			// 自キャラの座標をコピー
+			Vector3 position = {
+				worldTransform_.matWorld_.m[3][0],
+				worldTransform_.matWorld_.m[3][1],
+				worldTransform_.matWorld_.m[3][2] };
+
+			// 弾の速度
+			const float kBulletSpeed = 1.0f;
+			Vector3 velocity(0, 0, kBulletSpeed);
+			// 自機から照準オブジェクトへのベクトル
+			velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+			velocity.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+			velocity.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+
+
+
+			velocity = Normalize(velocity);
+			velocity.x *= kBulletSpeed;
+			velocity.y *= kBulletSpeed;
+			velocity.z *= kBulletSpeed;;
+
+			// 速度ベクトルを自機の向きに合わせて回転させる
+			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+
+			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			// 弾を生成し、初期化
+			PlayerRazer* newBullet = new PlayerRazer();
+			newBullet->Init(GetWorldPosition(), velocity);
+			//newBullet->SetParent(worldTransform_.parent_);
+			// 弾を登録する
+			razers_.push_back(newBullet);
+
+			break;
+		}
+	}
+}
 
 void Player::InitFloatingGimmmick()
 {
@@ -203,7 +627,7 @@ void Player::UpdateFloatingGimmmick()
 void Player::BehaviorRootUpdate()
 {
 	Move();
-	UpdateFloatingGimmmick();
+	//UpdateFloatingGimmmick();
 }
 
 void Player::BehaviorRootAttackUpdate()
@@ -292,4 +716,32 @@ void Player::ApplyGlobalVariables()
 	const char* groupName = "Player";
 	worldTransform_.translation_ = gVes->GetVector3Value(groupName, "main Translation");
 	worldTransform_head.translation_ = gVes->GetVector3Value(groupName, "head Translation");
+}
+
+Vector3 Player::GetReticleWorldPosition()
+{
+	// ワールド行列座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform3DReticleNear_.matWorld_.m[3][0];
+	worldPos.y = worldTransform3DReticleNear_.matWorld_.m[3][1];
+	worldPos.z = worldTransform3DReticleNear_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+void Player::OnCollision(uint32_t attri)
+{
+}
+
+Vector3 Player::GetWorldPosition() const
+{
+	// ワールド行列座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
 }

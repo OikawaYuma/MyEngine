@@ -8,6 +8,11 @@
 #include "json.hpp"
 #include "GlobalVariables/GlobalVariables.h"
 
+#include "IBullet.h"
+#include "Character/Player/PlayerBullet/PlayerBullet.h"
+#include "Character/Player/PlayerRazer/PlayerRazer.h"
+#include "Sprite.h"
+class LockOn;
 // ふるまい
 enum class Behavior {
 	kRoot, // 通常状態
@@ -15,12 +20,16 @@ enum class Behavior {
 	kDash, // ダッシュ中
 	kJump
 };
-class Player : public BaseCharacter
+class Player : public Collider
 {
 public:
-	void Init() override;
-	void Update() override;
-	void Draw(Camera* camera) override;
+	void Init();
+	void Update();
+	void Draw(Camera* camera);
+	/// <summary>
+	/// UI描画
+	/// </summary>	
+	void DrawUI();
 
 public:
 	// ダッシュ用ワーク
@@ -32,7 +41,12 @@ public:
 public:
 	void Move();
 
-	
+	void Aim();
+
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Attack();
 	// 浮遊ギミック初期化
 	void InitFloatingGimmmick();
 	void UpdateFloatingGimmmick();
@@ -57,9 +71,18 @@ public:
 public:
 	const WorldTransform *GetWorldTransform() const  { return &worldTransform_; }
 	Behavior GetBehaviorMode() { return behavior_; }
-
+	Vector3 GetReticleWorldPosition();
+	// Hpを取得
+	float GetHP() { return hp_; }
+	uint32_t GetBulletMode() { return bulletMode_; }
 public: // Setter
 	void SetCamera(Camera* camera) { camera_ = camera; }
+	void SetHP(float hp) { hp_ = hp; }
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+public: // Collider
+	void OnCollision(uint32_t attri) override;
+	Vector3 GetWorldPosition() const override;
+
 private:
 	Camera* camera_ = nullptr;
 	WorldTransform worldTransform_body;
@@ -68,10 +91,45 @@ private:
 	WorldTransform worldTransform_head;
 	WorldTransform worldTransform_weapon;
 	std::unique_ptr<Object3d> object_;
-	std::unique_ptr<Object3d> R_arm_;
-	std::unique_ptr<Object3d> L_arm_;
-	std::unique_ptr<Object3d> head_;
-	std::unique_ptr<Object3d> weapon_;
+	std::unique_ptr<Object3d> nearReticleObj_;
+	std::unique_ptr<Object3d> farReticleObj_;
+
+public: // もともとのゲームで使用変数
+	std::unique_ptr<Sprite> reticleNear_ = nullptr;
+	std::unique_ptr<Sprite> reticleFar_ = nullptr;
+	std::unique_ptr<Sprite> hpUI_ = nullptr;
+	std::unique_ptr<Sprite> hpUIBlue_ = nullptr;
+	std::unique_ptr<Sprite> bulletModeUI = nullptr;
+
+
+	std::list<PlayerBullet*> bullets_;
+	std::list<PlayerRazer*> razers_;
+
+	//bulletMode
+	uint32_t bulletMode_ = NormalBullet;
+
+	// BulletModeUI
+	uint32_t playerReticleTex_;
+	uint32_t playerHpUITex_;
+	uint32_t normalBulletUITex_;
+	uint32_t hommingBulletUITex_;
+	uint32_t razerBulletUITex_;
+	/// <summary>
+	/// //////////////////////////////////////////////////////////////////////
+	/// </summary>
+	float hp_ = 1;
+	Vector3 cameraToPlayerDistance_{ 0.0f, 7.0f, -30.0f };
+
+	// 3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticleNear_;
+	// 3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticleFar_;
+
+private: // 貸出
+	LockOn* lockOn_ = nullptr;
+
+
+
 
 	float angletime = 0.0f;
 	float preAngle_ ;
@@ -94,5 +152,9 @@ private:
 
 	// 速度
 	Vector3 velo_;
+	// ワールド変換データ
+	WorldTransform worldTransform_;
+	// model skin num
+	uint32_t skinTex_;
 };
 

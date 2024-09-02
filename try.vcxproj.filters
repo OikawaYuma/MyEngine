@@ -212,10 +212,13 @@
     <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
-    <ClCompile Include="Game\LockOn\LockOn.cpp" />
     <ClCompile Include="Game\Ground\Ground.cpp" />
     <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Game\Skydome\Skydome.cpp" />
+    <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp" />
+    <ClCompile Include="Game\Character\Player\PlayerRazer\PlayerRazer.cpp" />
+    <ClCompile Include="Game\Item\PlayerItem.cpp" />
+    <ClCompile Include="Game\LockOn\LockOn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -416,10 +419,13 @@
     <ClInclude Include="Game\Character\Enemy\Enemy.h" />
     <ClInclude Include="Game\Character\Player\Player.h" />
     <ClInclude Include="Game\Character\base\BaseCharacter.h" />
-    <ClInclude Include="Game\LockOn\LockOn.h" />
     <ClInclude Include="Game\Ground\Ground.h" />
     <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Game\Skydome\Skydome.h" />
+    <ClInclude Include="Game\Character\Player\PlayerBullet\PlayerBullet.h" />
+    <ClInclude Include="Game\Character\Player\PlayerRazer\PlayerRazer.h" />
+    <ClInclude Include="Game\Item\PlayerItem.h" />
+    <ClInclude Include="Game\LockOn\LockOn.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">

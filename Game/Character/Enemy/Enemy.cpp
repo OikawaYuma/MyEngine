@@ -5,11 +5,11 @@
 void Enemy::Init()
 {
 	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");
-	BaseCharacter::Init();
+	;
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("enemy.obj");
-	objects_.push_back(object_.get());
+	
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy/pig.png");
 	worldTransform_.translation_.z = 40.0f;
 	worldTransform_.translation_.y = 2.0f;
@@ -21,13 +21,14 @@ void Enemy::Update()
 {
 	Move();
 	object_->SetWorldTransform(worldTransform_);
-	BaseCharacter::Update();
+	object_->Update();
+	worldTransform_.UpdateMatrix();
 
 }
 
 void Enemy::Draw(Camera* camera)
 {
-	BaseCharacter::Draw(camera);
+	object_->Draw(skinTex_,camera);
 }
 
 void Enemy::Move()
@@ -49,3 +50,21 @@ void Enemy::Move()
 	}
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 }
+
+void Enemy::OnCollision(uint32_t attri)
+{
+}
+
+Vector3 Enemy::GetWorldPosition() const
+{
+	// ワールド行列座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;// ワールド行列座標を入れる変数
+}
+
+

@@ -14,7 +14,11 @@ void GameScene::Init()
 
 	enemy_ = std::make_unique<Enemy>();
 	enemy_->Init();
+	enemys_.push_back(enemy_.get());
 
+	lockOn_ = std::make_unique<LockOn>();
+	lockOn_->Init();
+	player_->SetLockOn(lockOn_.get());
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
@@ -33,11 +37,15 @@ void GameScene::Init()
 void GameScene::Update()
 {
 	GlobalVariables::GetInstance()->Update();
+	
+	// ロックオン
+	lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());
 	player_->Update();
+	followCamera_->Upadate();
 	enemy_->Update();
 	ground_->Update();
 	skydome_->Update();
-	followCamera_->Upadate();
+	
 	
 	}
 void GameScene::Draw()
@@ -51,7 +59,8 @@ void GameScene::Draw()
 
 void GameScene::Draw2d()
 {
-	
+	player_->DrawUI();
+	lockOn_->Draw();
 }
 
 void GameScene::PostDraw()
