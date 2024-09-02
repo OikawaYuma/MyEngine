@@ -23,7 +23,7 @@ enum class Behavior {
 class Player : public Collider
 {
 public:
-	void Init();
+	void Init(const Vector3& translate, const std::string filename);
 	void Update();
 	void Draw(Camera* camera);
 	/// <summary>

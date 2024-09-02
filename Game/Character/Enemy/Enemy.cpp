@@ -2,7 +2,7 @@
 #include "ModelManager.h"
 #include "TextureManager.h"
 #include <numbers>
-void Enemy::Init()
+void Enemy::Init(const Vector3& translate, const std::string filename)
 {
 	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");
 	;
@@ -11,8 +11,7 @@ void Enemy::Init()
 	object_->SetModel("enemy.obj");
 	
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy/pig.png");
-	worldTransform_.translation_.z = 40.0f;
-	worldTransform_.translation_.y = 2.0f;
+	worldTransform_.translation_ = translate;
 
 
 }

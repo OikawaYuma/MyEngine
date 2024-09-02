@@ -7,14 +7,9 @@ void GameScene::Init()
 	followCamera_->Init();
 
 	player_ = std::make_unique<Player>();
-	player_->Init();
 	player_->SetCamera(followCamera_->GetCamera());
 	// 自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(player_->GetWorldTransform());
-
-	enemy_ = std::make_unique<Enemy>();
-	enemy_->Init();
-	enemys_.push_back(enemy_.get());
 
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Init();
@@ -24,7 +19,7 @@ void GameScene::Init()
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
 	ground_->SetCamera(followCamera_->GetCamera());
-
+	Loder::LoadJsonFile("Resources/json", "stage", player_.get(), ground_.get(), enemys_, items_, worldDesigns_);
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 
@@ -43,18 +38,71 @@ void GameScene::Update()
 	lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());
 	player_->Update();
 	followCamera_->Upadate();
-	enemy_->Update();
 	ground_->Update();
 	skydome_->Update();
+	// エネミーの弾発射処理
+	for (std::list<Enemy*>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		(*itr)->Update();
+		//// enemy->Fire();
+		//if ((*itr)->GetFireTimer() >= (*itr)->kFireInterval) {
+		//	assert(player_);
+		//	// 弾の速度
+		//	const float kBulletSpeed = 1.0f;
+
+		//	Vector3 start = (*itr)->GetWorldPosition();
+		//	Vector3 end = player_->GetWorldPosition();
+
+		//	Vector3 diffVector;
+		//	diffVector.x = end.x - start.x;
+		//	diffVector.y = end.y - start.y;
+		//	diffVector.z = end.z - start.z;
+
+		//	diffVector = Normalize(diffVector);
+		//	diffVector.x *= kBulletSpeed;
+		//	diffVector.y *= kBulletSpeed;
+		//	diffVector.z *= kBulletSpeed;
+
+		//	Vector3 velocity(diffVector.x, diffVector.y, diffVector.z);
+
+		//	// 速度ベクトルを自機の向きに合わせて回転させる
+		//	velocity = TransformNormal(velocity, (*itr)->GetWorldTransform().matWorld_);
+
+		//	// 弾を生成し、初期化
+		//	EnemyBullet* newBullet = new EnemyBullet();
+		//	newBullet->Init((*itr)->GetWorldTransform().translation_, velocity);
+		//	newBullet->SetPlayer(player_.get());
+		//	// 弾を登録する
+		//	enemyBullets_.push_back(newBullet);
+		//	(*itr)->SetFireTimer(0);
+		//}
+	}
+	for (std::list<PlayerItem*>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+		(*itr)->Update();
+	}
 	
+
+	for (std::list<WorldDesign*>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+		(*itr)->Update();
+	}
+
 	
 	}
 void GameScene::Draw()
 {
-	player_->Draw(followCamera_->GetCamera());
-	enemy_->Draw(followCamera_->GetCamera());
+	
+	for (std::list<Enemy*>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		(*itr)->Draw(followCamera_->GetCamera());
+	}
+
+	for (std::list<WorldDesign*>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+		(*itr)->Draw(followCamera_->GetCamera());
+	}
+	for (std::list<PlayerItem*>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+		(*itr)->Draw(followCamera_->GetCamera());
+	}
 	ground_->Draw();
 	skydome_->Draw(followCamera_->GetCamera());
+	player_->Draw(followCamera_->GetCamera());
 	
 }
 

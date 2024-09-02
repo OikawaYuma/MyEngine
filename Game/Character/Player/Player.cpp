@@ -6,7 +6,7 @@
 #include "ImGuiCommon.h"
 #include "LockOn/LockOn.h"
 
-void Player::Init()
+void Player::Init(const Vector3& translate, const std::string filename)
 {
 	//GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	//const char* groupName = "Player";
@@ -67,8 +67,9 @@ void Player::Init()
 	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
 
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = translate;
 	worldTransform_.translation_.y = 1.0f;
-	worldTransform_.translation_.z = 30.0f;
+	
 
 	object_ = std::make_unique<Object3d>();
 	object_->Init();

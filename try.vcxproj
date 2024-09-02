@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\2d\PostEffect\Effect\GaussianBlur.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GrayScale.cpp" />
     <ClCompile Include="Game\Skydome\Skydome.cpp" />
+    <ClCompile Include="Game\WorldDesign\WorldDesign.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -234,6 +235,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\2d\PostEffect\Effect\GaussianBlur.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\GrayScale.h" />
     <ClInclude Include="Game\IBullet.h" />
+    <ClInclude Include="Game\WorldDesign\WorldDesign.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx12.h" />

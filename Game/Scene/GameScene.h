@@ -8,6 +8,8 @@
 #include "Character/Player/Player.h"
 #include "Character/Enemy/Enemy.h"
 #include "Ground/Ground.h"
+#include "Item/PlayerItem.h"
+#include "WorldDesign/WorldDesign.h"
 #include "Skydome/Skydome.h"
 #include "FollowCamera/FollowCamera.h"
 #include "LockOn/LockOn.h"
@@ -36,12 +38,13 @@ private:
 	
 
 	std::unique_ptr<Player> player_;
-	std::unique_ptr<Enemy> enemy_;
 	std::list<Enemy*> enemys_;
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<FollowCamera> followCamera_;
 	std::unique_ptr<LockOn> lockOn_;
+	std::list<PlayerItem*> items_;
+	std::list<WorldDesign*> worldDesigns_;
 	PostProcess* postProcess_ = nullptr;
 	uint32_t destroyCount_ = 0;
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;

@@ -120,7 +120,36 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 		}
 	}
 
-	
+	// レベルデータからオブジェクトを生成、配置
+	for (auto& objectData : levelData->objects) {
+		if (objectData.filename.compare("player") == 0) {
+			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
+			player->Init(objectData.transform.translate, objectData.filename);
+		}
+		else if (objectData.filename.compare("floor") == 0) {
+			//floor->Init(objectData.transform.scale, objectData.transform.translate);
+		}
+		else if (objectData.filename.compare("enemy") == 0) {
+			Enemy* enemy = new Enemy();
+			//enemy->SetPlayer(player);
+			enemy->Init(objectData.transform.translate, objectData.filename);
+			enemys.push_back(enemy);
+		}
+
+		else if (objectData.filename.compare("item") == 0) {
+			PlayerItem* item = new PlayerItem();
+			item->SetPlayer(player);
+			item->Init(objectData.transform.translate, objectData.filename);
+			items.push_back(item);
+		}
+		else if (objectData.filename.compare("worldDesign") == 0) {
+			WorldDesign* wood = new WorldDesign();
+			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
+			wood->Init(objectData.transform.scale, objectData.transform.translate, objectData.filename);
+			worldDesigns.push_back(wood);
+		}
+
+	}
 
 }
 
