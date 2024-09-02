@@ -3,6 +3,8 @@
 #include "WorldTransform.h"
 #include <memory>
 
+// 
+class LockOn;
 class FollowCamera
 {
 public:
@@ -17,10 +19,13 @@ public: // Getter
 
 public:
 	void SetTarget(const WorldTransform* target);
+	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn;};
 private:
 	std::unique_ptr<Camera> camera_;
 	// 追従対象
 	const WorldTransform* target_ = nullptr;
+	// ロックオン
+	LockOn* lockOn_ = nullptr;
 
 	float destinationAngleY_;
 	// 追従対象の残像座標

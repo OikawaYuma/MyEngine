@@ -1,5 +1,6 @@
 #include "FollowCamera.h"
 #include "Input.h"
+#include "LockOn/LockOn.h"
 void FollowCamera::Init()
 {
 	camera_ = std::make_unique<Camera>();
@@ -13,7 +14,16 @@ void FollowCamera::Upadate()
 
 	Vector3 cameraRotate = camera_->GetRotate();
 	destinationAngleY_ = cameraRotate.y;
-	if (Input::GetInstance()->GetJoystickState()) {
+	
+	if (lockOn_->GetTarget()) {
+		Vector3 lockOnPos = lockOn_->GetTargetPosition();
+		// 追従対象からロックオン対象へのベクトル
+		Vector3 sub = Subtract(lockOnPos , target_->translation_);
+
+		// Y軸回り角度
+		cameraRotate.y = std::atan2(sub.x, sub.z);
+	}
+	else if (Input::GetInstance()->GetJoystickState()) {
 		cameraRotate.y += Input::GetInstance()->JoyStickParmRX(0.05f);
 		
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
@@ -117,4 +127,5 @@ void FollowCamera::SetTarget(const WorldTransform* target)
 	target_ = target; 
 	Reset();
 }
+
 

@@ -13,6 +13,10 @@ public:
 
 	const Enemy* GetTarget() { return target_; }
 
+	Vector3 GetTargetPosition() const;
+
+	bool ExistTarget() const { return target_ ? true : false; }
+
 	void Search();
 
 	bool OutRangeJudge(Camera* camera);

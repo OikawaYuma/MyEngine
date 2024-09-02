@@ -130,6 +130,15 @@ void LockOn::Draw()
 	}
 }
 
+Vector3 LockOn::GetTargetPosition() const
+{
+	if (target_) {
+		return target_->GetWorldPosition();
+	}
+
+	return Vector3();
+}
+
 bool LockOn::OutRangeJudge(Camera* camera)
 {
 	// 敵のロックオン座標取得

@@ -19,6 +19,7 @@ void GameScene::Init()
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Init();
 	player_->SetLockOn(lockOn_.get());
+	followCamera_->SetLockOn(lockOn_.get());
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
