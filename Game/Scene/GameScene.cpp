@@ -10,7 +10,7 @@ void GameScene::Init()
 	player_->SetCamera(followCamera_->GetCamera());
 	// 自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(player_->GetWorldTransform());
-
+	Loder::LoadJsonFile("Resources/json", "stage", player_.get(), ground_.get(), enemys_, items_, worldDesigns_);
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Init();
 	player_->SetLockOn(lockOn_.get());
@@ -19,7 +19,7 @@ void GameScene::Init()
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
 	ground_->SetCamera(followCamera_->GetCamera());
-	Loder::LoadJsonFile("Resources/json", "stage", player_.get(), ground_.get(), enemys_, items_, worldDesigns_);
+	
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 

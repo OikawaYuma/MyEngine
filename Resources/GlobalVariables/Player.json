@@ -1,5 +1,14 @@
 {
     "Player": {
-        "Test": 14
+        "head Translation": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "main Translation": [
+            0.0,
+            0.4000000059604645,
+            0.0
+        ]
     }
 }

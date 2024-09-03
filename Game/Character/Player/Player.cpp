@@ -8,12 +8,12 @@
 
 void Player::Init(const Vector3& translate, const std::string filename)
 {
-	//GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	//const char* groupName = "Player";
-	//// グループを追加
-	//GlobalVariables::GetInstance()->CreateGroup(groupName);
-	//globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
-	//globalVariables->AddItme(groupName, "head Translation",worldTransform_head.translation_);
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	// グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
+	globalVariables->AddItme(groupName, "head Translation",worldTransform_head.translation_);
 	playerReticleTex_ = TextureManager::GetInstance()->StoreTexture("Resources/Reticle.png");
 	playerHpUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/HpUI.png");
 	normalBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/NormalBulletUI.png");
@@ -68,7 +68,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = translate;
-	worldTransform_.translation_.y = 1.0f;
+	worldTransform_.translation_.y = 0.5f;
 	
 
 	object_ = std::make_unique<Object3d>();
@@ -161,8 +161,7 @@ void Player::Update()
 		break;
 	}
 	
-	reticleNear_->Update();
-	reticleFar_->Update();
+	
 
 	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
 		switch (bulletMode_) {
@@ -289,7 +288,8 @@ void Player::Update()
 	worldTransform_.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
-	
+	reticleNear_->Update();
+	reticleFar_->Update();
 }
 
 void Player::Draw(Camera* camera)
@@ -704,8 +704,8 @@ void Player::BehaviorRootJumpUpdate()
 	velo_ = Add(velo_,accelerationVector);
 
 	// 着地
-	if (worldTransform_.translation_.y <= 2.0f) {
-		worldTransform_.translation_.y = 2.0;
+	if (worldTransform_.translation_.y <= 0.5f) {
+		worldTransform_.translation_.y = 0.5f;
 		// ジャンプ終了
 		behaviorRequest_ = Behavior::kRoot;
 	}
