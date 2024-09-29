@@ -346,19 +346,8 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 
-	// 実際に頂点リソースを作る
-	materialResource = Mesh::CreateBufferResource(directXCommon_->GetDevice(), sizeof(Material));
-
-	/*materialBufferView = CreateBufferView();;*/
-	// 頂点リソースにデータを書き込む
-	materialData = nullptr;
-	// 書き込むためのアドレスを取得
-	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-	// 色のデータを変数から読み込み
-	materialData->color = material.color;
-	materialData->enableLighting = material.enableLighting;
-	materialData->uvTransform = MakeIdentity4x4();
-	materialData->shininess = material.shininess;
+	
+	
 
 	transformUv = {
 		{1.0f,1.0f,1.0f},
@@ -397,7 +386,7 @@ void Model::Update() {
 };
 
 
-void Model::Draw(uint32_t texture, const Material& material, const DirectionalLight& dire, uint32_t mapTexture) {
+void Model::Draw(uint32_t texture, const DirectionalLight& dire, uint32_t mapTexture) {
 
 	pso_ = PSO::GatInstance();
 	vbvs[0] = vertexBufferView_;
@@ -410,9 +399,6 @@ void Model::Draw(uint32_t texture, const Material& material, const DirectionalLi
 
 	textureManager_ = TextureManager::GetInstance();
 	// 色のデータを変数から読み込み
-	materialData->color = material.color;
-	materialData->enableLighting = material.enableLighting;
-	materialData->shininess = 0.5f;
 	directionalLightData->direction = dire.direction;
 	//directionalLightData->direction =  Normalize(directionalLightData->direction);
 	//directXCommon_->GetCommandList()->SetGraphicsRootSignature(pso_->GetProperty().rootSignature.Get());
@@ -423,7 +409,7 @@ void Model::Draw(uint32_t texture, const Material& material, const DirectionalLi
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	//directXCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// マテリアルCBufferの場所を設定
-	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
+	
 
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, SRVManager::GetGPUDescriptorHandle(texture));

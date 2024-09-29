@@ -9,6 +9,7 @@ void Skydome::Init()
 	worldTransform_.scale_ = { 1000.0f,1000.0f,1000.0f };
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
+	object_->SetMaterial({ {1.0f,1.0f,1.0f,1.0f} , false });
 	object_->SetModel("skydome.obj");
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/skydome.png");
 }

@@ -26,6 +26,21 @@ void Object3d::Init()
 
 	cameraForGPUData_->worldPosition = { 1.0f,1.0f,-5.0f };
 
+	// 実際に頂点リソースを作る
+	materialResource = Mesh::CreateBufferResource(directXCommon->GetDevice(), sizeof(Material));
+
+	/*materialBufferView = CreateBufferView();;*/
+	// 頂点リソースにデータを書き込む
+	materialData_ = nullptr;
+
+	// 書き込むためのアドレスを取得
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	// 色のデータを変数から読み込み
+	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
+	materialData_->enableLighting = true;
+	materialData_->uvTransform = MakeIdentity4x4();
+	materialData_->shininess = 0.5f;
+
 }
 
 void Object3d::Update()
@@ -73,6 +88,7 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 	
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	directXCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
 	// 3Dモデルが割り当てられていれば描画する
@@ -85,8 +101,7 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 	else if (model_) {
 		wvpData->WVP =  worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
-		model_->Draw(texture,{ { 1.0f,1.0f,1.0f,1.0f },true
-			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.2f },mapTexture_);
+		model_->Draw(texture, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.2f },mapTexture_);
 	}
 	else if (skybox_) {
 		wvpData->WVP = worldViewProjectionMatrix;

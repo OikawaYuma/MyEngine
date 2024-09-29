@@ -41,6 +41,8 @@ public: // Setter
 	void SetWorldTransform(const WorldTransform& worldtransform) { worldTransform_ = worldtransform; };
 	void SetTransform(Transform transform);
 	void SetMapTexture(uint32_t maptexture) { mapTexture_ = maptexture; };
+
+	void SetMaterial(const Material& material) { *materialData_ = material; }
 public: // Getter
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
@@ -70,5 +72,12 @@ private:
 
 	// 環境マップ用Texture
 	uint32_t mapTexture_;
+
+
+	// マテリアルをきれいに
+	Material* materialData_;
+	Microsoft::WRL::ComPtr < ID3D12Resource> materialResource;
+	// 頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
 };
 
