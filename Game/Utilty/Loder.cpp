@@ -133,6 +133,7 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			Enemy* enemy = new Enemy();
 			//enemy->SetPlayer(player);
 			enemy->Init(objectData.transform.translate, objectData.filename);
+			enemy->SetPlayer(player);
 			enemys.push_back(enemy);
 		}
 

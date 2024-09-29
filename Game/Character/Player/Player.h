@@ -69,6 +69,7 @@ public:
 	void ApplyGlobalVariables();
 
 public:
+	const std::list<PlayerBullet*>& Getbullet() const { return bullets_; }
 	const WorldTransform *GetWorldTransform() const  { return &worldTransform_; }
 	Behavior GetBehaviorMode() { return behavior_; }
 	Vector3 GetReticleWorldPosition();

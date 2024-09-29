@@ -68,6 +68,10 @@ public:
 	int32_t GetIntValue(const std::string& groupName, const std::string& key)const ;
 	float GetFloatValue(const std::string& groupName, const std::string& key)const ;
 	Vector3 GetVector3Value(const std::string& groupName, const std::string& key)const;
+
+public: // Timer記録関数
+	void AddTime();
+
 private:
 	GlobalVariables() = default;
 	~GlobalVariables() = default;

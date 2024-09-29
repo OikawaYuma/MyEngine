@@ -27,13 +27,37 @@ void GameScene::Init()
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
 	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
-
+	collisionManager_ = std::make_unique<CollisionManager>();
+	collisionManager_->SetGameScene(this);
+	collisionManager_->SetPlayer(player_.get());
+	destroyCount_ = 0;
 }
 
 void GameScene::Update()
 {
-	GlobalVariables::GetInstance()->Update();
 	
+	GlobalVariables::GetInstance()->Update();
+	enemys_.remove_if([=](Enemy* bullet) {
+		if (bullet->IsDead()) {
+			destroyCount_++;
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+
+	items_.remove_if([](PlayerItem* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+
+	// 現状のクリア条件
+	if (destroyCount_ >= 3) {
+		IScene::SetSceneNo(CLEAR);
+	}
 	// ロックオン
 	lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());
 	player_->Update();
@@ -85,8 +109,9 @@ void GameScene::Update()
 		(*itr)->Update();
 	}
 
+	collisionManager_->CheckAllCollision();
 	
-	}
+}
 void GameScene::Draw()
 {
 	

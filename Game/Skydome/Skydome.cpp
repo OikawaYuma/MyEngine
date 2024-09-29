@@ -10,7 +10,7 @@ void Skydome::Init()
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("skydome.obj");
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/uvChecker.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/skydome.png");
 }
 
 void Skydome::Update()

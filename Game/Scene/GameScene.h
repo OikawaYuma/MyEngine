@@ -30,7 +30,11 @@ public:
 	void Release()override;
 	int GameClose()override;
 public:
-	
+public:
+	// 弾リストを取得
+	const std::list<Enemy*>& Getbullet() const { return enemys_; }
+	const std::list<PlayerItem*>& GetItems() const { return items_; }
+	//const std::list<EnemyBullet*>& GetEnemyBullets() const { return enemyBullets_; }
 
 private:
 

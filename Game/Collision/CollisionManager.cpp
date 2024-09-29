@@ -1,13 +1,39 @@
 #include "CollisionManager.h"
 #include "GameScene.h"
-
+#include "GameScene.h"
+#include "Character/Enemy/Enemy.h"
+#include "Character/Player/Player.h"
+#include "Item/PlayerItem.h"
 //#include "AxisIndicator.h"
 
 void CollisionManager::CheckAllCollision() {
 
 	
 	std::list<Collider*> colliders_;
+	// 自弾リストの取得
+	const std::list<PlayerBullet*>& playerBullets = player_->Getbullet();
 
+	//敵弾リストの取得
+	const std::list<Enemy*>& enemy = gameScene_->Getbullet();
+
+	const std::list<PlayerItem*>& items = gameScene_->GetItems();
+
+	//const std::list<EnemyBullet*>& enemyBullets = gameScene_->GetEnemyBullets();
+
+	
+	// コライダーをリストに登録
+	colliders_.push_back(player_);
+	//colliders_.push_back(enemy_);
+
+	for (PlayerBullet* bullet : playerBullets) {
+		colliders_.push_back(bullet);
+	}
+	for (Enemy* bullet : enemy) {
+		colliders_.push_back(bullet);
+	}
+	for (PlayerItem* bullet : items) {
+		colliders_.push_back(bullet);
+	}
 
 	// std::list<Collider*> colliders;
 	//  リスト内のペアを総当たり
@@ -37,6 +63,10 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		return;
 	};
 
+	
+	/*for (EnemyBullet* bullet : enemyBullets) {
+		colliders_.push_back(bullet);
+	}*/
 
 	if (colliderA->GetCollisionMode() == Ballc && colliderB->GetCollisionMode() == Ballc) {
 		// 判定対象AとBの座標

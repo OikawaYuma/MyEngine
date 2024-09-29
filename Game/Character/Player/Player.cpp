@@ -24,7 +24,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	reticleNear_ = std::make_unique<Sprite>();
 	reticleNear_->Init(
-		{ 720.0f ,360.0f },
+		{ 640.0f ,360.0f },
 		{ 64.0f, 64.0f },
 		{ 0.5f , 0.5f },
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
@@ -86,6 +86,8 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
 	InitFloatingGimmmick();
+	SetCollisonAttribute(0b0001);
+	SetCollisionMask(0b0110);
 }
 
 void Player::Update()
@@ -134,6 +136,9 @@ void Player::Update()
 	ImGui::Begin("ttt");
 	ImGui::Text("t%f",worldTransform_.translation_.y);
 	ImGui::End();
+
+	Aim();
+
 	switch (behavior_) {
 		// 通常行動
 	case Behavior::kRoot:
@@ -176,6 +181,7 @@ void Player::Update()
 			break;
 		}
 	}
+
 	else if (Input::GetInstance()->TriggerKey(DIK_K)) {
 
 		switch (bulletMode_) {
@@ -191,90 +197,10 @@ void Player::Update()
 		}
 	}
 
-	Aim();
+	
 
 
-	// ビューポート
-	Matrix4x4 matViewport =
-		MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
-
-	/*--------合成行列の逆行列--------------*/
-		// ビュープロジェクションビューポート合成行列
-	Matrix4x4 matVPV =
-		Multiply(Multiply(camera_->GetViewMatrix(), camera_->GetProjectionMatrix()), matViewport);
-	// 合成行列の逆行列を計算する
-
-	Matrix4x4 matInverseVPV = Inverse(matVPV);
-	/////////////////////以下はデバック用//////////////////////////////////
-	Matrix4x4 matInverseVPVReturn = Inverse(matInverseVPV);
-	ImGui::Begin("camera keisan");
-	MatrixScreenPrintf(matVPV, "matvpv");
-	MatrixScreenPrintf(matInverseVPV, "matvpv");
-	MatrixScreenPrintf(matVPV, "matvpv");
-	ImGui::Text("matvpv", matVPV);
-	ImGui::Text("%matinversevpv", matInverseVPV);
-	ImGui::Text("%matinversevpvinverse", matInverseVPVReturn);
-	ImGui::End();
-
-
-	/*--------2点のワールド行列--------------*/
-	// スクリーン座標
-	Vector3 posNear = Vector3(static_cast<float>(reticleNear_->GetPosition().x), (float)reticleNear_->GetPosition().y, 0);
-	Vector3 posFar = Vector3(static_cast<float>(reticleNear_->GetPosition().x), float(reticleNear_->GetPosition().y), 1);
-	// スクリーン座標系からワールド座標系へ
-	posNear = Transform1(posNear, matInverseVPV);
-	posFar = Transform1(posFar, matInverseVPV);
-
-	/*---------3Dレティクルの座標系さん-------*/
-	// スティックレイの方向
-	Vector3 spriteDierection;
-	spriteDierection.x = posFar.x - posNear.x;
-	spriteDierection.y = posFar.y - posNear.y;
-	spriteDierection.z = posFar.z - posNear.z;
-	spriteDierection = Normalize(spriteDierection);
-	// カメラから照準オブジェクトの距離
-	const float kDistanceTextObjectNear = 50.0f;
-	const float kDistanceTextObjectFar = 75.0f;
-	worldTransform3DReticleNear_.translation_.x = posNear.x + spriteDierection.x * kDistanceTextObjectNear;
-	worldTransform3DReticleNear_.translation_.y = posNear.y + spriteDierection.y * kDistanceTextObjectNear;
-	worldTransform3DReticleNear_.translation_.z = posNear.z + spriteDierection.z * kDistanceTextObjectNear;
-	worldTransform3DReticleNear_.UpdateMatrix();
-
-	worldTransform3DReticleFar_.translation_.x = GetReticleWorldPosition().x - GetWorldPosition().x;
-	worldTransform3DReticleFar_.translation_.y = GetReticleWorldPosition().y - GetWorldPosition().y;
-	worldTransform3DReticleFar_.translation_.z = GetReticleWorldPosition().z - GetWorldPosition().z;
-	worldTransform3DReticleFar_.translation_ = Normalize(worldTransform3DReticleFar_.translation_);
-
-	worldTransform3DReticleFar_.translation_.x = GetWorldPosition().x + worldTransform3DReticleFar_.translation_.x * kDistanceTextObjectFar;
-	worldTransform3DReticleFar_.translation_.y = GetWorldPosition().y + worldTransform3DReticleFar_.translation_.y * kDistanceTextObjectFar;
-	worldTransform3DReticleFar_.translation_.z = GetWorldPosition().z + worldTransform3DReticleFar_.translation_.z * kDistanceTextObjectFar;
-	worldTransform3DReticleFar_.UpdateMatrix();
-
-	{
-		Vector3 posReti = {
-			worldTransform3DReticleFar_.matWorld_.m[3][0],
-			worldTransform3DReticleFar_.matWorld_.m[3][1],
-			worldTransform3DReticleFar_.matWorld_.m[3][2],
-		};
-
-		// ビューポート行列
-		Matrix4x4 matView = MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
-
-		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
-		Matrix4x4 matViewProjectionViewport =
-			Multiply(camera_->GetViewprojectionMatrix(), matView);
-
-		// ワールド→スクリーン座標変換(ここで3Dから2dになる)
-		posReti = Transform1(posReti, matViewProjectionViewport);
-
-		// スプライトのレティクルに座標返還
-		reticleFar_->SetPosition(Vector2(posReti.x, posReti.y));
-	}
-
-	nearReticleObj_->SetWorldTransform(worldTransform3DReticleNear_);
-	farReticleObj_->SetWorldTransform(worldTransform3DReticleFar_);
-	nearReticleObj_->Update();
-	farReticleObj_->Update();
+	
 
 	Attack();
 	// 弾更新
@@ -365,7 +291,7 @@ void Player::Aim()
 	Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A);
 	// ゲームパッド状態取得
 	if (Input::GetInstance()->GetJoystickState()) {
-		spritePosition.x += Input::GetInstance()->JoyStickParmRX(12.0f);
+		//spritePosition.x += Input::GetInstance()->JoyStickParmRX(12.0f);
 		spritePosition.y -= Input::GetInstance()->JoyStickParmRY(12.0f);
 	}
 	else {
@@ -384,6 +310,90 @@ void Player::Aim()
 		}
 	}
 	reticleNear_->SetPosition(spritePosition);
+	// ビューポート
+	Matrix4x4 matViewport =
+		MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
+
+	/*--------合成行列の逆行列--------------*/
+		// ビュープロジェクションビューポート合成行列
+	Matrix4x4 matVPV =
+		Multiply(Multiply(camera_->GetViewMatrix(), camera_->GetProjectionMatrix()), matViewport);
+
+	// 合成行列の逆行列を計算する
+	Matrix4x4 matInverseVPV = Inverse(matVPV);
+
+	/////////////////////以下はデバック用//////////////////////////////////
+	Matrix4x4 matInverseVPVReturn = Inverse(matInverseVPV);
+	ImGui::Begin("camera keisan");
+	MatrixScreenPrintf(matVPV, "matvpv");
+	MatrixScreenPrintf(matInverseVPV, "matvpv");
+	MatrixScreenPrintf(matVPV, "matvpv");
+	ImGui::Text("matvpv", matVPV);
+	ImGui::Text("%matinversevpv", matInverseVPV);
+	ImGui::Text("%matinversevpvinverse", matInverseVPVReturn);
+	ImGui::End();
+	////////////////////////////////////////////////////////////////////
+
+	/*--------2点のワールド行列--------------*/
+	// スクリーン座標
+	Vector3 posNear = Vector3(static_cast<float>(reticleNear_->GetPosition().x), (float)reticleNear_->GetPosition().y, 0);
+	Vector3 posFar = Vector3(static_cast<float>(reticleNear_->GetPosition().x), float(reticleNear_->GetPosition().y), 1);
+
+	// スクリーン座標系からワールド座標系へ
+	posNear = Transform1(posNear, matInverseVPV);
+	posFar = Transform1(posFar, matInverseVPV);
+
+	/*---------3Dレティクルの座標系さん-------*/
+	// スティックレイの方向
+	Vector3 spriteDierection;
+	spriteDierection.x = posFar.x - posNear.x;
+	spriteDierection.y = posFar.y - posNear.y;
+	spriteDierection.z = posFar.z - posNear.z;
+	spriteDierection = Normalize(spriteDierection);
+
+	// カメラから照準オブジェクトの距離
+	const float kDistanceTextObjectNear = 50.0f;
+	const float kDistanceTextObjectFar = 75.0f;
+	worldTransform3DReticleNear_.translation_.x = posNear.x + spriteDierection.x * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.translation_.y = posNear.y + spriteDierection.y * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.translation_.z = posNear.z + spriteDierection.z * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.UpdateMatrix();
+
+	worldTransform3DReticleFar_.translation_.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+	worldTransform3DReticleFar_.translation_.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+	worldTransform3DReticleFar_.translation_.z = GetReticleWorldPosition().z - GetWorldPosition().z;
+	worldTransform3DReticleFar_.translation_ = Normalize(worldTransform3DReticleFar_.translation_);
+
+	worldTransform3DReticleFar_.translation_.x = GetWorldPosition().x + worldTransform3DReticleFar_.translation_.x * kDistanceTextObjectFar;
+	worldTransform3DReticleFar_.translation_.y = GetWorldPosition().y + worldTransform3DReticleFar_.translation_.y * kDistanceTextObjectFar;
+	worldTransform3DReticleFar_.translation_.z = GetWorldPosition().z + worldTransform3DReticleFar_.translation_.z * kDistanceTextObjectFar;
+	worldTransform3DReticleFar_.UpdateMatrix();
+
+	{
+		Vector3 posReti = {
+			worldTransform3DReticleFar_.matWorld_.m[3][0],
+			worldTransform3DReticleFar_.matWorld_.m[3][1],
+			worldTransform3DReticleFar_.matWorld_.m[3][2],
+		};
+
+		// ビューポート行列
+		Matrix4x4 matView = MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
+
+		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+		Matrix4x4 matViewProjectionViewport =
+			Multiply(camera_->GetViewprojectionMatrix(), matView);
+
+		// ワールド→スクリーン座標変換(ここで3Dから2dになる)
+		posReti = Transform1(posReti, matViewProjectionViewport);
+
+		// スプライトのレティクルに座標返還
+		reticleFar_->SetPosition(Vector2(posReti.x, posReti.y));
+	}
+
+	nearReticleObj_->SetWorldTransform(worldTransform3DReticleNear_);
+	farReticleObj_->SetWorldTransform(worldTransform3DReticleFar_);
+	nearReticleObj_->Update();
+	farReticleObj_->Update();
 }
 
 
@@ -397,7 +407,8 @@ void Player::Attack()
 			Vector3 position = {
 				worldTransform_.matWorld_.m[3][0],
 				worldTransform_.matWorld_.m[3][1],
-				worldTransform_.matWorld_.m[3][2] };
+				worldTransform_.matWorld_.m[3][2] 
+			};
 
 			// 弾の速度
 			const float kBulletSpeed = 1.0f;
@@ -561,7 +572,7 @@ void Player::Attack()
 			velocity.z *= kBulletSpeed;;
 
 			// 速度ベクトルを自機の向きに合わせて回転させる
-			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 			//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 			PlayerRazer* newBullet = new PlayerRazer();

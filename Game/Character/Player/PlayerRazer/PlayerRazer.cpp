@@ -1,5 +1,6 @@
 #include "PlayerRazer.h"
 #include "TextureManager.h"
+#include <ModelManager.h>
 
 //#include "GameScene.h"
 void PlayerRazer::Init(const Vector3& pos, const Vector3& velocity)
@@ -12,7 +13,7 @@ void PlayerRazer::Init(const Vector3& pos, const Vector3& velocity)
 	dir_.direction = { 0.0f,-1.0f,0.0f };
 
 	texHandle_ = TextureManager::StoreTexture("Resources/playerBullet.png");
-
+	ModelManager::GetInstance()->LoadModel("Resources/box", "box.obj");
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("box.obj");
