@@ -10,6 +10,7 @@ void Ground::Init()
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("ground.obj");
+	//object_->SetMaterial({ {1.0f,1.0f,1.0f,1.0f} , false });
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/ground/ground.png");
 }
 

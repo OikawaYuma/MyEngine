@@ -365,7 +365,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	// デフォルト値はとりあえず以下のようにしておく
 	directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
 	directionalLightData->direction = { 0.0f,-1.0f,0.0f };
-	directionalLightData->intensity = 1.0f;
+	directionalLightData->intensity = 0.8f;
 
 	indexResource_ = Mesh::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice().Get(), sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();

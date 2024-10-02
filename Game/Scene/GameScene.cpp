@@ -35,8 +35,11 @@ void GameScene::Init()
 
 void GameScene::Update()
 {
-	
+#ifdef DEBUG
 	GlobalVariables::GetInstance()->Update();
+#endif // DEBUG
+
+
 	enemys_.remove_if([=](Enemy* bullet) {
 		if (bullet->IsDead()) {
 			destroyCount_++;
@@ -57,6 +60,11 @@ void GameScene::Update()
 	// 現状のクリア条件
 	if (destroyCount_ >= 3) {
 		IScene::SetSceneNo(CLEAR);
+	}
+	// 現状のゲームオーバー条件
+	// PlayerのHpが０になったら
+	if (player_->GetHP() <= 0) {
+		IScene::SetSceneNo(GAMEOVER);
 	}
 	// ロックオン
 	lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());

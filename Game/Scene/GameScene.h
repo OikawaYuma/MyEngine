@@ -11,7 +11,7 @@
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
 #include "Skydome/Skydome.h"
-#include "FollowCamera/FollowCamera.h"
+#include "GameCamera/FollowCamera/FollowCamera.h"
 #include "LockOn/LockOn.h"
 #include "Camera.h"
 

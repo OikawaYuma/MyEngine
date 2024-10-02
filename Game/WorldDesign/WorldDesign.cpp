@@ -4,7 +4,7 @@
 #include "Model.h"
 void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std::string filename)
 {
-	floorTex_ = TextureManager::GetInstance()->StoreTexture("Resources/floor/floor.png");
+	floorTex_ = TextureManager::GetInstance()->StoreTexture("Resources/wood.png");
 	worldTransform_.Initialize();
 	worldTransform_.scale_ = scale;
 	worldTransform_.translation_ = translate;
@@ -12,6 +12,7 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel(filename + ".obj");
+	
 
 
 

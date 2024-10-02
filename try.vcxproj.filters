@@ -213,7 +213,7 @@
     <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
     <ClCompile Include="Game\Ground\Ground.cpp" />
-    <ClCompile Include="Game\FollowCamera\FollowCamera.cpp" />
+    <ClCompile Include="Game\GameCamera\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Game\Skydome\Skydome.cpp" />
     <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Game\Character\Player\PlayerRazer\PlayerRazer.cpp" />
@@ -221,6 +221,7 @@
     <ClCompile Include="Game\LockOn\LockOn.cpp" />
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp" />
     <ClCompile Include="Game\Scene\ResultScene.cpp" />
+    <ClCompile Include="Game\Character\Player\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -422,7 +423,7 @@
     <ClInclude Include="Game\Character\Player\Player.h" />
     <ClInclude Include="Game\Character\base\BaseCharacter.h" />
     <ClInclude Include="Game\Ground\Ground.h" />
-    <ClInclude Include="Game\FollowCamera\FollowCamera.h" />
+    <ClInclude Include="Game\GameCamera\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Game\Skydome\Skydome.h" />
     <ClInclude Include="Game\Character\Player\PlayerBullet\PlayerBullet.h" />
     <ClInclude Include="Game\Character\Player\PlayerRazer\PlayerRazer.h" />
@@ -431,6 +432,7 @@
     <ClInclude Include="Game\WorldDesign\WorldDesign.h" />
     <ClInclude Include="Game\Character\Enemy\EnemyBase.h" />
     <ClInclude Include="Game\Scene\ResultScene.h" />
+    <ClInclude Include="Game\Character\Player\TitlePlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
@@ -483,15 +485,9 @@
     <None Include="Resources\shader\Sprite.hlsli">
       <Filter>Resources\shader</Filter>
     </None>
-    <None Include="Resources\TL.json" />
     <None Include="Resources\shader\Skybox.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\Users\レン\Desktop\lalalalla\新しいフォルダー\1_ゲーム\Resources\title\title.png">
-      <Filter>Resources</Filter>
-    </Image>
   </ItemGroup>
 </Project>

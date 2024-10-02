@@ -11,19 +11,12 @@
 #include "IBullet.h"
 #include "Character/Player/PlayerBullet/PlayerBullet.h"
 #include "Character/Player/PlayerRazer/PlayerRazer.h"
+#include "Character/Player/Player.h"
 #include "Sprite.h"
-class LockOn;
-// ふるまい
-enum class Behavior {
-	kRoot, // 通常状態
-	kAttack, // 攻撃中
-	kDash, // ダッシュ中
-	kJump
-};
-class Player : public Collider
+class TitlePlayer : public Collider
 {
 public:
-	void Init(const Vector3& translate, const std::string filename);
+	void Init();
 	void Update();
 	void Draw(Camera* camera);
 	/// <summary>
@@ -70,7 +63,7 @@ public:
 
 public:
 	const std::list<PlayerBullet*>& Getbullet() const { return bullets_; }
-	const WorldTransform *GetWorldTransform() const  { return &worldTransform_; }
+	const WorldTransform* GetWorldTransform() const { return &worldTransform_; }
 	Behavior GetBehaviorMode() { return behavior_; }
 	Vector3 GetReticleWorldPosition();
 	// Hpを取得
@@ -87,15 +80,8 @@ public: // Collider
 private:
 	Camera* camera_ = nullptr;
 	std::unique_ptr<Object3d> object_;
-	std::unique_ptr<Object3d> nearReticleObj_;
-	std::unique_ptr<Object3d> farReticleObj_;
 
 public: // もともとのゲームで使用変数
-	std::unique_ptr<Sprite> reticleNear_ = nullptr;
-	std::unique_ptr<Sprite> reticleFar_ = nullptr;
-	std::unique_ptr<Sprite> hpUI_ = nullptr;
-	std::unique_ptr<Sprite> hpUIBlue_ = nullptr;
-	std::unique_ptr<Sprite> bulletModeUI = nullptr;
 
 
 	std::list<PlayerBullet*> bullets_;
@@ -104,17 +90,12 @@ public: // もともとのゲームで使用変数
 	//bulletMode
 	uint32_t bulletMode_ = NormalBullet;
 
-	// BulletModeUI
-	uint32_t playerReticleTex_;
-	uint32_t playerHpUITex_;
-	uint32_t normalBulletUITex_;
-	uint32_t hommingBulletUITex_;
-	uint32_t razerBulletUITex_;
+
 	/// <summary>
 	/// //////////////////////////////////////////////////////////////////////
 	/// </summary>
 	float hp_ = 1;
-	Vector3 cameraToPlayerDistance_{ 0.0f, 7.0f, -30.0f };
+
 
 	// 3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3DReticleNear_;
@@ -128,7 +109,7 @@ private: // 貸出
 
 
 	float angletime = 0.0f;
-	float preAngle_ ;
+	float preAngle_;
 	// 富裕ギミックの媒介変数
 	float floatingparam_ = 0.0f;
 
@@ -136,9 +117,9 @@ private: // 貸出
 	const uint16_t period = 120;
 	// 1フレームでのパラメータ加算値
 	const float step = 2.0f * (float)std::numbers::pi * 2.0f / period;
-	
+
 	// 振る舞い
-	Behavior behavior_ = Behavior::kRoot;
+	Behavior behavior_ = Behavior::kJump;
 	// 次の振る舞いリクエスト
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 

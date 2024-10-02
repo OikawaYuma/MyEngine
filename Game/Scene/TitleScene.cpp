@@ -3,21 +3,43 @@
 #include "TextureManager.h"
 #include "Input.h"
 
+
 void TitleScene::Init()
 {
 	sprite = new Sprite();
 	sprite->Init(
-		{0, 0}, { 1280, 720 },
-		{0,0},{1.0f,1.0f,1.0,1.0},
+		{640.0f, 100.0f}, { 512, 128 },
+		{0.5f,0.5f},{1.0f,1.0f,1.0,1.0},
 		"Resources/noise1.png");
-	titleTex_ = TextureManager::StoreTexture("Resources/title.png");
+	titleTex_ = TextureManager::StoreTexture("Resources/slimeTitle.png");
+
+	pushASp_ = new Sprite();
+	pushASp_->Init(
+		{ 640.0f, 620.0f }, { 512, 128 },
+		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
+		"Resources/noise1.png");
+	pushATex_ = TextureManager::StoreTexture("Resources/pushA.png");
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
+	camera_->SetTranslate({0.0f,5.0f,0.0f});
+
+
+	ground_ = std::make_unique<Ground>();
+	ground_->Init();
+	ground_->SetCamera(camera_.get());
+
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Init();
+
+	player_ = std::make_unique<TitlePlayer>();
+	player_->Init();
+
+	/////////////////////////////////////////////////
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_.get());
 	postProcess_->Init();
-	IPostEffectState::SetEffectNo(PostEffectMode::kBloom);
+	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
 }
 
 void TitleScene::Update()
@@ -29,13 +51,17 @@ void TitleScene::Update()
 	else if(Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		IScene::SetSceneNo(STAGE);
 	}
-	
+	skydome_->Update();
+	camera_->Update();
+	player_->Update();
 	postProcess_->Update();
 	
 }
 void TitleScene::Draw()
 {
-	sprite->Draw(titleTex_, { 1.0f,1.0f,1.0,1.0 });
+	skydome_->Draw(camera_.get());
+	ground_->Draw();
+	player_->Draw(camera_.get());
 }
 
 void TitleScene::PostDraw()
@@ -45,6 +71,8 @@ void TitleScene::PostDraw()
 
 void TitleScene::Draw2d()
 {
+	sprite->Draw(titleTex_, {1.0f,1.0f,1.0f,1.0f});
+	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,1.0f });
 }
 
 void TitleScene::Release() {
