@@ -43,6 +43,8 @@ public: // Setter
 	void SetMapTexture(uint32_t maptexture) { mapTexture_ = maptexture; };
 
 	void SetMaterial(const Material& material) { *materialData_ = material; }
+
+	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
 public: // Getter
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
@@ -79,5 +81,10 @@ private:
 	Microsoft::WRL::ComPtr < ID3D12Resource> materialResource;
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
+
+	// 平行光源用
+	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
+	// データを書き込む
+	DirectionalLight* directionalLightData;
 };
 

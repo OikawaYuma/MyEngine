@@ -91,10 +91,40 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	InitFloatingGimmmick();
 	SetCollisonAttribute(0b0001);
 	SetCollisionMask(0b0110);
+
+
+	// 色のデータを変数から読み込み
+	material_.color = { 1.0f,1.0f,1.0f,1.0f };
+	material_.enableLighting = true;
+	material_.uvTransform = MakeIdentity4x4();
+	material_.shininess = 60.0f;
+	object_->SetMaterial(material_);
+	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
+	direLight_.direction = { 0.0f,-1.0f,0.0f };
+	direLight_.intensity = 1.0f;
+	
 }
 
 void Player::Update()
 {
+#ifdef DEBUG
+	
+#endif // DEBUG
+	ImGui::Begin("Light");
+	ImGui::DragFloat4("mColor", &material_.color.x, 0.1f);
+	ImGui::DragFloat("mShin", &material_.shininess, 0.1f);
+
+	ImGui::DragFloat4("dColor", &direLight_.color.x, 0.1f);
+	ImGui::DragFloat3("ddire", &direLight_.direction.x, 0.1f);
+
+	ImGui::DragFloat("dinten", &direLight_.intensity, 0.1f);
+	ImGui::End();
+	direLight_.direction = Normalize(direLight_.direction);
+
+	object_->SetMaterial(material_);
+	object_->SetDirectionLight(direLight_);
+
+
 	hpUIBlue_->SetPosition({ hp_ * 200 + 50.0f,25.0f });
 	hpUIBlue_->SetSize({ hp_ * 200,50.0f });
 	hpUIBlue_->Update();

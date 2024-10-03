@@ -39,7 +39,17 @@ void Object3d::Init()
 	materialData_->color = {1.0f,1.0f,1.0f,1.0f};
 	materialData_->enableLighting = true;
 	materialData_->uvTransform = MakeIdentity4x4();
-	materialData_->shininess = 0.5f;
+	materialData_->shininess = 60.0f;
+
+	directionalLightData = nullptr;
+	directionalLightResource = Mesh::CreateBufferResource(directXCommon->GetDevice(), sizeof(DirectionalLight));
+	// 書き込むためのアドレスを取得
+	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
+
+	// デフォルト値はとりあえず以下のようにしておく
+	directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
+	directionalLightData->direction = { 0.0f,-1.0f,0.0f };
+	directionalLightData->intensity = 1.0f;
 
 }
 
@@ -90,6 +100,7 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 	directXCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
+	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
 	// 3Dモデルが割り当てられていれば描画する
 	if (animationModel_) {
@@ -101,7 +112,7 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 	else if (model_) {
 		wvpData->WVP =  worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
-		model_->Draw(texture, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.00005f },mapTexture_);
+		model_->Draw(texture,mapTexture_);
 	}
 	else if (skybox_) {
 		wvpData->WVP = worldViewProjectionMatrix;

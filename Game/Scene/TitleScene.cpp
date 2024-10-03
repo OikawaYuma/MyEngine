@@ -8,10 +8,10 @@ void TitleScene::Init()
 {
 	sprite = new Sprite();
 	sprite->Init(
-		{640.0f, 100.0f}, { 512, 128 },
+		{640.0f, 120.0f}, { 1280, 312 },
 		{0.5f,0.5f},{1.0f,1.0f,1.0,1.0},
 		"Resources/noise1.png");
-	titleTex_ = TextureManager::StoreTexture("Resources/slimeTitle.png");
+	titleTex_ = TextureManager::StoreTexture("Resources/slimeTitle3.png");
 
 	pushASp_ = new Sprite();
 	pushASp_->Init(

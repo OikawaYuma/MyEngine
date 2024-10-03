@@ -12,6 +12,9 @@
 #include "Character/Player/PlayerBullet/PlayerBullet.h"
 #include "Character/Player/PlayerRazer/PlayerRazer.h"
 #include "Sprite.h"
+
+#include "Material.h"
+#include "DirectionLight.h"
 class LockOn;
 // ふるまい
 enum class Behavior {
@@ -83,7 +86,7 @@ public: // Setter
 public: // Collider
 	void OnCollision(uint32_t attri) override;
 	Vector3 GetWorldPosition() const override;
-
+	
 private:
 	Camera* camera_ = nullptr;
 	std::unique_ptr<Object3d> object_;
@@ -152,5 +155,8 @@ private: // 貸出
 	WorldTransform worldTransform_;
 	// model skin num
 	uint32_t skinTex_;
+
+	Material material_;
+	DirectionalLight direLight_;
 };
 

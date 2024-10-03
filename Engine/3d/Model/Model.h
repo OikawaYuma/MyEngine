@@ -47,7 +47,7 @@ public:
 	~Model();
 	void Initialize(const std::string& directoryPath, const std::string& filePath, const Material& material);
 	void Update();
-	void Draw(uint32_t texture, const DirectionalLight& dire,uint32_t mapTexture);
+	void Draw(uint32_t texture,uint32_t mapTexture);
 
 
 	void SetTextureManager(TextureManager* textureManager) {
@@ -100,15 +100,13 @@ private:
 
 
 	
-	// 平行光源用
-	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
+	
 
 	// IndexBuffer用リソース
 
 	Microsoft::WRL::ComPtr < ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW	indexBufferView_{};
-	// データを書き込む
-	DirectionalLight* directionalLightData;
+	
 
 	
 

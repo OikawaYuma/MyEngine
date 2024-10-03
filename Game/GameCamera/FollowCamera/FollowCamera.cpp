@@ -24,7 +24,7 @@ void FollowCamera::Upadate()
 		cameraRotate.y = std::atan2(sub.x, sub.z);
 	}
 	else if (Input::GetInstance()->GetJoystickState()) {
-		cameraRotate.y += Input::GetInstance()->JoyStickParmRX(0.05f);
+		cameraRotate.y += Input::GetInstance()->JoyStickParmRX(0.03f);
 		
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
 			resetAngleFlag = true;
