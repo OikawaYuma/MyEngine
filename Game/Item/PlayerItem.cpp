@@ -8,7 +8,7 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.scale_.x = 1.0f;
 	worldTransform_.scale_.z = 1.0f;
 	worldTransform_.translation_.x = translate.x;
-	worldTransform_.translation_.y = -translate.y;
+	worldTransform_.translation_.y = translate.y;
 	worldTransform_.translation_.z = translate.z;
 
 

@@ -11,7 +11,7 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	object_->Init();
 	object_->SetModel("player.obj");
 	
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy/pig.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy2.png");
 	worldTransform_.translation_ = translate;
 
 	SetCollisonAttribute(0b010);
@@ -54,7 +54,7 @@ void Enemy::Move()
 	// 移動
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 	// 重量加速度
-	const float kGravityAcceleration = 0.1f;
+	const float kGravityAcceleration = 0.075f;
 	// 加速度ベクトル
 	Vector3 accelerationVector = { 0, -kGravityAcceleration, 0 };
 	// 加速する

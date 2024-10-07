@@ -18,5 +18,8 @@ private:
 	uint32_t floorTex_;
 	WorldTransform worldTransform_;
 	Camera* camera_ = nullptr;
+
+	Material material_;
+	DirectionalLight direLight_;
 };
 

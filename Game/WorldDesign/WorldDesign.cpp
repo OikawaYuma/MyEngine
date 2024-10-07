@@ -13,8 +13,15 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	object_->Init();
 	object_->SetModel(filename + ".obj");
 	
-
-
+	material_.color = { 1.0f,1.0f,1.0f,1.0f };
+	material_.enableLighting = true;
+	material_.uvTransform = MakeIdentity4x4();
+	material_.shininess = 60.0f;
+	object_->SetMaterial(material_);
+	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
+	direLight_.direction = { 0.0f,-1.0f,0.0f };
+	direLight_.intensity = 0.6f;
+	object_->SetDirectionLight(direLight_);
 
 
 }

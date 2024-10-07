@@ -11,7 +11,7 @@ void Skydome::Init()
 	object_->Init();
 	object_->SetMaterial({ {1.0f,1.0f,1.0f,1.0f} , false });
 	object_->SetModel("skydome.obj");
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/skydome.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/skydome2.png");
 }
 
 void Skydome::Update()

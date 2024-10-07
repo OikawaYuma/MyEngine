@@ -11,11 +11,11 @@ void PlayerBullet::Init(const Vector3& pos, const Vector3& velocity)
 	material.shininess = 5.0f;
 	dir_.direction = { 0.0f,-1.0f,0.0f };
 
-	texHandle_ = TextureManager::StoreTexture("Resources/playerBullet.png");
+	texHandle_ = TextureManager::StoreTexture("Resources/player/player.png");
 	
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
-	object_->SetModel("player.obj");
+	object_->SetModel("ball.obj");
 
 	// テクスチャ読み込み
 	//textureHandle_ = TextureManager::StoreTexture("Resources/uvChecker.png");

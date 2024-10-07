@@ -68,10 +68,12 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	worldTransform3DReticleFar_.Initialize();
 
 	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/ball", "ball.obj");
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = translate;
 	worldTransform_.translation_.y = 0.5f;
+
 	
 
 	object_ = std::make_unique<Object3d>();
@@ -118,7 +120,11 @@ void Player::Update()
 	ImGui::DragFloat3("ddire", &direLight_.direction.x, 0.1f);
 
 	ImGui::DragFloat("dinten", &direLight_.intensity, 0.1f);
+	ImGui::Text("playerPosX %f", worldTransform_.translation_.x);
+	ImGui::Text("playerPosZ %f", worldTransform_.translation_.z);
 	ImGui::End();
+
+
 	direLight_.direction = Normalize(direLight_.direction);
 
 	object_->SetMaterial(material_);
@@ -306,6 +312,16 @@ void Player::Move()
 		// Y軸周り角度（Θy）
 		preAngle_ = std::atan2(velo_.x, velo_.z);
 		
+	}
+
+	if (worldTransform_.translation_.x >= 30.0f) {
+		worldTransform_.translation_.x = 30.0f;
+	}
+	else if (worldTransform_.translation_.x <= -30.0f) {
+		worldTransform_.translation_.x = -30.0f;
+	}
+	else if (worldTransform_.translation_.z <= 65.0f) {
+		worldTransform_.translation_.z = 65.0f;
 	}
 
 	angletime += 0.05f;
