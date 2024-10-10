@@ -72,7 +72,7 @@ void TitleScene::Update()
 			threPorM_ *= -1.0f;
 			if (GamePlayFlag_) {
 				IScene::SetSceneNo(STAGE);
-				Audio::SoundStopWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_);
+				Audio::SoundStopWave(titleBGM_);
 			}
 		}
 		
