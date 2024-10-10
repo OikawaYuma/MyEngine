@@ -19,7 +19,7 @@ private:
 	WorldTransform worldTransform_;
 	Camera* camera_ = nullptr;
 
-	Material material_;
-	DirectionalLight direLight_;
+	Material material_{};
+	DirectionalLight direLight_{};
 };
 

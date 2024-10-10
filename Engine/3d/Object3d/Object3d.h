@@ -52,7 +52,6 @@ public: // Getter
 private:
 	Object3dCommon* objectCommon_ = nullptr;
 
-	HRESULT hr;
 	// RootSignature作成
 	Model* model_ = nullptr;
 	AnimationModel* animationModel_ = nullptr;
@@ -68,12 +67,12 @@ private:
 
 	/*カメラ用*/
 	Microsoft::WRL::ComPtr < ID3D12Resource> cameraForGPUResource_;
-	CameraForGPU* cameraForGPUData_;
+	CameraForGPU* cameraForGPUData_ = nullptr;
 	// データを書き込む
 	WorldTransform worldTransform_;
 
 	// 環境マップ用Texture
-	uint32_t mapTexture_;
+	uint32_t mapTexture_ = 1;
 
 
 	// マテリアルをきれいに
@@ -85,6 +84,6 @@ private:
 	// 平行光源用
 	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
 	// データを書き込む
-	DirectionalLight* directionalLightData;
+	DirectionalLight* directionalLightData = nullptr;
 };
 

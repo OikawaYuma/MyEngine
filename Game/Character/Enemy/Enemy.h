@@ -24,7 +24,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// model skin num
-	uint32_t skinTex_;
+	uint32_t skinTex_ = 0;
 	bool isDead_ = false;
 	int radius_ = 1;
 	Player* player_ = nullptr;

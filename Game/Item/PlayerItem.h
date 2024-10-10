@@ -31,7 +31,7 @@ private:
 	std::unique_ptr<Object3d> object_;
 
 	bool isDead_ = false;
-	uint32_t floorTex_;
+	uint32_t floorTex_ = 0;
 	WorldTransform worldTransform_;
 
 

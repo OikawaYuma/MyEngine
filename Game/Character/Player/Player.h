@@ -131,11 +131,11 @@ public: // もともとのゲームで使用変数
 	uint32_t bulletMode_ = NormalBullet;
 
 	// BulletModeUI
-	uint32_t playerReticleTex_;
-	uint32_t playerHpUITex_;
-	uint32_t normalBulletUITex_;
-	uint32_t hommingBulletUITex_;
-	uint32_t razerBulletUITex_;
+	uint32_t playerReticleTex_ = 0;
+	uint32_t playerHpUITex_ = 0;
+	uint32_t normalBulletUITex_ = 0;
+	uint32_t hommingBulletUITex_ = 0;
+	uint32_t razerBulletUITex_ = 0;
 	/// <summary>
 	/// //////////////////////////////////////////////////////////////////////
 	/// </summary>
@@ -176,11 +176,11 @@ private: // 貸出
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// model skin num
-	uint32_t skinTex_;
+	uint32_t skinTex_ = 0;
 
 
-	Material material_;
-	DirectionalLight direLight_;
+	Material material_{};
+	DirectionalLight direLight_{};
 
 	//　敵と衝突した後の再衝突用タイマー
 	bool isEnemyHit_ = false;

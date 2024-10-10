@@ -18,7 +18,7 @@ public: // Getter
 	uint32_t GetType() { return cameraType_; }
 private:
 	std::unique_ptr<Camera> camera_;
-	uint32_t cameraTimer_;
+	uint32_t cameraTimer_ = 0;
 	uint32_t cameraType_ = CAMERA1;
 	
 };

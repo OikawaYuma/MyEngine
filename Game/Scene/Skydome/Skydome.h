@@ -16,6 +16,6 @@ private:
 	Camera* camera_ = nullptr;
 	WorldTransform worldTransform_;
 	std::unique_ptr<Object3d> object_;
-	uint32_t skinTex_;
+	uint32_t skinTex_ = 0;
 };
 
