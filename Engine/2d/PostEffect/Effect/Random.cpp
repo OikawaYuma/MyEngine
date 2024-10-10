@@ -90,7 +90,7 @@ PSOProperty Random::CreatePipelineStateObject()
 void Random::CommandRootParameter(PostProcess* postProcess)
 {
 	DirectXCommon* sDirectXCommon = DirectXCommon::GetInstance();
-	Camera* camera = postProcess->GetCamera();
+	//Camera* camera = postProcess->GetCamera();
 	depthOutlinelData_->random = postProcess->GetRandom();
 	// マテリアルCBufferの場所を設定
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。

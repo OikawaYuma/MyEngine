@@ -27,9 +27,7 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 	}
 	// モデルの生成とファイル読み込み、初期化
 	std::unique_ptr<Model> model = std::make_unique<Model>();
-	model->Initialize(directoryPath, filePath,
-		{{ 1.0f,1.0f,1.0f,1.0 },true
-});
+	model->Initialize(directoryPath, filePath);
 	models_.insert(std::make_pair(filePath, std::move(model)));
 }
 

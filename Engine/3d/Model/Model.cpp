@@ -324,8 +324,7 @@ void Model::ApplyAnimation(SkeletonData& skeleton, const AnimationData& animatio
 }
 ;
 
-void Model::Initialize(const std::string& directoryPath, const std::string& filename, const Material& material) {
-	WinAPI* sWinAPI = WinAPI::GetInstance();
+void Model::Initialize(const std::string& directoryPath, const std::string& filename) {
 	directXCommon_ = DirectXCommon::GetInstance();
 
 	// モデル読み込み
@@ -381,7 +380,7 @@ void Model::Update() {
 };
 
 
-void Model::Draw(uint32_t texture,uint32_t mapTexture) {
+void Model::Draw(uint32_t texture) {
 
 	pso_ = PSO::GatInstance();
 	vbvs[0] = vertexBufferView_;

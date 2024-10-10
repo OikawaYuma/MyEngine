@@ -40,7 +40,7 @@ void TitleScene::Init()
 	player_ = std::make_unique<Player>();
 	player_->SetCamera(camera_->GetCamera());
 	
-	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), ground_.get(), enemys_, items_, worldDesigns_);
+	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), enemys_, items_, worldDesigns_);
 	player_->TitleInit();
 	/////////////////////////////////////////////////
 	postProcess_ = new PostProcess();

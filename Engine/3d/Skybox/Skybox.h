@@ -35,7 +35,6 @@ private:
 	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
 
 	// IndexBuffer用リソース
-	uint32_t* indexDataSprite;
 	Microsoft::WRL::ComPtr < ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW	indexBufferView_{};
 	// データを書き込む

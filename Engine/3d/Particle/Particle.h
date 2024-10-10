@@ -98,15 +98,9 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
 
-	Particle* particle = nullptr;
+	Particle* particle_ = nullptr;
 
 
-	//D3D12_DESCRIPTOR_RANGE descriptorRange_[1] = {};
-
-	// RootParmeter作成。複数でっていできるので配列。今回は結果１つだけなので長さ1の配列
-	//D3D12_ROOT_PARAMETER rootParamerters[1] = {};
-
-	uint32_t* indexDataSprite;
 	Microsoft::WRL::ComPtr < ID3D12Resource> indexResourceSprite;
 	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite{};
 

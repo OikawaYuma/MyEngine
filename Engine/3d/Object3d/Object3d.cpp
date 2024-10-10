@@ -3,8 +3,6 @@
 #include "Object3dCommon.h"
 void Object3d::Init()
 {
-
-	WinAPI* sWinAPI = WinAPI::GetInstance();
 	DirectXCommon* directXCommon = DirectXCommon::GetInstance();
 	worldTransform_.Initialize();
 
@@ -107,12 +105,12 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 		wvpData->WVP = worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
 		animationModel_->Draw(texture, { { 1.0f,1.0f,1.0f,1.0f },true
-			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.5f },mapTexture_);
+			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.5f });
 	}
 	else if (model_) {
 		wvpData->WVP =  worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
-		model_->Draw(texture,mapTexture_);
+		model_->Draw(texture);
 	}
 	else if (skybox_) {
 		wvpData->WVP = worldViewProjectionMatrix;

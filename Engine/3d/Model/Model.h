@@ -45,9 +45,9 @@ public:
 	ModelData GetModelData() { return modelData_; }
 	Model();
 	~Model();
-	void Initialize(const std::string& directoryPath, const std::string& filePath, const Material& material);
+	void Initialize(const std::string& directoryPath, const std::string& filePath);
 	void Update();
-	void Draw(uint32_t texture,uint32_t mapTexture);
+	void Draw(uint32_t texture);
 
 
 	void SetTextureManager(TextureManager* textureManager) {
@@ -117,6 +117,6 @@ private:
 
 	Matrix4x4 aniMatrix_;
 	Matrix4x4 skeMatrix_;
-	float animationTime = 0.0f;
+	float animationTime_ = 0.0f;
 };
 

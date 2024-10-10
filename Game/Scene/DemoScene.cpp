@@ -85,7 +85,7 @@ void DemoScene::Update()
 	if (Input::GetInstance()->GetJoystickState()) {
 	}
 
-	short leftStickX = joyState.Gamepad.sThumbLX;
+	//short leftStickX = joyState.Gamepad.sThumbLX;
 
 
 

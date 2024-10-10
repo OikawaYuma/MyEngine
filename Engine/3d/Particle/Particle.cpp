@@ -136,7 +136,7 @@ void Particle::Draw(Emitter emitter, const Vector3& worldTransform, uint32_t tex
 
 	emitter_.frequencyTime += kDeltaTime;// 時刻を進める
 	if (emitter_.frequency <= emitter_.frequencyTime) {// 頻度より大きいなら発生
-		particles_.splice(particles_.end(), particle->Emission(emitter_, randomEngine, randRange));
+		particles_.splice(particles_.end(), particle_->Emission(emitter_, randomEngine, randRange));
 		emitter_.frequencyTime -= emitter_.frequency;// 余計に過ぎた時間も加味して頻度計算する
 
 	}

@@ -659,7 +659,7 @@ float Length(const Vector3& v) {
 
 bool IsCollisionAABB(const Vector3& AABBPos, const Vector3& AABBMin, const Vector3& AABBMax, const Vector3& spherePos,const float& radius) {
 	bool g = false;
-
+	AABBPos;
 	// 最近接点を求める
 	Vector3 closestPoint{
 		std::clamp(spherePos.x,AABBMin.x ,AABBMax.x),

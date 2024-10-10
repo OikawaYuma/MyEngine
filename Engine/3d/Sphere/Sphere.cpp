@@ -282,7 +282,7 @@ D3D12_VERTEX_BUFFER_VIEW  Sphere::CreateBufferView() {
 	return view;
 };
 
-void Sphere::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportmatrix) {
+void Sphere::DrawSphere() {
 	const uint32_t kSubdivision = 16;
 	float pi = 3.1415f;
 	const float kLonEvery = pi * 2.0f / (float)kSubdivision;  // 軽度分割1つ分の角度
@@ -294,7 +294,7 @@ void Sphere::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMat
 		float lat = -pi / 2.0f + kLatEvery * latIndex;// 現在の緯度
 		// 緯度の方向に分割 0 ~ 2π
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
-			uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
+			//uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
 			float lon = lonIndex * kLonEvery;// 現在の緯度
 			
 			const float latD = pi / kSubdivision;

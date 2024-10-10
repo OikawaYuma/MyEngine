@@ -124,9 +124,11 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		// 弾と弾の考交差判定
 		// 衝突フィルタリング
 
-		float p2b = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+		/*float p2b = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
 			(posB.z - posA.z) * (posB.z - posA.z);
-		float r2r = (radiusA + radiusB) * (radiusA + radiusB);
+		float r2r = (radiusA + radiusB) * (radiusA + radiusB);*/
+
+
 		/*  if (((colliderA->GetCollisonAttribute() & colliderB->GetCollisionMask())!=0) ||
 			  ((colliderB->GetCollisonAttribute() & colliderA->GetCollisionMask()))!=0) {
 		  return;
