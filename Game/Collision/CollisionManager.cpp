@@ -14,7 +14,7 @@ void CollisionManager::CheckAllCollision() {
 	const std::list<PlayerBullet*>& playerBullets = player_->Getbullet();
 
 	//敵弾リストの取得
-	const std::list<Enemy*>& enemy = gameScene_->Getbullet();
+	const std::list<std::unique_ptr<Enemy>>& enemy = gameScene_->Getbullet();
 
 	const std::list<PlayerItem*>& items = gameScene_->GetItems();
 
@@ -28,8 +28,14 @@ void CollisionManager::CheckAllCollision() {
 	for (PlayerBullet* bullet : playerBullets) {
 		colliders_.push_back(bullet);
 	}
-	for (Enemy* bullet : enemy) {
-		colliders_.push_back(bullet);
+	for (const auto& bullet : enemy) {
+		colliders_.push_back(bullet.get());
+	}
+	for (auto obstacles = enemy.begin();
+		obstacles != enemy.end(); ++obstacles) {
+
+		colliders_.push_back((*obstacles).get()); // enemyをリストに登録
+
 	}
 	for (PlayerItem* bullet : items) {
 		colliders_.push_back(bullet);
@@ -53,7 +59,8 @@ void CollisionManager::CheckAllCollision() {
 
 void CollisionManager::PushClider(Collider* collider)
 {
-	//colliders_.push_back(collider);
+	collider;
+	///colliders_.push_back(collider);
 }
 
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {

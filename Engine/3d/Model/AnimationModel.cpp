@@ -288,7 +288,7 @@ void AnimationModel::Initialize(const std::string& directoryPath, const std::str
 	animation_ = LoadAnimationFile(directoryPath, filename);
 	skeleton_ = Skeleton::CreateSkeleton(modelData_.rootNode);
 	skinCluster_ = Skeleton::CreateSkinCluster(directXCommon_->GetDevice(),
-		skeleton_, modelData_, SRVManager::GetInstance()->GetDescriptorHeap(), SRVManager::GetInstance()->descriptorSize_);
+		skeleton_, modelData_, SRVManager::GetInstance()->descriptorSize_);
 	// 頂点リソースを作る
 	vertexResource_ = Mesh::CreateBufferResource(directXCommon_->GetDevice(), sizeof(VertexData) * modelData_.vertices.size());
 

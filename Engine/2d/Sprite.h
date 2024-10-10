@@ -62,6 +62,7 @@ public:
 	void SetTextureSize(const Vector2& textureSize) {
 		this->textureSize_ = textureSize;
 	}
+	void SetColor(const Vector4& color) { materialData->color = color; }
 	D3D12_VERTEX_BUFFER_VIEW CreateBufferView();
 private:
 	PSOSprite* pso_ = nullptr;

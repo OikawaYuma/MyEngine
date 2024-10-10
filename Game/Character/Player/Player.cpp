@@ -96,7 +96,8 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 
 	// 色のデータを変数から読み込み
-	material_.color = { 1.0f,1.0f,1.0f,1.0f };
+	coolTimeAlpha_ = 1.0f;
+	material_.color = { 1.0f,1.0f,1.0f,coolTimeAlpha_ };
 	material_.enableLighting = true;
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
@@ -134,6 +135,9 @@ void Player::Update()
 	hpUIBlue_->SetPosition({ hp_ * 200 + 50.0f,25.0f });
 	hpUIBlue_->SetSize({ hp_ * 200,50.0f });
 	hpUIBlue_->Update();
+
+	HitEnemyCoolTime();
+
 	//ApplyGlobalVariables();
 	if (behaviorRequest_) {
 		// 振る舞いを変更する
@@ -292,6 +296,170 @@ void Player::DrawUI()
 		bulletModeUI->Draw(razerBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	}
+}
+
+void Player::TitleInit()
+{
+#ifdef DEBUG
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	// グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->AddItme(groupName, "main Translation", worldTransform_.translation_);
+#endif // DEBUG
+
+
+
+
+	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
+
+	worldTransform_.Initialize();
+	worldTransform_.translation_ = { 0.0f,1.0f,100.0f };
+	worldTransform_.translation_.y = 0.5f;
+
+
+	object_ = std::make_unique<Object3d>();
+	object_->Init();
+	object_->SetModel("player.obj");
+
+
+	//BehaviorRootJumpInit();
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
+	InitFloatingGimmmick();
+	SetCollisonAttribute(0b0001);
+	SetCollisionMask(0b0110);
+	behaviorRequest_ = Behavior::kTitlePlayer;
+}
+
+void Player::TitleUpdate()
+{
+	//ApplyGlobalVariables();
+	if (behaviorRequest_) {
+		// 振る舞いを変更する
+		behavior_ = behaviorRequest_.value();
+		// 各振る舞いごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInit();
+
+			break;
+		case Behavior::kAttack:
+			BehaviorRootAttackInit();
+			break;
+		case Behavior::kDash:
+			BehaviorRootDashInit();
+			break;
+		case Behavior::kJump:
+			BehaviorRootJumpInit();
+			break;
+		case Behavior::kTitlePlayer:
+			BehaviorRootJumpInit();
+			break;
+		}
+		
+		// 振る舞いリクエストをリセット
+		behaviorRequest_ = std::nullopt;
+	}
+	// HPを元に基準となる大きさを決定する
+	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	//SetRadius(hp_);
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+	razers_.remove_if([](PlayerRazer* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+
+
+	//Aim();
+	
+	switch (behavior_) {
+		// 通常行動
+	case Behavior::kRoot:
+
+	default:
+		BehaviorRootUpdate();
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X)) {
+			behaviorRequest_ = Behavior::kAttack;
+		}
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
+			behaviorRequest_ = Behavior::kDash;
+		}
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_B)) {
+			behaviorRequest_ = Behavior::kJump;
+		}
+		break;
+	case Behavior::kAttack:
+		BehaviorRootAttackUpdate();
+		break;
+	case Behavior::kDash:
+		BehaviorRootDashUpdate();
+		break;
+	case Behavior::kJump:
+		BehaviorRootJumpUpdate();
+		break;
+	case Behavior::kTitlePlayer:
+		BehaviorRootTitleJumpUpdate();
+		break;
+	}
+
+
+
+	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+		switch (bulletMode_) {
+		case BulletMode::NormalBullet:
+			bulletMode_ = HommingBullet;
+			break;
+		case BulletMode::HommingBullet:
+			bulletMode_ = LaserBeam;
+			break;
+		case BulletMode::LaserBeam:
+			bulletMode_ = NormalBullet;
+			break;
+		}
+	}
+
+	else if (Input::GetInstance()->TriggerKey(DIK_K)) {
+
+		switch (bulletMode_) {
+		case BulletMode::NormalBullet:
+			bulletMode_ = HommingBullet;
+			break;
+		case BulletMode::HommingBullet:
+			bulletMode_ = LaserBeam;
+			break;
+		case BulletMode::LaserBeam:
+			bulletMode_ = NormalBullet;
+			break;
+		}
+	}
+
+
+
+
+	//BehaviorRootJumpUpdate();
+	worldTransform_.translation_.z += 0.25f;
+	Attack();
+	// 弾更新
+	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
+		(*itr)->Update();
+	}
+	// 弾更新
+	for (std::list<PlayerRazer*>::iterator itr = razers_.begin(); itr != razers_.end(); itr++) {
+		(*itr)->Update();
+	}
+	worldTransform_.UpdateMatrix();
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
 }
 
 void Player::Move()
@@ -467,7 +635,7 @@ void Player::Attack()
 			};
 
 			// 弾の速度
-			const float kBulletSpeed = 1.0f;
+			const float kBulletSpeed = 3.0f;
 			Vector3 velocity(0, 0, kBulletSpeed);
 			// 自機から照準オブジェクトへのベクトル
 			velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
@@ -686,6 +854,38 @@ void Player::UpdateFloatingGimmmick()
 	worldTransform_.translation_.y = worldTransform_.translation_.y  + std::sin(floatingparam_) * floathingWidth;
 }
 
+void Player::HitEnemyCoolTime()
+{
+	if (isEnemyHit_) {
+		coolTimer_++;
+		// 透明度増減
+		coolTimeAlpha_ -= coolTimeAlphaPorM_;
+		if (coolTimeAlpha_ <= 0.0f) {
+			coolTimeAlphaPorM_ *= -1.0f;
+		}
+		else if (coolTimeAlpha_ >= 1.0f) {
+			coolTimeAlphaPorM_ *= -1.0f;
+		}
+
+
+		if (coolTimer_ >= 120) {
+			isEnemyHit_ = false;
+			coolTimer_ = 0;
+			coolTimeAlpha_ = 1.0f;
+		}
+		material_.color = { 1.0f, 1.0f, 1.0f, coolTimeAlpha_ };
+	}
+
+}
+
+void Player::HitEnemySlime()
+{
+	if (!isEnemyHit_) {
+		hp_ -= 0.1f;
+		isEnemyHit_ = true;
+	}
+}
+
 void Player::BehaviorRootUpdate()
 {
 	Move();
@@ -763,6 +963,25 @@ void Player::BehaviorRootJumpUpdate()
 	}
 }
 
+void Player::BehaviorRootTitleJumpUpdate()
+{
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velo_);
+	// 重量加速度
+	const float kGravityAcceleration = 0.1f;
+	// 加速度ベクトル
+	Vector3 accelerationVector = { 0, -kGravityAcceleration, 0 };
+	// 加速する
+	velo_ = Add(velo_, accelerationVector);
+
+	// 着地
+	if (worldTransform_.translation_.y <= 0.5f * hp_) {
+		worldTransform_.translation_.y = 0.5f * hp_;
+		// タイトル用なので無限にジャンプする
+		BehaviorRootJumpInit();
+	}
+}
+
 void Player::ApplyGlobalVariables()
 {
 #ifdef DEBUG
@@ -788,6 +1007,9 @@ Vector3 Player::GetReticleWorldPosition()
 
 void Player::OnCollision(uint32_t attri)
 {
+	if (attri) {
+
+	}
 }
 
 Vector3 Player::GetWorldPosition() const

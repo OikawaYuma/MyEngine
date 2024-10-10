@@ -40,10 +40,9 @@ void GameScene::Update()
 #endif // DEBUG
 
 
-	enemys_.remove_if([=](Enemy* bullet) {
+	enemys_.remove_if([=](std::unique_ptr<Enemy>& bullet) {
 		if (bullet->IsDead()) {
 			destroyCount_++;
-			delete bullet;
 			return true;
 		}
 		return false;
@@ -73,7 +72,7 @@ void GameScene::Update()
 	ground_->Update();
 	skydome_->Update();
 	// エネミーの弾発射処理
-	for (std::list<Enemy*>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->Update();
 		//// enemy->Fire();
 		//if ((*itr)->GetFireTimer() >= (*itr)->kFireInterval) {
@@ -123,7 +122,7 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	
-	for (std::list<Enemy*>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
 	}
 

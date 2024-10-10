@@ -282,7 +282,7 @@ D3D12_VERTEX_BUFFER_VIEW  Sphere::CreateBufferView() {
 	return view;
 };
 
-void Sphere::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportmatrix, int color) {
+void Sphere::DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportmatrix) {
 	const uint32_t kSubdivision = 16;
 	float pi = 3.1415f;
 	const float kLonEvery = pi * 2.0f / (float)kSubdivision;  // 軽度分割1つ分の角度

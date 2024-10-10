@@ -10,7 +10,7 @@
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
 
-void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, Ground* floor, std::list<Enemy*>& enemys, std::list<PlayerItem*>& items, std::list<WorldDesign*>& worldDesigns)
+void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, Ground* floor, std::list<std::unique_ptr<Enemy>>& enemys, std::list<PlayerItem*>& items, std::list<WorldDesign*>& worldDesigns)
 {
 	// 連結してフルパスを得る
 	const std::string fullpath = kDefaultBaseDirectory + "/" + fileName + ".json";
@@ -130,11 +130,11 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			//floor->Init(objectData.transform.scale, objectData.transform.translate);
 		}
 		else if (objectData.filename.compare("enemy") == 0) {
-			Enemy* enemy = new Enemy();
+			std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
 			//enemy->SetPlayer(player);
 			enemy->Init(objectData.transform.translate, objectData.filename);
 			enemy->SetPlayer(player);
-			enemys.push_back(enemy);
+			enemys.push_back(std::move(enemy));
 		}
 
 		else if (objectData.filename.compare("item") == 0) {
@@ -153,6 +153,7 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 	}
 
 }
+
 
 
 void Loder::LoadJsonFileBase(const std::string kDefaultBaseDirectory, const std::string fileName, std::vector<Object3d*>& objects, Camera* camera)

@@ -165,7 +165,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GaussianBlur.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GrayScale.cpp" />
-    <ClCompile Include="Game\Skydome\Skydome.cpp" />
+    <ClCompile Include="Game\Scene\Skydome\Skydome.cpp" />
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\IPostEffectState.cpp" />
     <ClCompile Include="Lib\utility\function.cpp" />
@@ -196,7 +196,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Skybox\Skybox.cpp" />
     <ClCompile Include="Engine\Interface\PSO\PSOSkybox.cpp" />
     <ClCompile Include="Game\Scene\ResultScene.cpp" />
-    <ClCompile Include="Game\Character\Player\TitlePlayer.cpp" />
+    <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
@@ -227,7 +227,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Model\AnimationModel.h" />
     <ClInclude Include="Engine\3d\Skeleton\Skeleton.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\FullScreen.h" />
-    <ClInclude Include="Game\Skydome\Skydome.h" />
+    <ClInclude Include="Game\Scene\Skydome\Skydome.h" />
     <ClInclude Include="Game\Utilty\Loder.h" />
     <ClInclude Include="Engine\Interface\PSO\PSOAnimationModel.h" />
     <ClInclude Include="Game\Scene\DemoScene.h" />
@@ -293,7 +293,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Skybox\Skybox.h" />
     <ClInclude Include="Engine\Interface\PSO\PSOSkybox.h" />
     <ClInclude Include="Game\Scene\ResultScene.h" />
-    <ClInclude Include="Game\Character\Player\TitlePlayer.h" />
+    <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

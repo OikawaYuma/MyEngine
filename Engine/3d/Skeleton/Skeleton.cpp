@@ -39,7 +39,7 @@ SkeletonData Skeleton::CreateSkeleton(const Node& rootNode)
 }
 
 SkinCluster Skeleton::CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const SkeletonData& skeleton,
-	const ModelData& modelData, const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize)
+	const ModelData& modelData,  uint32_t descriptorSize)
 {
 	SkinCluster skinCluster;
 	// particle用のResourceを確保

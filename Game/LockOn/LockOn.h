@@ -8,10 +8,10 @@ class LockOn
 {
 public:
 	void Init();
-	void Update(const std::list<Enemy*>& enemies,Camera* camera,Player * player);
+	void Update(const std::list<std::unique_ptr<Enemy>>& enemies,Camera* camera,Player * player);
 	void Draw();
 
-	const Enemy* GetTarget() { return target_; }
+	const Enemy* GetTarget() { return target_.get(); }
 
 	Vector3 GetTargetPosition() const;
 
@@ -24,7 +24,7 @@ private:
 	// ロックオンマーク用スプライト
 	std::unique_ptr<Sprite> lockOnMark_;
 	// ロックオン対象
-	const Enemy* target_ = nullptr;
+	const std::unique_ptr<Enemy> target_ = nullptr;
 	// 最小距離
 	float minDistance_ = 10.0f;
 	// 最大距離

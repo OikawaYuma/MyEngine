@@ -2,66 +2,193 @@
 #include "ImGuiCommon.h"
 #include "TextureManager.h"
 #include "Input.h"
-
-
+#include "Loder.h"
+#include "Audio.h"
 void TitleScene::Init()
 {
+	titleSpritePos_ = { 640.0f, 120.0f };
+	titleSpriteVelo_ = 0.75f;
 	sprite = new Sprite();
 	sprite->Init(
-		{640.0f, 120.0f}, { 1280, 312 },
+		titleSpritePos_, { 700, 280 },
 		{0.5f,0.5f},{1.0f,1.0f,1.0,1.0},
 		"Resources/noise1.png");
 	titleTex_ = TextureManager::StoreTexture("Resources/slimeTitle3.png");
 
+
+	pushSpriteAlpha_ = 1.0f;
+	pushSpriteAlphaPorM_ = 0.05f;
 	pushASp_ = new Sprite();
 	pushASp_->Init(
 		{ 640.0f, 620.0f }, { 512, 128 },
-		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
+		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,pushSpriteAlpha_ },
 		"Resources/noise1.png");
 	pushATex_ = TextureManager::StoreTexture("Resources/pushA.png");
 
-	camera_ = std::make_unique<Camera>();
-	camera_->Initialize();
-	camera_->SetTranslate({0.0f,5.0f,0.0f});
+	camera_ = std::make_unique<TitleCamera>();
+	camera_->Init();
+	
 
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
-	ground_->SetCamera(camera_.get());
+	ground_->SetCamera(camera_->GetCamera());
 
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 
-	player_ = std::make_unique<TitlePlayer>();
-	player_->Init();
-
+	player_ = std::make_unique<Player>();
+	player_->SetCamera(camera_->GetCamera());
+	
+	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), ground_.get(), enemys_, items_, worldDesigns_);
+	player_->TitleInit();
 	/////////////////////////////////////////////////
 	postProcess_ = new PostProcess();
-	postProcess_->SetCamera(camera_.get());
+	postProcess_->SetCamera(camera_->GetCamera());
 	postProcess_->Init();
-	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
+	thre_ = 0.0f;
+	threPorM_ = 0.025f;
+	threFlag_ = false;
+	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+
+	titleBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/title.wav");
+	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_, true);
+
+	// シーン遷移Flag
+	GamePlayFlag_ = false;
 }
 
 void TitleScene::Update()
 {
+	if (camera_->GetTimer() >= 200) {
+		threFlag_ = true;
+	}
+	if (camera_->GetTimer() >= 239) {
+		player_->SetTranslate({ 0.0f, 0.5f, 100.0f });
+	}
+	
+	if (threFlag_) {
+		if (thre_ >= 1.2f) {
+			threPorM_ *= -1.0f;
+			if (GamePlayFlag_) {
+				IScene::SetSceneNo(STAGE);
+				Audio::SoundStopWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_);
+			}
+		}
+		
+		thre_ += threPorM_;
+		if (thre_ <= 0.0f) {
+			threFlag_ = false;
+			threPorM_ *= -1.0f;
+		}
+		
+	}
+	
+	/*ImGui::Begin("thre");
+	ImGui::DragFloat("ss",&thre_,0.01f);
+	ImGui::End();*/
+	postProcess_->SetThreshold(thre_);
 	if (Input::GetInstance()->GetJoystickState()) {}
 	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A)) {
-		IScene::SetSceneNo(STAGE);
+		GamePlayFlag_ = true;
+		threPorM_ = 0.025f;
+		threFlag_ = true;
 	}
 	else if(Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		IScene::SetSceneNo(STAGE);
+		GamePlayFlag_ = true;
+		threPorM_ = 0.025f;
+		threFlag_ = true;
+
 	}
+	
+	if (titleSpritePos_.y >= 130.0f) {
+		titleSpriteVelo_ *= -1.0f;
+	}
+	else if(titleSpritePos_.y <= 110.0f)
+	{
+		titleSpriteVelo_ *= -1.0f;
+	}
+	titleSpritePos_.y += titleSpriteVelo_;
+	sprite->SetPosition(titleSpritePos_);
+	sprite->Update();
+
+	if (pushSpriteAlpha_ >= 1.0f) {
+		pushSpriteAlphaPorM_ *= -1.0f;
+	}
+	else if (pushSpriteAlpha_ <= 0.0f)
+	{
+		pushSpriteAlphaPorM_ *= -1.0f;
+	}
+	pushSpriteAlpha_ += pushSpriteAlphaPorM_;
+	sprite->SetColor({1.0f,1.0f,1.0f,pushSpriteAlpha_});
+	pushASp_->Update();
 	skydome_->Update();
 	camera_->Update();
-	player_->Update();
+	player_->TitleUpdate();
+	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		(*itr)->Update();
+		//// enemy->Fire();
+		//if ((*itr)->GetFireTimer() >= (*itr)->kFireInterval) {
+		//	assert(player_);
+		//	// 弾の速度
+		//	const float kBulletSpeed = 1.0f;
+
+		//	Vector3 start = (*itr)->GetWorldPosition();
+		//	Vector3 end = player_->GetWorldPosition();
+
+		//	Vector3 diffVector;
+		//	diffVector.x = end.x - start.x;
+		//	diffVector.y = end.y - start.y;
+		//	diffVector.z = end.z - start.z;
+
+		//	diffVector = Normalize(diffVector);
+		//	diffVector.x *= kBulletSpeed;
+		//	diffVector.y *= kBulletSpeed;
+		//	diffVector.z *= kBulletSpeed;
+
+		//	Vector3 velocity(diffVector.x, diffVector.y, diffVector.z);
+
+		//	// 速度ベクトルを自機の向きに合わせて回転させる
+		//	velocity = TransformNormal(velocity, (*itr)->GetWorldTransform().matWorld_);
+
+		//	// 弾を生成し、初期化
+		//	EnemyBullet* newBullet = new EnemyBullet();
+		//	newBullet->Init((*itr)->GetWorldTransform().translation_, velocity);
+		//	newBullet->SetPlayer(player_.get());
+		//	// 弾を登録する
+		//	enemyBullets_.push_back(newBullet);
+		//	(*itr)->SetFireTimer(0);
+		//}
+	}
+	for (std::list<PlayerItem*>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+		(*itr)->Update();
+	}
+
+
+	for (std::list<WorldDesign*>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+		(*itr)->Update();
+	}
+
 	postProcess_->Update();
 	
 }
 void TitleScene::Draw()
 {
-	skydome_->Draw(camera_.get());
+	skydome_->Draw(camera_->GetCamera());
+	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		(*itr)->Draw(camera_->GetCamera());
+	}
+
+	for (std::list<WorldDesign*>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+		(*itr)->Draw(camera_->GetCamera());
+	}
+	for (std::list<PlayerItem*>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+		(*itr)->Draw(camera_->GetCamera());
+	}
 	ground_->Draw();
-	player_->Draw(camera_.get());
+	player_->Draw(camera_->GetCamera());
+	sprite->Draw(titleTex_, { 1.0f,1.0f,1.0f,1.0f });
+	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 }
 
 void TitleScene::PostDraw()
@@ -71,8 +198,7 @@ void TitleScene::PostDraw()
 
 void TitleScene::Draw2d()
 {
-	sprite->Draw(titleTex_, {1.0f,1.0f,1.0f,1.0f});
-	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,1.0f });
+	
 }
 
 void TitleScene::Release() {

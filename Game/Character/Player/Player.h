@@ -21,7 +21,8 @@ enum class Behavior {
 	kRoot, // 通常状態
 	kAttack, // 攻撃中
 	kDash, // ダッシュ中
-	kJump
+	kJump,
+	kTitlePlayer
 };
 class Player : public Collider
 {
@@ -34,6 +35,12 @@ public:
 	/// </summary>	
 	void DrawUI();
 
+
+/// <summary>
+/// Title
+/// </summary>
+	void TitleInit();
+	void TitleUpdate();
 public:
 	// ダッシュ用ワーク
 	struct WorkDash {
@@ -54,6 +61,17 @@ public:
 	void InitFloatingGimmmick();
 	void UpdateFloatingGimmmick();
 
+
+	/*---敵と衝突した際の処置用関数---*/
+	//　衝突した後の衝突クールタイム
+	void HitEnemyCoolTime();
+	
+	//　敵スライムと衝突した時の処理
+	void HitEnemySlime();
+
+
+
+
 	/*---Behavior用関数---*/
 	// 攻撃行動
 	void BehaviorRootUpdate();
@@ -67,7 +85,11 @@ public:
 	// ジャンプ行動
 	void BehaviorRootJumpInit();
 	void BehaviorRootJumpUpdate();
+	// title jump
+	void BehaviorRootTitleJumpUpdate();
+	
 
+	
 	// 調整項目の適用
 	void ApplyGlobalVariables();
 
@@ -83,6 +105,7 @@ public: // Setter
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	void SetHP(float hp) { hp_ = hp; }
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
+	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; }
 public: // Collider
 	void OnCollision(uint32_t attri) override;
 	Vector3 GetWorldPosition() const override;
@@ -129,7 +152,6 @@ private: // 貸出
 
 
 
-
 	float angletime = 0.0f;
 	float preAngle_ ;
 	// 富裕ギミックの媒介変数
@@ -156,7 +178,16 @@ private: // 貸出
 	// model skin num
 	uint32_t skinTex_;
 
+
 	Material material_;
 	DirectionalLight direLight_;
+
+	//　敵と衝突した後の再衝突用タイマー
+	bool isEnemyHit_ = false;
+	uint32_t coolTimer_ = 0;
+	// クールタイム時の透明度調整
+	float coolTimeAlpha_ = 1.0f;
+	// 透明度の増減値
+	float coolTimeAlphaPorM_ = 0.1f;
 };
 

@@ -245,9 +245,6 @@
     <ClCompile Include="Game\Character\Player\Player.cpp">
       <Filter>Application\character\player</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Character\Player\TitlePlayer.cpp">
-      <Filter>Application\character\player</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp">
       <Filter>Application\character\player\bullet</Filter>
     </ClCompile>
@@ -302,7 +299,7 @@
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp">
       <Filter>Application\worldDesign</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Skydome\Skydome.cpp">
+    <ClCompile Include="Game\Scene\Skydome\Skydome.cpp">
       <Filter>Application\skydome</Filter>
     </ClCompile>
     <ClCompile Include="Game\Item\PlayerItem.cpp">
@@ -324,6 +321,7 @@
     <ClCompile Include="Engine\Externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -503,9 +501,6 @@
     <ClInclude Include="Game\Character\Player\Player.h">
       <Filter>Application\character\player</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Character\Player\TitlePlayer.h">
-      <Filter>Application\character\player</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Character\Player\PlayerBullet\PlayerBullet.h">
       <Filter>Application\character\player\bullet</Filter>
     </ClInclude>
@@ -566,7 +561,7 @@
     <ClInclude Include="Game\WorldDesign\WorldDesign.h">
       <Filter>Application\worldDesign</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Skydome\Skydome.h">
+    <ClInclude Include="Game\Scene\Skydome\Skydome.h">
       <Filter>Application\skydome</Filter>
     </ClInclude>
     <ClInclude Include="Game\IBullet.h">
@@ -595,6 +590,7 @@
     <ClInclude Include="Engine\Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">

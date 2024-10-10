@@ -72,12 +72,12 @@ void Enemy::Move()
 
 void Enemy::OnCollision(uint32_t attri)
 {
-	isDead_ = true;
+	
 	if (attri == 0b0001) {
-		float playerHP = player_->GetHP();
-		playerHP -= 0.1f;
-		player_->SetHP(playerHP);
-
+		player_->HitEnemySlime();
+	}
+	else if (attri == 0b1000) {
+		isDead_ = true;
 	}
 }
 

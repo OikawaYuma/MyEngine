@@ -88,6 +88,9 @@ void PlayerRazer::SetParent(const WorldTransform* parent)
 
 void PlayerRazer::OnCollision(uint32_t attri)
 {
+	if (attri) {
+
+	}
 	isDead_ = true;
 }
 

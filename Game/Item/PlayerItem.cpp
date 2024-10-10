@@ -39,6 +39,9 @@ void PlayerItem::Draw(Camera* camera)
 
 void PlayerItem::OnCollision(uint32_t attri)
 {
+	if (attri) {
+
+	}
 	isDead_ = true;
 	float preScale = player_->GetHP();
 	preScale += 0.2f;

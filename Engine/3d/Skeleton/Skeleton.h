@@ -88,7 +88,7 @@ public:
 	static int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent,std::vector<Joint>& joints);
 	static SkeletonData CreateSkeleton(const Node& rootNode);
 	static SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const SkeletonData& skeleton,
-		const ModelData& modelData, const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize);
+		const ModelData& modelData, uint32_t descriptorSize);
 private:
 };
 
