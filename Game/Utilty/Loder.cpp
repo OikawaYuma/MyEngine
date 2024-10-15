@@ -1,5 +1,9 @@
 #include "Loder.h"
-#include  "json.hpp"
+#pragma warning(push)
+// C26819のエラーを見なかったことにする
+#pragma warning(disable:26819)
+#include  <json.hpp>
+#pragma warning(pop)
 #include <fstream>
 #include <cassert>
 #include "ModelManager.h"

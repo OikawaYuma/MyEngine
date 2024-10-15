@@ -29,13 +29,13 @@ private:
 	// ロックオン
 	LockOn* lockOn_ = nullptr;
 
-	float destinationAngleY_;
+	float destinationAngleY_ = 0.0f;
 	// 追従対象の残像座標
 	Vector3 interarget_ = {};
 
 	float cameraTime_ = 1.0f;
 	bool isDash_ = false;
-	float angletime;
+	float angletime = 0.0f;
 
 	bool resetAngleFlag = false;
 	float resetAngleTime_ = 0.0f;

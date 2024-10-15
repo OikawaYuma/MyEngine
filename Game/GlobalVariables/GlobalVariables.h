@@ -3,7 +3,11 @@
 #include "Vector3.h"
 #include <map>
 #include <string>
-#include "json.hpp"
+#pragma warning(push)
+// C26819のエラーを見なかったことにする
+#pragma warning(disable:26819)
+#include  <json.hpp>
+#pragma warning(pop)
 #include <Windows.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>

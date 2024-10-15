@@ -114,7 +114,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 void Player::Update()
 {
-#ifdef DEBUG
+#ifdef Debug
 	
 #endif // DEBUG
 	/*ImGui::Begin("Light");

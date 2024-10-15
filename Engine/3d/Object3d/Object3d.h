@@ -59,24 +59,24 @@ private:
 
 	/*移動用*/
 	// WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
-	TransformationMatrix* wvpData;
+	TransformationMatrix* wvpData{nullptr};
 	Microsoft::WRL::ComPtr < ID3D12Resource> wvpResource;
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW wvpBufferView{};
-	Transform transformUv;
+	Transform transformUv{};
 
 	/*カメラ用*/
 	Microsoft::WRL::ComPtr < ID3D12Resource> cameraForGPUResource_;
 	CameraForGPU* cameraForGPUData_ = nullptr;
 	// データを書き込む
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_{};
 
 	// 環境マップ用Texture
 	uint32_t mapTexture_ = 1;
 
 
 	// マテリアルをきれいに
-	Material* materialData_;
+	Material* materialData_ = nullptr;
 	Microsoft::WRL::ComPtr < ID3D12Resource> materialResource;
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
