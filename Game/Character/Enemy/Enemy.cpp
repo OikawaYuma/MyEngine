@@ -13,7 +13,9 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy2.png");
 	worldTransform_.translation_ = translate;
-
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
 	SetCollisionMask(0b001);
 }

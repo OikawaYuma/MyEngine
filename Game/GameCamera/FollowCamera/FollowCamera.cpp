@@ -3,10 +3,12 @@
 #include "LockOn/LockOn.h"
 void FollowCamera::Init()
 {
+
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate({ 0,5,-30 });
 	cameraTime_ = 1.0f;
+
 }
 
 void FollowCamera::Upadate()
@@ -120,6 +122,17 @@ void FollowCamera::Reset()
 	offset = TransformNormal(offset, camera_->GetCameraMatrix());
 	camera_->SetTranslate(Add(interarget_, offset));
 	camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
+}
+
+void FollowCamera::PosAdustment()
+{
+	if (target_) {
+		Vector3 offset = { 0,2,-30 };
+		offset = TransformNormal(offset, camera_->GetCameraMatrix());
+		camera_->SetTranslate(Add(target_->translation_, offset));
+		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
+	}
+	camera_->Update();
 }
 
 void FollowCamera::SetTarget(const WorldTransform* target)

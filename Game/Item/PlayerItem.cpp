@@ -16,7 +16,9 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel(filename + ".obj");
-
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	worldTransform_.UpdateMatrix();
 	SetRadius(1.0f);
 	SetCollisonAttribute(0b0100);
 	SetCollisionMask(0b0001);

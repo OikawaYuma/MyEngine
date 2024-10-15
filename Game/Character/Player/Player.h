@@ -143,9 +143,9 @@ public: // もともとのゲームで使用変数
 	Vector3 cameraToPlayerDistance_{ 0.0f, 7.0f, -30.0f };
 
 	// 3Dレティクル用ワールドトランスフォーム
-	WorldTransform worldTransform3DReticleNear_;
+	WorldTransform worldTransform3DReticleNear_{};
 	// 3Dレティクル用ワールドトランスフォーム
-	WorldTransform worldTransform3DReticleFar_;
+	WorldTransform worldTransform3DReticleFar_{};
 
 private: // 貸出
 	LockOn* lockOn_ = nullptr;
@@ -153,7 +153,7 @@ private: // 貸出
 
 
 	float angletime = 0.0f;
-	float preAngle_ ;
+	float preAngle_ = 0.0f;
 	// 富裕ギミックの媒介変数
 	float floatingparam_ = 0.0f;
 
@@ -167,14 +167,14 @@ private: // 貸出
 	// 次の振る舞いリクエスト
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 
-	WorkDash workDash_;
+	WorkDash workDash_{};
 
 	using json = nlohmann::json;
 
 	// 速度
-	Vector3 velo_;
+	Vector3 velo_{};
 	// ワールド変換データ
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_{};
 	// model skin num
 	uint32_t skinTex_ = 0;
 

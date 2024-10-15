@@ -15,6 +15,31 @@ void TitleScene::Init()
 		"Resources/noise1.png");
 	titleTex_ = TextureManager::StoreTexture("Resources/slimeTitle3.png");
 
+	LoadStringSp_ =  std::make_unique<Sprite>();
+	loadpos = 800;
+	LoadStringSp_->Init(
+		{800,loadpos }, { 500, 120 },
+		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
+		"Resources/noise1.png");
+	LoadStringSpTex_ = TextureManager::StoreTexture("Resources/LoadString.png");
+
+	slime2DSp1_ = std::make_unique<Slime2d>();
+	slime2DSp1_->Init(
+		{1050,800 },0.2f,2,true);
+
+	slime2DSp2_ = std::make_unique<Slime2d>();
+	slime2DSp2_->Init(
+		{ 1135,800 },0.2f,3,false);
+
+	slime2DSp3_ = std::make_unique<Slime2d>();
+	slime2DSp3_->Init(
+		{ 1220,800 },0.25f,4,false);
+
+	jumpNum_ = JUMPSTART;
+	
+	startTimer = 0;
+	startTimer2 = 0;
+
 
 	pushSpriteAlpha_ = 1.0f;
 	pushSpriteAlphaPorM_ = 0.05f;
@@ -51,6 +76,8 @@ void TitleScene::Init()
 	threFlag_ = false;
 	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
 
+	loadingSpriteMoveFlag_ = false;
+
 	titleBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/title.wav");
 	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_, true);
 
@@ -68,12 +95,9 @@ void TitleScene::Update()
 	}
 	
 	if (threFlag_) {
-		if (thre_ >= 1.2f) {
+		if (thre_ >= 1.2f && !GamePlayFlag_) {
 			threPorM_ *= -1.0f;
-			if (GamePlayFlag_) {
-				IScene::SetSceneNo(STAGE);
-				Audio::SoundStopWave(titleBGM_);
-			}
+			
 		}
 		
 		thre_ += threPorM_;
@@ -127,6 +151,7 @@ void TitleScene::Update()
 	player_->TitleUpdate();
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->Update();
+		/*
 		//// enemy->Fire();
 		//if ((*itr)->GetFireTimer() >= (*itr)->kFireInterval) {
 		//	assert(player_);
@@ -159,16 +184,80 @@ void TitleScene::Update()
 		//	enemyBullets_.push_back(newBullet);
 		//	(*itr)->SetFireTimer(0);
 		//}
+		*/
 	}
-	for (std::list<PlayerItem*>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+	for (std::list<std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Update();
 	}
 
 
-	for (std::list<WorldDesign*>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+	for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
 		(*itr)->Update();
 	}
+	if (thre_ >= 1.2f && GamePlayFlag_) {
+		switch (jumpNum_) {
+		case JUMPONE: {
+			slime2DSp1_->Update();
+			if (!slime2DSp1_->GetIsJump()) {
+				jumpNum_ = JUMPTWO;
+				slime2DSp2_->SetIsJump(true);
+			}
+			break;
+		}
+		case JUMPTWO: {
+			slime2DSp2_->Update();
+			if (!slime2DSp2_->GetIsJump()) {
+				jumpNum_ = JUMPTHREE;
+				slime2DSp3_->SetIsJump(true);
+			}
+			break;
+		}
+		case JUMPTHREE: {
+			slime2DSp3_->Update();
+			if (!slime2DSp3_->GetIsJump()) {
+				jumpNum_ = JUMPONE;
+				slime2DSp1_->SetIsJump(true);
+			}
+			break;
+		}
+		case JUMPSTART:
+		{
+			
+				if (slime2DSp1_->IsApear()) {
+					loadpos -= 4.0f;
+				}
+				
+				slime2DSp1_->StartUpdate();
+				slime2DSp2_->StartUpdate();
+				slime2DSp3_->StartUpdate();
 
+				if (!slime2DSp1_->IsApear() && loadpos <= 660.0f) {
+					loadpos += 4.0f;
+					if (loadpos >= 660.0f) {
+						loadpos = 660.0f;
+					}
+				}
+
+
+				LoadStringSp_->SetPosition({ 800.0f,loadpos });
+				LoadStringSp_->Update();
+
+				if (slime2DSp1_->IsStart()) {
+
+
+					IScene::SetSceneNo(STAGE);
+					DeleteObject();
+					//Audio::SoundStopWave(titleBGM_);
+
+				}
+			
+			break;
+		}
+
+
+		}
+	}
+	
 	postProcess_->Update();
 	
 }
@@ -179,26 +268,33 @@ void TitleScene::Draw()
 		(*itr)->Draw(camera_->GetCamera());
 	}
 
-	for (std::list<WorldDesign*>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+	for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
 		(*itr)->Draw(camera_->GetCamera());
 	}
-	for (std::list<PlayerItem*>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Draw(camera_->GetCamera());
 	}
 	ground_->Draw();
 	player_->Draw(camera_->GetCamera());
 	sprite->Draw(titleTex_, { 1.0f,1.0f,1.0f,1.0f });
+
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 }
 
 void TitleScene::PostDraw()
 {
 	postProcess_->Draw();
+	
 }
 
 void TitleScene::Draw2d()
 {
-	
+	if (GamePlayFlag_ && thre_ >= 1.0f) {
+		LoadStringSp_->Draw(LoadStringSpTex_, { 1.0f,1.0f,1.0f,1.0f });
+		slime2DSp1_->Draw();
+		slime2DSp2_->Draw();
+		slime2DSp3_->Draw();
+	}
 }
 
 void TitleScene::Release() {
@@ -209,4 +305,13 @@ void TitleScene::Release() {
 int TitleScene::GameClose()
 {
 	return false;
+}
+
+void TitleScene::DeleteObject()
+{
+	enemys_.clear();
+
+	items_.clear();
+
+	worldDesigns_.clear();
 }

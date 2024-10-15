@@ -10,7 +10,7 @@
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
 
-void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, std::list<std::unique_ptr<Enemy>>& enemys, std::list<PlayerItem*>& items, std::list<WorldDesign*>& worldDesigns)
+void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, std::list<std::unique_ptr<Enemy>>& enemys, std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns)
 {
 	// 連結してフルパスを得る
 	const std::string fullpath = kDefaultBaseDirectory + "/" + fileName + ".json";
@@ -138,16 +138,16 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 		}
 
 		else if (objectData.filename.compare("item") == 0) {
-			PlayerItem* item = new PlayerItem();
+			std::unique_ptr <PlayerItem> item = std::make_unique<PlayerItem>();
 			item->SetPlayer(player);
 			item->Init(objectData.transform.translate, objectData.filename);
-			items.push_back(item);
+			items.push_back(std::move(item));
 		}
 		else if (objectData.filename.compare("worldDesign") == 0) {
-			WorldDesign* wood = new WorldDesign();
+			std::unique_ptr <WorldDesign> wood = std::make_unique <WorldDesign>();
 			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
 			wood->Init(objectData.transform.scale, objectData.transform.translate, objectData.filename);
-			worldDesigns.push_back(wood);
+			worldDesigns.push_back(std::move(wood));
 		}
 
 	}

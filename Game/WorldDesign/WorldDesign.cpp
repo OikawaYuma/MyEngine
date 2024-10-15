@@ -22,7 +22,9 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	direLight_.direction = { 0.0f,-1.0f,0.0f };
 	direLight_.intensity = 0.6f;
 	object_->SetDirectionLight(direLight_);
-
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	worldTransform_.UpdateMatrix();
 
 }
 

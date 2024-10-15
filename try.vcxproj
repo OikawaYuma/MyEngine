@@ -197,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Interface\PSO\PSOSkybox.cpp" />
     <ClCompile Include="Game\Scene\ResultScene.cpp" />
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
+    <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
@@ -294,6 +295,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Interface\PSO\PSOSkybox.h" />
     <ClInclude Include="Game\Scene\ResultScene.h" />
     <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
+    <ClInclude Include="Game\Slime2d\Slime2d.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

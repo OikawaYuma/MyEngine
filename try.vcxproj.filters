@@ -322,6 +322,7 @@
     <ClCompile Include="Engine\Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
+    <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -591,6 +592,7 @@
     <ClInclude Include="Engine\Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
+    <ClInclude Include="Game\Slime2d\Slime2d.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Object3d.PS.hlsl">

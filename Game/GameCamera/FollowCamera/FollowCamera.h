@@ -10,8 +10,10 @@ class FollowCamera
 public:
 	void Init();
 	void Upadate();
-
 	void Reset();
+
+	// プレイヤーの位置調整
+	void PosAdustment();
 	
 
 public: // Getter

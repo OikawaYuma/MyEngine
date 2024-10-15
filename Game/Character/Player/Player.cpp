@@ -106,6 +106,10 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	direLight_.direction = { 0.0f,-1.0f,0.0f };
 	direLight_.intensity = 1.0f;
 	
+	
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Update()
@@ -113,7 +117,7 @@ void Player::Update()
 #ifdef DEBUG
 	
 #endif // DEBUG
-	ImGui::Begin("Light");
+	/*ImGui::Begin("Light");
 	ImGui::DragFloat4("mColor", &material_.color.x, 0.1f);
 	ImGui::DragFloat("mShin", &material_.shininess, 0.1f);
 
@@ -123,7 +127,7 @@ void Player::Update()
 	ImGui::DragFloat("dinten", &direLight_.intensity, 0.1f);
 	ImGui::Text("playerPosX %f", worldTransform_.translation_.x);
 	ImGui::Text("playerPosZ %f", worldTransform_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 
 
 	direLight_.direction = Normalize(direLight_.direction);

@@ -9,7 +9,7 @@
 #include "Character/Enemy/Enemy.h"
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
-
+#include "Slime2d/Slime2d.h"
 class TitleScene : public IScene
 {
 public:
@@ -21,10 +21,24 @@ public:
 	void Release()override;
 	int GameClose()override;
 
+	void DeleteObject();
+
 private:
 	Sprite* sprite = nullptr;
+
 	Vector2 titleSpritePos_;
 	float titleSpriteVelo_;
+
+	std::unique_ptr<Sprite> LoadStringSp_;
+	uint32_t LoadStringSpTex_ = 0;
+
+	std::unique_ptr<Slime2d> slime2DSp1_;
+	std::unique_ptr<Slime2d> slime2DSp2_;
+	std::unique_ptr<Slime2d> slime2DSp3_;
+	uint32_t jumpNum_ = JUMPONE;
+	float loadpos = 0;
+
+	bool loadingSpriteMoveFlag_ = false;
 
 	Sprite* pushASp_ = nullptr;
 	float pushSpriteAlpha_;
@@ -38,8 +52,8 @@ private:
 	std::unique_ptr<Player> player_;
 	std::list<std::unique_ptr<Enemy>> enemys_;
 	std::unique_ptr<Ground> ground_;
-	std::list<PlayerItem*> items_;
-	std::list<WorldDesign*> worldDesigns_;
+	std::list<std::unique_ptr<PlayerItem>> items_;
+	std::list<std::unique_ptr<WorldDesign>> worldDesigns_;
 	std::unique_ptr<Skydome> skydome_;
 
 	float thre_;
@@ -49,5 +63,7 @@ private:
 	uint32_t titleBGM_;
 
 	bool GamePlayFlag_ = false;
+	uint32_t startTimer = 0;
+	uint32_t startTimer2 = 0;
 };
 
