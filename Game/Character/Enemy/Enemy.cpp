@@ -22,6 +22,14 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 
 void Enemy::Update()
 {
+	// HPを元に基準となる大きさを決定する
+	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	// 着地
+	if (worldTransform_.translation_.y <= 0.5f * hp_) {
+		worldTransform_.translation_.y = 0.5f * hp_;
+		// ジャンプ終了
+		//behaviorRequest_ = Behavior::kRoot;
+	}
 	Move();
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
@@ -41,20 +49,21 @@ void Enemy::Move()
 	//worldTransform_.rotation_.y += 0.02f * (float)std::numbers::pi;
 	//worldTransform_.UpdateMatrix();
 
-	//if (!(move.x == 0 && move.y == 0 && move.z == 0)) {
-	//	move = Normalize(move);
-	//	move.x *= 0.4f;
-	//	move.y *= 0.4f;
-	//	move.z *= 0.4f;
-	//	move = TransformNormal(move, worldTransform_.matWorld_);
-	//	// Y軸周り角度（Θy）
-	//	//preAngle = std::atan2(move.x, move.z);
+	Vector2 directionToPlayer;
+	directionToPlayer = Subtract(Vector2{ player_->GetWorldPosition().x ,player_->GetWorldPosition().z }, Vector2{ GetWorldPosition().x,GetWorldPosition().z });
 
-	//}
+	if (!(directionToPlayer.x == 0 && directionToPlayer.y == 0)) {
+		directionToPlayer = Normalize(directionToPlayer);
+		directionToPlayer.x *= 0.4f;
+		directionToPlayer.y *= 0.4f;
+		//move = TransformNormal(move, worldTransform_.matWorld_);
+		// Y軸周り角度（Θy）
+		//preAngle = std::atan2(move.x, move.z);
+	}
 	//worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 
-	// 移動
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	move.x = directionToPlayer.x;
+	move.z = directionToPlayer.y;
 	// 重量加速度
 	const float kGravityAcceleration = 0.075f;
 	// 加速度ベクトル
@@ -70,6 +79,9 @@ void Enemy::Move()
 		// ジャンプ初速を与える
 		move.y = kJumpFirstSpeed;
 	}
+	move = TransformNormal(move, worldTransform_.matWorld_);
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 }
 
 void Enemy::OnCollision(uint32_t attri)
@@ -79,7 +91,11 @@ void Enemy::OnCollision(uint32_t attri)
 		player_->HitEnemySlime();
 	}
 	else if (attri == 0b1000) {
-		isDead_ = true;
+		hp_ -= 0.2f;
+		if (hp_ <= 0.4f) {
+			isDead_ = true;
+		}
+		
 	}
 }
 

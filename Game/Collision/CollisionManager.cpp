@@ -31,12 +31,12 @@ void CollisionManager::CheckAllCollision() {
 	for (const auto& bullet : enemy) {
 		colliders_.push_back(bullet.get());
 	}
-	for (auto obstacles = enemy.begin();
-		obstacles != enemy.end(); ++obstacles) {
+	//for (auto obstacles = enemy.begin();
+	//	obstacles != enemy.end(); ++obstacles) {
 
-		colliders_.push_back((*obstacles).get()); // enemyをリストに登録
+	//	colliders_.push_back((*obstacles).get()); // enemyをリストに登録
 
-	}
+	//}
 	for (const auto& bullet : items) {
 		colliders_.push_back(bullet.get());
 	}
@@ -106,6 +106,9 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderB->OnCollision(colliderA->GetCollisonAttribute());
 		}
 	}
+
+
+	// 以下制作中
 	if (
 		(colliderA->GetCollisionMode() == Ballc && colliderB->GetCollisionMode() == OBBc) ||
 		(colliderA->GetCollisionMode() == OBBc && colliderB->GetCollisionMode() == Ballc)

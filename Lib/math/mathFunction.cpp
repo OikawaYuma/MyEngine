@@ -437,15 +437,33 @@ Vector3 Add(const Vector3& posa, const Vector3& posb) {
 	return AddPos;
 }
 
+Vector2 Subtract(const Vector2& posa, const Vector2& posb)
+{
+	Vector2 subTractPos;
+	subTractPos.x = posa.x - posb.x;
+	subTractPos.y = posa.y - posb.y;
+
+	return subTractPos;
+}
+
 Vector3 Subtract(const Vector3& posa, const Vector3& posb)
 {
 	Vector3 AddPos;
 
-	AddPos.x = posa.x -posb.x;
+	AddPos.x = posa.x - posb.x;
 	AddPos.y = posa.y - posb.y;
 	AddPos.z = posa.z - posb.z;
 
 	return AddPos;
+}
+
+Vector2 Normalize(const Vector2& v)
+{
+	Vector2 m2;
+	float mag = 1 / sqrtf(v.x * v.x + v.y * v.y);
+	m2 = { v.x * mag, v.y * mag };
+
+	return m2;
 }
 
 // 正規化

@@ -5,7 +5,11 @@
 #include "Object3d.h"
 #include "Camera.h"
 #include "Character/base/BaseCharacter.h"
-#include "json.hpp"
+#pragma warning(push)
+// C26819のエラーを見なかったことにする
+#pragma warning(disable:26819)
+#include  <json.hpp>
+#pragma warning(pop)
 #include "GlobalVariables/GlobalVariables.h"
 
 #include "IBullet.h"
@@ -150,7 +154,7 @@ public: // もともとのゲームで使用変数
 private: // 貸出
 	LockOn* lockOn_ = nullptr;
 
-
+private:
 
 	float angletime = 0.0f;
 	float preAngle_ = 0.0f;
@@ -189,5 +193,10 @@ private: // 貸出
 	float coolTimeAlpha_ = 1.0f;
 	// 透明度の増減値
 	float coolTimeAlphaPorM_ = 0.1f;
+
+private:
+	bool isShot_ = false;
+	uint32_t shotTimer_ = 0;
+	const  uint32_t shotInterval_ = 5;
 };
 

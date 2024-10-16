@@ -51,9 +51,13 @@ float DotQuaternion(const Quaternion& v1, const Quaternion& v2);
 Vector3 SLerp(const Vector3& v1, const Vector3& v2, float t);
 Quaternion SLerp(const Quaternion& v1, const Quaternion& v2, float t);
 Vector3 Add(const Vector3& posa, const Vector3& posb);
+
+Vector2 Subtract(const Vector2& posa, const Vector2& posb);
 Vector3 Subtract(const Vector3& posa, const Vector3& posb);
 
+Vector2 Normalize(const Vector2& v);
 Vector3 Normalize(const Vector3& v);
+
 Quaternion Normalize(Quaternion quaternion);
 Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 Vector3 CalculateValue(const std::vector<KeyFrameVector3>& keyframes, float time);
