@@ -65,7 +65,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Lib\math;$(ProjectDir)Lib\utility;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Game\Player;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Resources\shaders;$(ProjectDir)Engine\Externals\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Lib\math;$(ProjectDir)Lib\utility;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Game\Player;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Resources\shaders;$(ProjectDir)Engine\Externals\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -96,7 +96,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Engine/Externals\assimp;$(ProjectDir)Lib\math;$(ProjectDir)Lib\utility;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Resources\shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Engine/Externals\assimp;$(ProjectDir)Lib\math;$(ProjectDir)Lib\utility;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Resources\shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -198,6 +198,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Scene\ResultScene.cpp" />
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
+    <ClCompile Include="Engine\3d\Light\SpotLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
@@ -296,6 +297,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Scene\ResultScene.h" />
     <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
     <ClInclude Include="Game\Slime2d\Slime2d.h" />
+    <ClInclude Include="Engine\3d\Light\SpotLight.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">
