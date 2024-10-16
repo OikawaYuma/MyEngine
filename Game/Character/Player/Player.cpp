@@ -168,6 +168,12 @@ void Player::Update()
 	}
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	// 着地
+	if (worldTransform_.translation_.y <= 0.5f * hp_) {
+		worldTransform_.translation_.y = 0.5f * hp_;
+		// ジャンプ終了
+		//behaviorRequest_ = Behavior::kRoot;
+	}
 	//SetRadius(hp_);
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -628,9 +634,12 @@ void Player::Aim()
 
 void Player::Attack()
 {
+	shotTimer_++;
 	switch (bulletMode_) {
 	case BulletMode::NormalBullet:
-		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+
+		if (Input::GetInstance()->PushJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) && shotInterval_ <= shotTimer_) {
+			shotTimer_ = 0;
 			// 自キャラの座標をコピー
 			Vector3 position = {
 				worldTransform_.matWorld_.m[3][0],

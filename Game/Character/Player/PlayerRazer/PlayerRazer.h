@@ -36,13 +36,13 @@ private:
 	WorldTransform worldtransform_;
 	Model* model_ = nullptr;
 	std::unique_ptr<Object3d> object_ = nullptr;
-	uint32_t textureHandle_;
+	uint32_t textureHandle_ = 0;
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
-	Vector3 velocity_;
+	Vector3 velocity_{};
 
 	static const int32_t kLifeTime = 60 * 5;
-	DirectionalLight dir_;
-	Material material;
+	DirectionalLight dir_{};
+	Material material{};
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime;
 	bool isDead_ = false;
