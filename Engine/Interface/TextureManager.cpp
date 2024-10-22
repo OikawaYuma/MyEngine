@@ -27,6 +27,7 @@ int TextureManager::StoreTexture(const std::string& filePath) {
 	 // テクスチャ枚数上限チェック
 	//assert(SRVManager::kMaXSRVCount <= SRVManager::);
 	DirectXCommon *sDirectXCommon = DirectXCommon::GetInstance();
+	WinAPI* sWinAPI = WinAPI::GetInstance();
 
 	TextureData& textureData = textureDatas_[filePath];
 	// Textureを読んで転送する
@@ -125,8 +126,7 @@ Microsoft::WRL::ComPtr <ID3D12Resource> TextureManager::CreateTextureResource(Mi
 
 	// Rewsourceの生成
 	resource_ = nullptr;
-	HRESULT hr;
-	hr = device->CreateCommittedResource(
+	HRESULT hr = device->CreateCommittedResource(
 		&heapProperties_, // Heapの設定
 		D3D12_HEAP_FLAG_NONE, //Heapの特殊な設定。特になし。
 		&resourceDesc_, // Resourceの設定

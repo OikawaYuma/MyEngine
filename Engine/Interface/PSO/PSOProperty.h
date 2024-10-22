@@ -24,14 +24,14 @@ enum BlendMode {
 
 class PSOProperty {
 public:
-	
+	struct  {
 		Microsoft::WRL::ComPtr < ID3D12PipelineState> graphicsPipelineState;
 		Microsoft::WRL::ComPtr < ID3D12RootSignature> rootSignature;
 		Microsoft::WRL::ComPtr < ID3DBlob> signatureBlob;
 		Microsoft::WRL::ComPtr < ID3DBlob> errorBlob;
 		Microsoft::WRL::ComPtr < IDxcBlob> vertexShaderBlob;
 		Microsoft::WRL::ComPtr < IDxcBlob> pixelShaderBlob;
-	
+	};
 protected:
 
 	static int BlendNo_;

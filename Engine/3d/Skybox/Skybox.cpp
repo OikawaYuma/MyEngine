@@ -156,8 +156,10 @@ void Skybox::Init(const Material& material)
 void Skybox::Draw(uint32_t texture, const Material& material, const DirectionalLight& dire)
 {
 
-	//PSOSkybox* pso_ = PSOSkybox::GatInstance();
+	PSOSkybox* pso_ = PSOSkybox::GatInstance();
 	
+
+	TextureManager* textureManager_ = TextureManager::GetInstance();
 	// 色のデータを変数から読み込み
 	materialData_->color = material.color;
 	materialData_->enableLighting = material.enableLighting;

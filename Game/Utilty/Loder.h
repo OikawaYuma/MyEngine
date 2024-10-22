@@ -8,7 +8,6 @@
 #include <list>
 
 
-
 class LevelData {
 public:
 	struct ObjectData {
@@ -22,16 +21,11 @@ private:
 	
 
 };
-class Player;
-class Enemy;
-class Ground;
-class PlayerItem;
-class WorldDesign;
 class Loder
 {
 public:
 	static void LoadJsonFileBase(const std::string kDefaultBaseDirectory, const std::string fileName,std::vector<Object3d*>& objects,Camera* camera);
-	static void LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName,Player *player,std::list<std::unique_ptr<Enemy>>& enemys,std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns);
+	//static void LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName,Player *player, Floor* floor,std::list<Enemy*>& enemys,std::list<Item*>& items, std::list<WorldDesign*>& worldDesigns);
 };
 
 
