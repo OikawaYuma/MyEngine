@@ -20,6 +20,7 @@
 ---------------------------------------------*/
 enum GameState {
 	WAITGAME,
+	STARTGAME,
 	PLAYGAME,
 };
 
@@ -71,10 +72,27 @@ private:
 	std::unique_ptr<Slime2d> slime2DSp1_;
 	std::unique_ptr<Slime2d> slime2DSp2_;
 	std::unique_ptr<Slime2d> slime2DSp3_;
+
+
+	Vector2 startSpritePos_;
+	float startSpriteVelo_;
+	std::unique_ptr<Sprite> startEffectSp_;
+	uint32_t startEffectSpTex_ = 0;
+	bool moveflag1 = false;
+	bool moveFlag2 = false;
+	uint32_t statrTimer_ = 0;
+	bool cameraFlag_ = false;
+
+	Vector2 startSpritePos2_;
+	float startSpriteVelo2_;
+	std::unique_ptr<Sprite> startEffectSp2_;
+	uint32_t startEffectSpTex2_ = 0;
+
 	uint32_t jumpNum_ = JUMPONE;
 	uint32_t jumpRoopNum = 0;
 	float loadpos = 0;
 	uint32_t endTimer = 0;
 	uint32_t startTimer = 0;
+	uint32_t gameBGM_;
 };
 
