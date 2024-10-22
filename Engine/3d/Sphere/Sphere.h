@@ -37,7 +37,7 @@ public :
 	void SetTextureManager(TextureManager* textureManager) {
 		textureManager_ = textureManager;
 	}
-	void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportmatrix, int color);
+	void DrawSphere();
 	// データを書き込む
 	DirectionalLight* directionalLightData;
 	Transform transformUv;

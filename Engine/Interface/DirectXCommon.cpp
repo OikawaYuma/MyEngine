@@ -16,7 +16,8 @@ Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> DirectXCommon::CreateDescriptorHe
 	descriptorHeapDesc.NumDescriptors = numDescriptors; //ダブルバッファように2つ。多くても構わない
 	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-	HRESULT hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	HRESULT hr;
+	hr = device_->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 	// ディスクリプタヒープが作れなかったのðえ起動できない
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
@@ -175,7 +176,8 @@ void DirectXCommon::BeginFrame() {
 	//指定した色で画面全体をクリアする
 	//float clearColor[] = { 0.1f,0.25f,0.5f,1.0f }; //青っぽい色。 RGBAの淳  0.1/0.25/0.5/1.0f
 	//float clearColor[] = { 0.25f,0.5f,0.1f,1.0f }; //青っぽい色。 RGBAの淳  0.1/0.25/0.5/1.0f
-	float clearColor[] = { 0.25f,0.5f,0.1f,1.0f }; //青っぽい色。 RGBAの淳  0.1/0.25/0.5/1.0f
+	//float clearColor[] = { 0.25f,0.5f,0.1f,1.0f }; //青っぽい色。 RGBAの淳  0.1/0.25/0.5/1.0f
+	float clearColor[] = { 1.0f,1.0f,1.0f,1.0f }; //青っぽい色。 RGBAの淳  0.1/0.25/0.5/1.0f
 	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearColor, 0, nullptr);
 	dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 	
@@ -192,7 +194,7 @@ void DirectXCommon::ViewChange() {
 	//ImGuiの描画
 	ImGuiCommon::GetInstance()->Draw();
 	// これから書き込むバックバッファのインデックスを取得
-	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
+	//UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
 	//ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 	//画面に描く処理はすべて終わり、画面に移すので、状態を遷移
 // 今回はRenderTargetからPresentにする
@@ -565,7 +567,8 @@ Microsoft::WRL::ComPtr <ID3D12Resource> DirectXCommon::CreateDepthStencilTexture
 	depthClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // フォーマットResourceと合わせる
 
 	Microsoft::WRL::ComPtr <ID3D12Resource> resource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(
+	HRESULT hr;
+	hr = device->CreateCommittedResource(
 		&heapProperties, //Heapの設定
 		D3D12_HEAP_FLAG_NONE, // Heapの特殊な設定。特になし。
 		&resourceDesc, // Resourceの設定
@@ -605,7 +608,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateRenderTextureResourc
 	clearValue.Color[3] = clearColor.w;
 
 	Microsoft::WRL::ComPtr <ID3D12Resource> resource = nullptr;
-	HRESULT hr = device->CreateCommittedResource(
+	HRESULT hr;
+	hr = device->CreateCommittedResource(
 		&heapProperties, //Heapの設定
 		D3D12_HEAP_FLAG_NONE, // Heapの特殊な設定。特になし。
 		&resourceDesc, // Resourceの設定

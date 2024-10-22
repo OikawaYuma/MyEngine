@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "SRVManager.h"
 
-void Skeleton::Update(SkeletonData& skeleton)
+void Skeleton::Update()
 {
 	
 }
@@ -38,8 +38,8 @@ SkeletonData Skeleton::CreateSkeleton(const Node& rootNode)
 	return skeleton;
 }
 
-SkinCluster Skeleton::CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const SkeletonData& skeleton,
-	const ModelData& modelData, const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize)
+SkinCluster Skeleton::CreateSkinCluster(const SkeletonData& skeleton,
+	const ModelData& modelData)
 {
 	SkinCluster skinCluster;
 	// particle用のResourceを確保
@@ -48,11 +48,11 @@ SkinCluster Skeleton::CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Devic
 	WellForGPU* mappedPalette = nullptr;
 	skinCluster.paletteResource->Map(0,nullptr,reinterpret_cast<void**>(&mappedPalette));
 	skinCluster.mappedPalette = { mappedPalette, skeleton.joints.size()};// spanを使ってアクセスするようにする
-	uint32_t index = SRVManager::GetInstance()->Allocate();
+	uint32_t srvIndex = SRVManager::GetInstance()->Allocate();
 	skinCluster.paletteSrvHandle.first = SRVManager::GetInstance()->GetCPUDescriptorHandle(
-		index);
+		srvIndex);
 	skinCluster.paletteSrvHandle.second = SRVManager::GetInstance()->GetGPUDescriptorHandle(
-		index);
+		srvIndex);
 
 	// palette用のsrvを作成。StructureBufferでアクセスできるようにする
 	D3D12_SHADER_RESOURCE_VIEW_DESC paletteSrvDesc{  };

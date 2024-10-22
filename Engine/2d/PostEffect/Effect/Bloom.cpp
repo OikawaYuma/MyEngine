@@ -90,7 +90,6 @@ PSOProperty Bloom::CreatePipelineStateObject()
 void Bloom::CommandRootParameter(PostProcess* postProcess)
 {
 	DirectXCommon* sDirectXCommon = DirectXCommon::GetInstance();
-	Camera* camera = postProcess->GetCamera();
 	bloomData_->luminance = postProcess->GetBloominfo().luminance;
 	bloomData_->deviation = postProcess->GetBloominfo().deviation;
 	bloomData_->brightness = postProcess->GetBloominfo().brightness;

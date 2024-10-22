@@ -324,8 +324,7 @@ void Model::ApplyAnimation(SkeletonData& skeleton, const AnimationData& animatio
 }
 ;
 
-void Model::Initialize(const std::string& directoryPath, const std::string& filename, const Material& material) {
-	WinAPI* sWinAPI = WinAPI::GetInstance();
+void Model::Initialize(const std::string& directoryPath, const std::string& filename) {
 	directXCommon_ = DirectXCommon::GetInstance();
 
 	// モデル読み込み
@@ -346,19 +345,8 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 
-	// 実際に頂点リソースを作る
-	materialResource = Mesh::CreateBufferResource(directXCommon_->GetDevice(), sizeof(Material));
-
-	/*materialBufferView = CreateBufferView();;*/
-	// 頂点リソースにデータを書き込む
-	materialData = nullptr;
-	// 書き込むためのアドレスを取得
-	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-	// 色のデータを変数から読み込み
-	materialData->color = material.color;
-	materialData->enableLighting = material.enableLighting;
-	materialData->uvTransform = MakeIdentity4x4();
-	materialData->shininess = material.shininess;
+	
+	
 
 	transformUv = {
 		{1.0f,1.0f,1.0f},
@@ -368,15 +356,10 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 
 
 
-	directionalLightData = nullptr;
-	directionalLightResource = Mesh::CreateBufferResource(directXCommon_->GetDevice(), sizeof(DirectionalLight));
-	// 書き込むためのアドレスを取得
-	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData));
+	
+	
 
-	// デフォルト値はとりあえず以下のようにしておく
-	directionalLightData->color = { 1.0f,1.0f,1.0f,1.0f };
-	directionalLightData->direction = { 0.0f,-1.0f,0.0f };
-	directionalLightData->intensity = 1.0f;
+	
 
 	indexResource_ = Mesh::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice().Get(), sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
@@ -397,41 +380,19 @@ void Model::Update() {
 };
 
 
-void Model::Draw(uint32_t texture, const Material& material, const DirectionalLight& dire, uint32_t mapTexture) {
+void Model::Draw(uint32_t texture) {
 
 	pso_ = PSO::GatInstance();
 	vbvs[0] = vertexBufferView_;
 	vbvs[1] = skinCluster_.influenceBufferView;
-	//NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
-	//Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime);
-	//Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime);
-	//Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime);
-	//aniMatrix_ = MakeAffineMatrix(scale, rotate, translate);
 
 	textureManager_ = TextureManager::GetInstance();
-	// 色のデータを変数から読み込み
-	materialData->color = material.color;
-	materialData->enableLighting = material.enableLighting;
-	materialData->shininess = 0.5f;
-	directionalLightData->direction = dire.direction;
-	//directionalLightData->direction =  Normalize(directionalLightData->direction);
-	//directXCommon_->GetCommandList()->SetGraphicsRootSignature(pso_->GetProperty().rootSignature.Get());
-	//directXCommon_->GetCommandList()->SetPipelineState(pso_->GetProperty().graphicsPipelineState.Get());    //PSOを設定
-	//directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);    //VBVを設定
+	
 	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);    //VBVを設定
 	directXCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);    //VBVを設定
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
-	//directXCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	// マテリアルCBufferの場所を設定
-	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, SRVManager::GetGPUDescriptorHandle(texture));
+	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, SRVManager::GetGPUDescriptorHandle(texture));;
 
-	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
-	//directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(5, SRVManager::GetGPUDescriptorHandle(mapTexture));
-
-	//directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster_.paletteSrvHandle.second);
 	directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), 1, 0, 0, 0);
-	//directXCommon_->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }

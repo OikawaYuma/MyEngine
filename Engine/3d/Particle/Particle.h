@@ -74,7 +74,7 @@ public:
 	}
 	ParticlePro MakeNewParticle(std::mt19937& randomEngine, const Vector3& scale, const Vector3& translate, const RandRangePro& randRange);
 
-	std::list<ParticlePro> Emission(const Emitter& emitter, std::mt19937& randEngine, const Vector3& worldTransform, const RandRangePro& randRange);
+	std::list<ParticlePro> Emission(const Emitter& emitter, std::mt19937& randEngine,const RandRangePro& randRange);
 	D3D12_VERTEX_BUFFER_VIEW CreateBufferView();
 private:
 	const static uint32_t kNumMaxInstance = 10000; // インスタンス数
@@ -98,15 +98,9 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
 
-	Particle* particle = nullptr;
+	Particle* particle_ = nullptr;
 
 
-	//D3D12_DESCRIPTOR_RANGE descriptorRange_[1] = {};
-
-	// RootParmeter作成。複数でっていできるので配列。今回は結果１つだけなので長さ1の配列
-	//D3D12_ROOT_PARAMETER rootParamerters[1] = {};
-
-	uint32_t* indexDataSprite;
 	Microsoft::WRL::ComPtr < ID3D12Resource> indexResourceSprite;
 	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite{};
 
