@@ -3,6 +3,7 @@
 #include "ImGuiCommon.h"
 #include "TextureManager.h"
 #include "Input.h"
+#include <Loder.h>
 void GameOverScene::Init()
 {
 	sprite = new Sprite();
@@ -12,12 +13,26 @@ void GameOverScene::Init()
 		"Resources/noise1.png");
 	titleTex_ = TextureManager::StoreTexture("Resources/gameOver.png");
 
-	camera_ = std::make_unique<Camera>();
-	camera_->Initialize();
+	camera_ = std::make_unique<GameOverCamera>();
+	camera_->Init();
+	ground_ = std::make_unique<Ground>();
+	ground_->Init();
+	ground_->SetCamera(camera_->GetCamera());
+
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Init();
+
+	player_ = std::make_unique<Player>();
+	player_->SetCamera(camera_->GetCamera());
+
+	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), enemys_, items_, worldDesigns_);
+	player_->TitleInit();
+	/////////////////////////////////////////////////
+
 	postProcess_ = new PostProcess();
-	postProcess_->SetCamera(camera_.get());
+	postProcess_->SetCamera(camera_->GetCamera());
 	postProcess_->Init();
-	IPostEffectState::SetEffectNo(PostEffectMode::kBloom);
+	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
 }
 void GameOverScene::Update()
 {
