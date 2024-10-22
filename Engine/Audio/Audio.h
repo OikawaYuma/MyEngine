@@ -56,7 +56,7 @@ public:
 	static void SoundPlayWave(IXAudio2* xAudio2, uint32_t audioHandle, bool loopFlag);
 
 	// 音声再生
-	static void SoundStopWave(uint32_t audioHandle);
+	static void SoundStopWave(IXAudio2* xAudio2, uint32_t audioHandle);
 	static void SoundLoopWave(IXAudio2* xAudio2, const SoundData& soundData);
 
 	static Microsoft::WRL::ComPtr<IXAudio2> GetIXAudio() { return xAudio2_; };
@@ -71,7 +71,7 @@ private:
 	IXAudio2MasteringVoice* masterVoice_;
 
 	static IXAudio2SourceVoice* pSourceVoice[soundDataMaxSize];
-	static SoundData soundData_[soundDataMaxSize];
+	static SoundData soundData[soundDataMaxSize];
 
 };
 

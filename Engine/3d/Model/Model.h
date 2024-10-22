@@ -45,9 +45,9 @@ public:
 	ModelData GetModelData() { return modelData_; }
 	Model();
 	~Model();
-	void Initialize(const std::string& directoryPath, const std::string& filePath);
+	void Initialize(const std::string& directoryPath, const std::string& filePath, const Material& material);
 	void Update();
-	void Draw(uint32_t texture);
+	void Draw(uint32_t texture, const Material& material, const DirectionalLight& dire,uint32_t mapTexture);
 
 
 	void SetTextureManager(TextureManager* textureManager) {
@@ -74,7 +74,7 @@ private:
 	//ModelManager* modelManager = nullptr;
 
 	// 頂点リソースにデータを書き込む
-	
+	Material* materialData;
 
 	VertexData* vertexData_;
 	ModelData modelData_;
@@ -95,18 +95,22 @@ private:
 	/*色用*/
 //頂点リソースの設定
 // 実際に頂点リソースを作る
-	
+	Microsoft::WRL::ComPtr < ID3D12Resource> materialResource;
+	// 頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
 	
 
 
 	
-	
+	// 平行光源用
+	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
 
 	// IndexBuffer用リソース
 
 	Microsoft::WRL::ComPtr < ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW	indexBufferView_{};
-	
+	// データを書き込む
+	DirectionalLight* directionalLightData;
 
 	
 
@@ -117,6 +121,6 @@ private:
 
 	Matrix4x4 aniMatrix_;
 	Matrix4x4 skeMatrix_;
-	float animationTime_ = 0.0f;
+	float animationTime = 0.0f;
 };
 

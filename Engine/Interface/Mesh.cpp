@@ -1,4 +1,4 @@
-#include "Mesh.h"
+﻿#include "Mesh.h"
 
 Mesh::Mesh() {
 };
@@ -20,8 +20,7 @@ Microsoft::WRL::ComPtr <ID3D12Resource> Mesh::CreateBufferResource(Microsoft::WR
 	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	
 	Microsoft::WRL::ComPtr <ID3D12Resource> resource = nullptr;
-	HRESULT hr;
-	hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
 		&resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));

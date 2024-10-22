@@ -120,16 +120,16 @@ void Sprite::Update() {
 	vertexDataSprite_[3].position = { right,top,0.0f,1.0f }; // 右上
 
 	
-	//float tex_left = textureleftTop_.x / originSize_.x;
-	//float tex_right = (textureleftTop_.x + textureSize_.x) / originSize_.x;
-	//float tex_top = textureleftTop_.y / originSize_.y;
-	//float tex_bottom = (textureleftTop_.y + textureSize_.y) / originSize_.y;
+	float tex_left = textureleftTop_.x / originSize_.x;
+	float tex_right = (textureleftTop_.x + textureSize_.x) / originSize_.x;
+	float tex_top = textureleftTop_.y / originSize_.y;
+	float tex_bottom = (textureleftTop_.y + textureSize_.y) / originSize_.y;
 
-	//// 1枚目の三角形
-	//vertexDataSprite_[0].texcorrd = { tex_left,tex_bottom };
-	//vertexDataSprite_[1].texcorrd = { tex_left,tex_top };
-	//vertexDataSprite_[2].texcorrd = { tex_right,tex_bottom };
-	//vertexDataSprite_[3].texcorrd = { tex_right,tex_top };
+	// 1枚目の三角形
+	vertexDataSprite_[0].texcorrd = { tex_left,tex_bottom };
+	vertexDataSprite_[1].texcorrd = { tex_left,tex_top };
+	vertexDataSprite_[2].texcorrd = { tex_right,tex_bottom };
+	vertexDataSprite_[3].texcorrd = { tex_right,tex_top };
 	//// 1枚目の三角形
 	//vertexDataSprite_[0].texcorrd = { 0.0f,1.0f };
 	//vertexDataSprite_[1].texcorrd = { 0.0f,0.0f };

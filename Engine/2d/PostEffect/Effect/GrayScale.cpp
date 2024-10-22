@@ -90,6 +90,7 @@ PSOProperty GrayScale::CreatePipelineStateObject()
 void GrayScale::CommandRootParameter(PostProcess* postProcess)
 {
 	DirectXCommon* sDirectXCommon = DirectXCommon::GetInstance();
+	Camera* camera = postProcess->GetCamera();
 	depthOutlinelData_->calorValue = postProcess->GetColorValue();
 	// マテリアルCBufferの場所を設定
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。

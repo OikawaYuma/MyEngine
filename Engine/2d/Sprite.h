@@ -62,7 +62,6 @@ public:
 	void SetTextureSize(const Vector2& textureSize) {
 		this->textureSize_ = textureSize;
 	}
-	void SetColor(const Vector4& color) { materialData->color = color; }
 	D3D12_VERTEX_BUFFER_VIEW CreateBufferView();
 private:
 	PSOSprite* pso_ = nullptr;
@@ -95,6 +94,7 @@ private:
 	// RootParmeter作成。複数でっていできるので配列。今回は結果１つだけなので長さ1の配列
 	//D3D12_ROOT_PARAMETER rootParamerters[1] = {};
 	
+	uint32_t* indexDataSprite;
 	Microsoft::WRL::ComPtr < ID3D12Resource> indexResourceSprite;
 	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite{};
 	

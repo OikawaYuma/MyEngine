@@ -41,10 +41,6 @@ public: // Setter
 	void SetWorldTransform(const WorldTransform& worldtransform) { worldTransform_ = worldtransform; };
 	void SetTransform(Transform transform);
 	void SetMapTexture(uint32_t maptexture) { mapTexture_ = maptexture; };
-
-	void SetMaterial(const Material& material) { *materialData_ = material; }
-
-	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
 public: // Getter
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
@@ -52,6 +48,7 @@ public: // Getter
 private:
 	Object3dCommon* objectCommon_ = nullptr;
 
+	HRESULT hr;
 	// RootSignature作成
 	Model* model_ = nullptr;
 	AnimationModel* animationModel_ = nullptr;
@@ -59,31 +56,19 @@ private:
 
 	/*移動用*/
 	// WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
-	TransformationMatrix* wvpData{nullptr};
+	TransformationMatrix* wvpData;
 	Microsoft::WRL::ComPtr < ID3D12Resource> wvpResource;
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW wvpBufferView{};
-	Transform transformUv{};
+	Transform transformUv;
 
 	/*カメラ用*/
 	Microsoft::WRL::ComPtr < ID3D12Resource> cameraForGPUResource_;
-	CameraForGPU* cameraForGPUData_ = nullptr;
+	CameraForGPU* cameraForGPUData_;
 	// データを書き込む
-	WorldTransform worldTransform_{};
+	WorldTransform worldTransform_;
 
 	// 環境マップ用Texture
-	uint32_t mapTexture_ = 1;
-
-
-	// マテリアルをきれいに
-	Material* materialData_ = nullptr;
-	Microsoft::WRL::ComPtr < ID3D12Resource> materialResource;
-	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
-
-	// 平行光源用
-	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
-	// データを書き込む
-	DirectionalLight* directionalLightData = nullptr;
+	uint32_t mapTexture_;
 };
 

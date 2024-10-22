@@ -5,7 +5,7 @@ Audio::ComPtr<IXAudio2> Audio::xAudio2_;
 
 IXAudio2SourceVoice* Audio::pSourceVoice[soundDataMaxSize];
 
-SoundData Audio::soundData_[soundDataMaxSize];
+SoundData Audio::soundData[soundDataMaxSize];
 
 uint32_t Audio::soundHandle = 0u;
 
@@ -82,11 +82,11 @@ uint32_t Audio::SoundLoadWave(const char* filename)
 	file.close();
 	
 	// returnするための音声データ
-	soundData_[soundHandle];
+	soundData[soundHandle];
 
-	soundData_[soundHandle].wfek = format.fmt;
-	soundData_[soundHandle].pBuffer = reinterpret_cast<BYTE*>(pBuffer);
-	soundData_[soundHandle].bufferSize = data.size;
+	soundData[soundHandle].wfek = format.fmt;
+	soundData[soundHandle].pBuffer = reinterpret_cast<BYTE*>(pBuffer);
+	soundData[soundHandle].bufferSize = data.size;
 	uint32_t returnSoundHandle = soundHandle;
 	soundHandle++;
 
@@ -96,11 +96,11 @@ uint32_t Audio::SoundLoadWave(const char* filename)
 void Audio::SoundUnload(uint32_t audioHandle) {
 
 	// バッファのメモリを解放
-	delete[] soundData_[audioHandle].pBuffer;
+	delete[] soundData[audioHandle].pBuffer;
 
-	soundData_[audioHandle].pBuffer = 0;
-	soundData_[audioHandle].bufferSize = 0;
-	soundData_[audioHandle].wfek = {};
+	soundData[audioHandle].pBuffer = 0;
+	soundData[audioHandle].bufferSize = 0;
+	soundData[audioHandle].wfek = {};
 }
 
 void Audio::SoundPlayWave(IXAudio2* xAudio2,uint32_t audioHandle,bool loopFlag)
@@ -109,13 +109,13 @@ void Audio::SoundPlayWave(IXAudio2* xAudio2,uint32_t audioHandle,bool loopFlag)
 
 	// 波形フォーマットを元にSorceVoiceの生成
 	pSourceVoice[audioHandle] = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice[audioHandle], &soundData_[audioHandle].wfek);
+	result = xAudio2->CreateSourceVoice(&pSourceVoice[audioHandle], &soundData[audioHandle].wfek);
 	assert(SUCCEEDED(result));
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
-	buf.pAudioData = soundData_[audioHandle].pBuffer;
-	buf.AudioBytes = soundData_[audioHandle].bufferSize;
+	buf.pAudioData = soundData[audioHandle].pBuffer;
+	buf.AudioBytes = soundData[audioHandle].bufferSize;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	if (loopFlag) {
 		// 無限ループ
@@ -127,7 +127,7 @@ void Audio::SoundPlayWave(IXAudio2* xAudio2,uint32_t audioHandle,bool loopFlag)
 	result = pSourceVoice[audioHandle]->Start();
 }
 
-void Audio::SoundStopWave(uint32_t audioHandle)
+void Audio::SoundStopWave(IXAudio2* xAudio2, uint32_t audioHandle)
 {
 	HRESULT result;
 	
@@ -142,8 +142,6 @@ void Audio::SoundStopWave(uint32_t audioHandle)
 
 void Audio::SoundLoopWave(IXAudio2* xAudio2, const SoundData& soundData)
 {
-	xAudio2;
-	soundData;
 	//HRESULT result;
 
 

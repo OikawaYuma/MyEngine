@@ -280,14 +280,15 @@ void AnimationModel::ApplyAnimation(SkeletonData& skeleton, const AnimationData&
 ;
 
 void AnimationModel::Initialize(const std::string& directoryPath, const std::string& filename, const Material& material) {
+	WinAPI* sWinAPI = WinAPI::GetInstance();
 	directXCommon_ = DirectXCommon::GetInstance();
 
 	// モデル読み込み
 	modelData_ = LoadGLTFFile(directoryPath, filename);
 	animation_ = LoadAnimationFile(directoryPath, filename);
 	skeleton_ = Skeleton::CreateSkeleton(modelData_.rootNode);
-	skinCluster_ = Skeleton::CreateSkinCluster(
-		skeleton_, modelData_);
+	skinCluster_ = Skeleton::CreateSkinCluster(directXCommon_->GetDevice(),
+		skeleton_, modelData_, SRVManager::GetInstance()->GetDescriptorHeap(), SRVManager::GetInstance()->descriptorSize_);
 	// 頂点リソースを作る
 	vertexResource_ = Mesh::CreateBufferResource(directXCommon_->GetDevice(), sizeof(VertexData) * modelData_.vertices.size());
 
@@ -308,14 +309,14 @@ void AnimationModel::Initialize(const std::string& directoryPath, const std::str
 
 	/*materialBufferView = CreateBufferView();;*/
 	// 頂点リソースにデータを書き込む
-	materialData_ = nullptr;
+	materialData = nullptr;
 	// 書き込むためのアドレスを取得
-	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
 	// 色のデータを変数から読み込み
-	materialData_->color = material.color;
-	materialData_->enableLighting = material.enableLighting;
-	materialData_->uvTransform = MakeIdentity4x4();
-	materialData_->shininess = material.shininess;
+	materialData->color = material.color;
+	materialData->enableLighting = material.enableLighting;
+	materialData->uvTransform = MakeIdentity4x4();
+	materialData->shininess = material.shininess;
 
 	transformUv = {
 		{1.0f,1.0f,1.0f},
@@ -350,15 +351,15 @@ void AnimationModel::Initialize(const std::string& directoryPath, const std::str
 
 void AnimationModel::Update() {
 
-	animationTime_ += 1.0f / 60.0f;
-	animationTime_ = std::fmod(animationTime_, animation_.duration); // 最後まで行ったら最初からリピート再生。リピートしなくても別によい
+	animationTime += 1.0f / 60.0f;
+	animationTime = std::fmod(animationTime, animation_.duration); // 最後まで行ったら最初からリピート再生。リピートしなくても別によい
 	for (Joint& joint : skeleton_.joints) {
 		// 対象のJointのAnimationがあれば、他の適用を行う。下記のif文はC++17,から可能になった初期化付きif文。
 		if (auto it = animation_.nodeAnimations.find(joint.name); it != animation_.nodeAnimations.end()) {
 			const NodeAnimation& rootNodeAnimation = (*it).second;
-			joint.transform.translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime_);
-			joint.transform.rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime_);
-			joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime_);
+			joint.transform.translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime);
+			joint.transform.rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime);
+			joint.transform.scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime);
 
 		}
 	}
@@ -385,8 +386,9 @@ void AnimationModel::Update() {
 };
 
 
-void AnimationModel::Draw(uint32_t texture, const Material& material, const DirectionalLight& dire) {
+void AnimationModel::Draw(uint32_t texture, const Material& material, const DirectionalLight& dire, uint32_t mapTexture) {
 
+	PSOAnimationModel *pso_ = PSOAnimationModel::GatInstance();
 	vbvs[0] = vertexBufferView_;
 	vbvs[1] = skinCluster_.influenceBufferView;
 	//NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
@@ -397,9 +399,9 @@ void AnimationModel::Draw(uint32_t texture, const Material& material, const Dire
 
 	textureManager_ = TextureManager::GetInstance();
 	// 色のデータを変数から読み込み
-	materialData_->color = material.color;
-	materialData_->enableLighting = material.enableLighting;
-	materialData_->shininess = 0.5f;
+	materialData->color = material.color;
+	materialData->enableLighting = material.enableLighting;
+	materialData->shininess = 0.5f;
 	directionalLightData->direction = dire.direction;
 	//directionalLightData->direction =  Normalize(directionalLightData->direction);
 	//directXCommon_->GetCommandList()->SetGraphicsRootSignature(pso_->GetProperty().rootSignature.Get());
