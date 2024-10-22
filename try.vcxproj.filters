@@ -299,7 +299,7 @@
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp">
       <Filter>Application\worldDesign</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\Skydome\Skydome.cpp">
+    <ClCompile Include="Game\Skydome\Skydome.cpp">
       <Filter>Application\skydome</Filter>
     </ClCompile>
     <ClCompile Include="Game\Item\PlayerItem.cpp">
@@ -563,7 +563,7 @@
     <ClInclude Include="Game\WorldDesign\WorldDesign.h">
       <Filter>Application\worldDesign</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\Skydome\Skydome.h">
+    <ClInclude Include="Game\Skydome\Skydome.h">
       <Filter>Application\skydome</Filter>
     </ClInclude>
     <ClInclude Include="Game\IBullet.h">
@@ -597,90 +597,84 @@
     <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Lib\Resources\shader\Object3d.PS.hlsl">
+    <FxCompile Include="Resources\shader\Particle.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Object3d.VS.hlsl">
+    <FxCompile Include="Resources\shader\Particle.VS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Particle.PS.hlsl">
+    <FxCompile Include="Resources\shader\Sprite.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Particle.VS.hlsl">
+    <FxCompile Include="Resources\shader\Sprite.VS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Sprite.PS.hlsl">
+    <FxCompile Include="Resources\shader\Bloom.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Sprite.VS.hlsl">
+    <FxCompile Include="Resources\shader\BoxFilter.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Bloom.PS.hlsl">
+    <FxCompile Include="Resources\shader\DepthBasedOutline.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\BoxFilter.PS.hlsl">
+    <FxCompile Include="Resources\shader\Dissololve.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\DepthBasedOutline.PS.hlsl">
+    <FxCompile Include="Resources\shader\Fog.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Dissololve.PS.hlsl">
+    <FxCompile Include="Resources\shader\Fullscreen.hlsli">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Fog.PS.hlsl">
+    <FxCompile Include="Resources\shader\Fullscreen.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Fullscreen.hlsli">
+    <FxCompile Include="Resources\shader\Fullscreen.VS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Fullscreen.PS.hlsl">
+    <FxCompile Include="Resources\shader\GaussianFilter.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Fullscreen.VS.hlsl">
+    <FxCompile Include="Resources\shader\Grayscale.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\GaussianFilter.PS.hlsl">
+    <FxCompile Include="Resources\shader\HSVFilter.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Grayscale.PS.hlsl">
+    <FxCompile Include="Resources\shader\LuminanceBasedOutline.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\HSVFilter.PS.hlsl">
+    <FxCompile Include="Resources\shader\RadialBlur.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\LuminanceBasedOutline.PS.hlsl">
+    <FxCompile Include="Resources\shader\Random.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\RadialBlur.PS.hlsl">
+    <FxCompile Include="Resources\shader\SkinningObject3d.VS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Random.PS.hlsl">
+    <FxCompile Include="Resources\shader\Skybox.VS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\SkinningObject3d.VS.hlsl">
+    <FxCompile Include="Resources\shader\Skybox.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Skybox.VS.hlsl">
-      <Filter>Resources\shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Skybox.PS.hlsl">
-      <Filter>Resources\shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Lib\Resources\shader\Vignetting.PS.hlsl">
+    <FxCompile Include="Resources\shader\Vignetting.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Lib\Resources\shader\Object3d.hlsli">
+    <None Include="Resources\shader\Object3d.hlsli">
       <Filter>Resources\shader</Filter>
     </None>
-    <None Include="Lib\Resources\shader\Particle.hlsli">
+    <None Include="Resources\shader\Particle.hlsli">
       <Filter>Resources\shader</Filter>
     </None>
-    <None Include="Lib\Resources\shader\Sprite.hlsli">
+    <None Include="Resources\shader\Sprite.hlsli">
       <Filter>Resources\shader</Filter>
     </None>
-    <None Include="Lib\Resources\shader\Skybox.hlsli">
+    <None Include="Resources\shader\Skybox.hlsli">
       <Filter>Resources\shader</Filter>
     </None>
     <None Include="Engine\Externals\imgui\imgui.ini" />

@@ -11,7 +11,10 @@ public:
 	void Update();
 	void Draw(Camera* camera);
 
+
+
 public: // Setter
+	void SetSkydomeTexture(const uint32_t& tex) { skinTex_ = tex; }
 private:
 	Camera* camera_ = nullptr;
 	WorldTransform worldTransform_;

@@ -42,6 +42,29 @@ void Enemy::Draw(Camera* camera)
 	object_->Draw(skinTex_,camera);
 }
 
+void Enemy::GameOverUpdate()
+{
+	// 重量加速度
+	const float kGravityAcceleration = 0.075f;
+	// 加速度ベクトル
+	Vector3 accelerationVector = { 0, -kGravityAcceleration, 0 };
+	// 加速する
+	move = Add(move, accelerationVector);
+	// 着地
+	if (worldTransform_.translation_.y <= 0.5f) {
+		worldTransform_.translation_.y = 0.5f;
+		// ジャンプ初速
+		const float kJumpFirstSpeed = 1.0f;
+		// ジャンプ初速を与える
+		move.y = kJumpFirstSpeed;
+	}
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, {0.0f,move.y,0.0f});
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	worldTransform_.UpdateMatrix();
+}
+
 void Enemy::Move()
 {
 
