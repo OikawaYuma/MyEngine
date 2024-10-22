@@ -49,6 +49,29 @@ void GameScene::Init()
 		"Resources/noise1.png");
 	LoadStringSpTex_ = TextureManager::StoreTexture("Resources/LoadString.png");
 
+	moveflag1 = false;
+	moveFlag2 = false;
+	startSpritePos_ = { 640.0f , -250.0f };
+	startSpriteVelo_ = 0.75f;
+	startEffectSp_ = std::make_unique<Sprite>();
+	startEffectSp_->Init(
+		startSpritePos_, { 800, 280 },
+		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
+		"Resources/noise1.png");
+	startEffectSpTex_ = TextureManager::StoreTexture("Resources/StartSprite.png");
+
+	startSpritePos2_ = { 640.0f , -250.0f };
+	startSpriteVelo2_ = 0.75f;
+	startEffectSp2_ = std::make_unique<Sprite>();
+	startEffectSp2_->Init(
+		startSpritePos2_, { 800, 280 },
+		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
+		"Resources/noise1.png");
+	startEffectSpTex2_ = TextureManager::StoreTexture("Resources/StartSprite2.png");
+
+
+	statrTimer_ = 0;
+
 	slime2DSp1_ = std::make_unique<Slime2d>();
 	slime2DSp1_->Init(
 		{ 1050,650 }, 0.2f, 2, true);
@@ -64,10 +87,15 @@ void GameScene::Init()
 	loadpos = 660.0f;
 	endTimer = 0;
 	startTimer = 0;
+	cameraFlag_ = false;
+
+	gameBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/game.wav");
+	
 }
 
 void GameScene::Update()
 {
+	
 #ifdef DEBUG
 	GlobalVariables::GetInstance()->Update();
 #endif // DEBUG
@@ -108,6 +136,7 @@ void GameScene::Update()
 		}
 		case JUMPEND:
 		{
+			
 			endTimer++;
 			if (endTimer >= 10) {
 				if (slime2DSp1_->IsApear()) {
@@ -128,13 +157,20 @@ void GameScene::Update()
 
 				if (slime2DSp1_->IsStart()) {
 
-
+					
 					thre_ -= threPorM_;;
+					if (thre_ <= 0.5f) {
+						followCamera_->StartCameraEffect();
+					}
 					if (thre_ <= 0.0f) {
-						gameStateMode_ = PLAYGAME;
+						gameStateMode_ = STARTGAME;
+						threPorM_ = 0.025f;
+						threFlag_ = true;
+						Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameBGM_, true);
 					}
 					postProcess_->SetThreshold(thre_);
 					Audio::SoundStopWave(0);
+					
 
 				}
 			}
@@ -149,8 +185,68 @@ void GameScene::Update()
 		
 		break;
 	}
+	case STARTGAME: {
+		if (!cameraFlag_) {
+			followCamera_->StartCameraEffect();
+		}
+		
+		startTimer++;
+		if (!moveFlag2) {
+			
+			if (!moveflag1) {
+				startSpriteVelo_ = 4.0f;
+				if (startSpritePos_.y >= 130.0f) {
+					startSpriteVelo_ = 0.75f;
+					startSpriteVelo_ *= -1.0f;
+					moveflag1 = true;
+				}
+			}
+			else if (moveflag1) {
+				if (startSpritePos_.y >= 130.0f) {
+					startSpriteVelo_ *= -1.0f;
+				}
+				else if (startSpritePos_.y <= 110.0f)
+				{
+					startSpriteVelo_ *= -1.0f;
+				}
+			}
+			
+			if (startTimer >= 300) {
+				moveFlag2 = true;
+			}
+		}
+		else if (moveFlag2) {
+			startSpriteVelo_ = -4.0f;
+		}
+
+		if (startTimer >=360.0f) {
+			if (threFlag_) {
+				if (thre_ >= 1.2f) {
+					threPorM_ *= -1.0f;
+					cameraFlag_ = true;
+					followCamera_->Upadate();
+				}
+
+				thre_ += threPorM_;
+				if (thre_ <= 0.0f) {
+					threFlag_ = false;
+					threPorM_ *= -1.0f;
+					gameStateMode_ = PLAYGAME;
+				}
+
+			}
+		}
+		postProcess_->SetThreshold(thre_);
+		startSpritePos_.y += startSpriteVelo_;
+		startEffectSp_->SetPosition(startSpritePos_);
+		startEffectSp_->Update();
+		break;
+	}
 	case PLAYGAME: 
 	{
+		startSpritePos2_.y += 12.0f;
+		startEffectSp2_->SetPosition(startSpritePos2_);
+		startEffectSp2_->Update();
 		enemys_.remove_if([=](std::unique_ptr<Enemy>& bullet) {
 			if (bullet->IsDead()) {
 				destroyCount_++;
@@ -169,12 +265,14 @@ void GameScene::Update()
 		// 現状のクリア条件
 		if (destroyCount_ >= 3) {
 			IScene::SetSceneNo(CLEAR);
+			Audio::SoundStopWave(gameBGM_);
 			DeleteObject();
 		}
 		// 現状のゲームオーバー条件
 		// PlayerのHpが０になったら
 		if (player_->GetHP() <= 0) {
 			IScene::SetSceneNo(GAMEOVER);
+			Audio::SoundStopWave(gameBGM_);
 			DeleteObject();
 		}
 		// ロックオン
@@ -254,7 +352,12 @@ void GameScene::Draw()
 	ground_->Draw();
 	skydome_->Draw(followCamera_->GetCamera());
 	player_->Draw(followCamera_->GetCamera());
-	player_->DrawUI();
+	switch (gameStateMode_) {
+		case PLAYGAME:
+			player_->DrawUI();
+			break;
+	}
+	
 	lockOn_->Draw();
 	
 }
@@ -265,6 +368,8 @@ void GameScene::Draw2d()
 	slime2DSp1_->Draw();
 	slime2DSp2_->Draw();
 	slime2DSp3_->Draw();
+	startEffectSp_->Draw(startEffectSpTex_, { 1.0f,1.0f,1.0f,1.0f });
+	startEffectSp2_->Draw(startEffectSpTex2_, { 1.0f,1.0f,1.0f,1.0f });
 }
 
 void GameScene::PostDraw()
