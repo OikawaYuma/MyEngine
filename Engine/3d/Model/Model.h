@@ -1,3 +1,8 @@
+/**
+* @ file
+* @ brief
+*/
+
 #pragma once
 #include "WinAPI.h"
 #include "DirectXCommon.h"
