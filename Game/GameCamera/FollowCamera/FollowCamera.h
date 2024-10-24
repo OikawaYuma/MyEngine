@@ -9,6 +9,7 @@ class FollowCamera
 {
 public:
 	void Init();
+	void StartCameraEffect();
 	void Upadate();
 	void Reset();
 

@@ -299,7 +299,7 @@
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp">
       <Filter>Application\worldDesign</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\Skydome\Skydome.cpp">
+    <ClCompile Include="Game\Skydome\Skydome.cpp">
       <Filter>Application\skydome</Filter>
     </ClCompile>
     <ClCompile Include="Game\Item\PlayerItem.cpp">
@@ -324,6 +324,7 @@
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
     <ClCompile Include="Engine\3d\Light\SpotLight.cpp" />
+    <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -563,7 +564,7 @@
     <ClInclude Include="Game\WorldDesign\WorldDesign.h">
       <Filter>Application\worldDesign</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Scene\Skydome\Skydome.h">
+    <ClInclude Include="Game\Skydome\Skydome.h">
       <Filter>Application\skydome</Filter>
     </ClInclude>
     <ClInclude Include="Game\IBullet.h">
@@ -595,14 +596,9 @@
     <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
     <ClInclude Include="Game\Slime2d\Slime2d.h" />
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
+    <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
-      <Filter>Resources\shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Object3d.VS.hlsl">
-      <Filter>Resources\shader</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>

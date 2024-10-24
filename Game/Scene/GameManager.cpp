@@ -107,6 +107,7 @@ int GameManager::Run() {
 			break;
 		}
 		// ゲームの処理の開始
+		// PostEffectかけない処理
 		sDirctX->tempRender();
 		// ImGui
 		ImGuiCommon::GetInstance()->UICreate();
@@ -143,18 +144,19 @@ int GameManager::Run() {
 		///
 
 		sceneArr_[currentSceneNo_]->Draw();
-		
-
+	
 		///
 		/// ↑描画処理ここまで
 		///
 		sDirctX->BeginFrame();
 		sDirctX->ChangeDepthStatetoRead();
 		sceneArr_[currentSceneNo_]->PostDraw();
+		sDirctX->ChangeDepthStatetoRender();
+		// PostEffectかけないスプライトのDraw
+		sceneArr_[currentSceneNo_]->Draw2d();
+
 		// フレームの終了
 		//スワップチェーン
-		sDirctX->ChangeDepthStatetoRender();
-		sceneArr_[currentSceneNo_]->Draw2d();
 		sDirctX->ViewChange();
 		sAudio->GetIXAudio().Reset();
 		// ESCキーが押されたらループを抜ける

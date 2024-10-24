@@ -126,6 +126,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
     <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
     <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
@@ -165,7 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GaussianBlur.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GrayScale.cpp" />
-    <ClCompile Include="Game\Scene\Skydome\Skydome.cpp" />
+    <ClCompile Include="Game\Skydome\Skydome.cpp" />
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\IPostEffectState.cpp" />
     <ClCompile Include="Lib\utility\function.cpp" />
@@ -209,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
     <ClInclude Include="Game\Character\base\BaseCharacter.h" />
     <ClInclude Include="Game\Character\Enemy\Enemy.h" />
     <ClInclude Include="Game\Character\Enemy\EnemyBase.h" />
@@ -229,7 +231,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Model\AnimationModel.h" />
     <ClInclude Include="Engine\3d\Skeleton\Skeleton.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\FullScreen.h" />
-    <ClInclude Include="Game\Scene\Skydome\Skydome.h" />
+    <ClInclude Include="Game\Skydome\Skydome.h" />
     <ClInclude Include="Game\Utilty\Loder.h" />
     <ClInclude Include="Engine\Interface\PSO\PSOAnimationModel.h" />
     <ClInclude Include="Game\Scene\DemoScene.h" />
@@ -361,18 +363,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shader\Fullscreen.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Object3d.PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\shader\Object3d.VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

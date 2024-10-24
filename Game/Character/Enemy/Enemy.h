@@ -8,9 +8,11 @@ class Enemy: public EnemyBase
 {
 public:
 	void Init(const Vector3& translate, const std::string filename) ;
-	void Update() ;
+	void Update();
 	void Draw(Camera* camera) ;
 
+public:
+	void GameOverUpdate();
 public:
 	void Move();
 
