@@ -90,11 +90,14 @@ void PSOAnimationModel::CreateRootSignature() {
 	rootParamerters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParamerters[4].Descriptor.ShaderRegister = 2;
 
-	rootParamerters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescripterTableを使う
-	rootParamerters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX; // PixelShaderで使う
-	rootParamerters[5].DescriptorTable.pDescriptorRanges = &descriptorRange_[0]; // Tableの中身の配列を指定
-	rootParamerters[5].DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
+	rootParamerters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParamerters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamerters[5].Descriptor.ShaderRegister = 3;
 
+	rootParamerters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescripterTableを使う
+	rootParamerters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX; // PixelShaderで使う
+	rootParamerters[6].DescriptorTable.pDescriptorRanges = &descriptorRange_[0]; // Tableの中身の配列を指定
+	rootParamerters[6].DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
 	//rootParamerters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // DescripterTableを使う
 	//rootParamerters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 	//rootParamerters[6].DescriptorTable.pDescriptorRanges = &descriptorRange_[1]; // Tableの中身の配列を指定

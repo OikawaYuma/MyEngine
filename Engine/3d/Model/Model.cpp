@@ -5,8 +5,7 @@
 Model::Model() {}
 Model::~Model()
 {
-}
-;
+};
 ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filePath)
 {
 	Assimp::Importer importer;
@@ -56,7 +55,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	}
 
 	modelData_.rootNode = ReadNode(scene->mRootNode);
-
+	/*
 	//ModelData modelData; // 構築するMataData
 	//std::vector<Vector4> positions; // 位置
 	//std::vector<Vector3> normals; // 法線
@@ -135,9 +134,11 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	//	}
 
 	//}
+	*/
 	return modelData_;
 
 }
+
 ModelData Model::LoadGLTFFile(const std::string& directoryPath, const std::string& filePath)
 {
 	Assimp::Importer importer;
@@ -209,8 +210,7 @@ ModelData Model::LoadGLTFFile(const std::string& directoryPath, const std::strin
 	modelData_.rootNode = ReadNode(scene->mRootNode);
 	return modelData_;
 
-}
-;
+};
 
 MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
 	MaterialData materialData;// 構築するMaterialData
@@ -235,6 +235,7 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 
 	return materialData;
 }
+
 AnimationData Model::LoadAnimationFile(const std::string& directoryPath, const std::string& filePath)
 {
 	AnimationData animation;// 今回作るアニメーション
@@ -274,6 +275,7 @@ AnimationData Model::LoadAnimationFile(const std::string& directoryPath, const s
 	}
 	return animation;
 }
+
 Node Model::ReadNode(aiNode* node)
 {
 	Node result;
@@ -309,6 +311,7 @@ Node Model::ReadNode(aiNode* node)
 	}
 	return result;
 }
+
 void Model::ApplyAnimation(SkeletonData& skeleton, const AnimationData& animation, float animationTime)
 {
 	for (Joint& joint : skeleton.joints) {
@@ -321,8 +324,7 @@ void Model::ApplyAnimation(SkeletonData& skeleton, const AnimationData& animatio
 
 		}
 	}
-}
-;
+};
 
 void Model::Initialize(const std::string& directoryPath, const std::string& filename) {
 	directXCommon_ = DirectXCommon::GetInstance();
@@ -345,21 +347,11 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 
-	
-	
-
 	transformUv = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f}
 	};
-
-
-
-	
-	
-
-	
 
 	indexResource_ = Mesh::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice().Get(), sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
@@ -372,13 +364,13 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	std::memcpy(indexDataSprite, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 	//worldTransform_.Initialize();
 
+	
 };
 
 void Model::Update() {
 
 
 };
-
 
 void Model::Draw(uint32_t texture) {
 

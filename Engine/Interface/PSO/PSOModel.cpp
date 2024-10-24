@@ -77,13 +77,20 @@ void PSO::CreateRootSignature() {
 	rootParamerters[2].DescriptorTable.pDescriptorRanges = &descriptorRange_[0]; // Tableの中身の配列を指定
 	rootParamerters[2].DescriptorTable.NumDescriptorRanges = 1; // Tableで利用する数
 
+	// 平行光源用
 	rootParamerters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParamerters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParamerters[3].Descriptor.ShaderRegister = 1;
 
+	// カメラ用
 	rootParamerters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParamerters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParamerters[4].Descriptor.ShaderRegister = 2;
+
+	// スポットライト用
+	rootParamerters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParamerters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParamerters[5].Descriptor.ShaderRegister = 3;
 	// 環境マップ用
 	//descriptorRange_[1].BaseShaderRegister = 1; // 0から始まる
 	//descriptorRange_[1].NumDescriptors = 1; // 数は1つ

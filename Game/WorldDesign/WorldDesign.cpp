@@ -12,7 +12,7 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel(filename + ".obj");
-	
+	object_->SetSpotlightPos(translate);
 	material_.color = { 1.0f,1.0f,1.0f,1.0f };
 	material_.enableLighting = true;
 	material_.uvTransform = MakeIdentity4x4();
