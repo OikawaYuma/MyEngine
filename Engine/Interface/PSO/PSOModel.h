@@ -1,3 +1,7 @@
+/**
+* @ file
+* @ brief
+*/
 #pragma once
 #include <d3d12.h>
 #include "DirectXCommon.h"

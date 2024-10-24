@@ -1,4 +1,9 @@
-﻿#pragma once
+/**
+* @ file
+* @ brief
+*/
+
+#pragma once
 
 /// <summary>
 /// 3次元ベクトル
