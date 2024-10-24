@@ -20,7 +20,7 @@
 #include "Object3dCommon.h"
 #include <PSOAnimationModel.h>
 #include "Skybox/Skybox.h"
-
+#include "SpotLight.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -45,6 +45,7 @@ public: // Setter
 	void SetMaterial(const Material& material) { *materialData_ = material; }
 
 	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
+	void SetSpotlightPos(const Vector3& pos) { spotLightData_->position = pos; }
 public: // Getter
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
@@ -85,5 +86,10 @@ private:
 	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
 	// データを書き込む
 	DirectionalLight* directionalLightData = nullptr;
+
+	// スポットライト用
+	Microsoft::WRL::ComPtr < ID3D12Resource> spotLightResource_;
+	SpotLight* spotLightData_ = nullptr;
+	SpotLight spotlight;
 };
 

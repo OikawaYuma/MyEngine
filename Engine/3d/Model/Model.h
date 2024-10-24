@@ -19,6 +19,7 @@
 #include "Material.h"
 #include "TransformationMatrix.h"
 
+
 #include "Animation.h"
 #include<Windows.h>
 #include<d3d12.h>
@@ -118,5 +119,7 @@ private:
 	Matrix4x4 aniMatrix_;
 	Matrix4x4 skeMatrix_;
 	float animationTime_ = 0.0f;
+
+	
 };
 

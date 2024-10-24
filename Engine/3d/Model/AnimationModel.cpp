@@ -416,7 +416,7 @@ void AnimationModel::Draw(uint32_t texture, const Material& material, const Dire
 	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, SRVManager::GetGPUDescriptorHandle(texture));
 
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
-	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster_.paletteSrvHandle.second);
+	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(7, skinCluster_.paletteSrvHandle.second);
 	//directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(6, SRVManager::GetGPUDescriptorHandle(mapTexture));
 	directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), 1, 0, 0, 0);
 	//directXCommon_->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);

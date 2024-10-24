@@ -16,12 +16,25 @@ struct DirectionalLight {
 	float intensity; //!< 輝度
 	
 };
+
+struct SpotLight
+{
+    float32_t4 color; //!< ライトの色
+    float32_t3 position; //!< ライトの位置
+    float32_t intensity; //!< 輝度
+    float32_t3 direction; //!< スポットの方向
+    float32_t distance; //!< ライトの届く最大距離
+    float32_t decay; //!< 減衰率
+    float32_t cosAngle; //!< スポットライトの余弦
+	
+};
 struct Camera {
 	float32_t3 worldPosition;
 };
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<Camera> gCamera : register(b2);
+ConstantBuffer<SpotLight> gSpotLight : register(b3);
 Texture2D<float32_t4> gTexture : register(t0);
 //TextureCube<float32_t4> gEnvironmentTexture : register(t1);
 
@@ -59,8 +72,17 @@ PixelShaderOutput main(VertexShaderOutput input)
 		// 鏡面反射
         float32_t3 specular =
 			gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f, 1.0f, 1.0f);
+		
+        float32_t3 spotLightDirectionOnSurface = normalize(input.worldPosition - gSpotLight.position);
+		
+		
 		// 拡散反射+鏡面反射
-		output.color.rgb = diffuse + specular;
+		output.color.rgb = diffuse + specular * gSpotLight.intensity;
+        float32_t cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
+        float32_t falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0f - gSpotLight.cosAngle));
+		// 以下はこの方法でもできるということ　attenuationFactorは距離による減衰のこと
+		//gSpotLight.color.rgb * gSpotLight.intensity * attenuationFactor * falloffFactor
+		
 		//// αは今まで通り
 		//output.color.a = gMaterial.color.a * textureColor.a;
         //float32_t3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);

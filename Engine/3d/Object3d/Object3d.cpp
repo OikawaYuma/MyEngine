@@ -49,6 +49,24 @@ void Object3d::Init()
 	directionalLightData->direction = { 0.0f,-1.0f,0.0f };
 	directionalLightData->intensity = 1.0f;
 
+	spotLightResource_ = nullptr;
+	spotLightResource_ = Mesh::CreateBufferResource(directXCommon->GetDevice(), sizeof(SpotLight));
+	// 書き込むためのアドレスを取得
+	spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
+
+	
+	spotlight.color = { 0.0f,0.0f,0.0f,1.0f };
+	spotlight.position = { 2.0f,1.25f,0.0f };
+	spotlight.distance = 7.0f;
+	spotlight.direction =
+		Normalize(Vector3{ -1.0f,-1.0f,0.0f });
+	spotlight.intensity = 4.0f;
+	spotlight.dacya = 2.0f;
+	spotlight.cosAngle =
+		std::cos(std::numbers::pi_v<float> / 3.0f);
+
+	spotLightData_ = &spotlight;
+
 }
 
 void Object3d::Update()
@@ -100,14 +118,17 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
+	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(5, spotLightResource_->GetGPUVirtualAddress());
+	
 	// 3Dモデルが割り当てられていれば描画する
 	if (animationModel_) {
-		wvpData->WVP = worldViewProjectionMatrix;
+		
 		wvpData->World = worldTransform_.matWorld_;
 		animationModel_->Draw(texture, { { 1.0f,1.0f,1.0f,1.0f },true
 			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.5f });
 	}
 	else if (model_) {
+		
 		wvpData->WVP =  worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
 		model_->Draw(texture);
