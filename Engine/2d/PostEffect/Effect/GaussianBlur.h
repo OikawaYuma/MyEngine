@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file GaussianBlur.h
+* @ brief ポストエフェクトのGaussianBlurに関する設定
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

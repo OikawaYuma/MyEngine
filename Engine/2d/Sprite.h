@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Sprite.h
+* @ brief スプライトの描画を行う関数
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

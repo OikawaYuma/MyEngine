@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Random.h
+* @ brief ポストエフェクトのRandomに関する設定
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

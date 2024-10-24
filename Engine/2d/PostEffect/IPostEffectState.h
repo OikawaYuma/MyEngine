@@ -1,6 +1,7 @@
 /**
-* @ file  
-* @ brief 
+* @ file IPostEffectState.h
+* @ brief StatePatternでポストエフェクトの掛けるエフェクトを変更を行うためのインターフェース
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

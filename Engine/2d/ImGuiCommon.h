@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file　ImGuiCommon.h
+* @ brief ImGuiの使うための機能をまとめるクラス　Singleton Patternで作成
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

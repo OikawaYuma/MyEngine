@@ -1,4 +1,8 @@
-#pragma once
+/**
+* @ file PSOPostEffect.h
+* @ brief ポストエフェクト画像の描画に関する設定　Singleton Patternで作成
+* @ author 及川　優麿　（オイカワ　ユウマ）
+*/
 #pragma once
 #include <d3d12.h>
 #include "DirectXCommon.h"

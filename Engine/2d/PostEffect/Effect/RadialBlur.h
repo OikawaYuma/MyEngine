@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file RadialBlur.h
+* @ brief ポストエフェクトのRadialBlurに関する設定
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

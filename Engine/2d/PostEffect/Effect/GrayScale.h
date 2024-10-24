@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file GrayScale.h
+* @ brief ポストエフェクトのGrayScaleに関する設定
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file PostProcess.h
+* @ brief IPostEffectStateから読み取りどのEffectを選び描画を行うクラス
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
