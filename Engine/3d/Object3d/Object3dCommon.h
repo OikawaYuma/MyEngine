@@ -1,6 +1,6 @@
 /**
-* @ file
-* @ brief
+* @ file ObjectCommon.h
+* @ brief Objectの共通部分をまとめたクラス Singleton Patternで制作
 */
 
 #pragma once

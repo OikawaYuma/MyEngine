@@ -323,7 +323,6 @@
     <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
-    <ClCompile Include="Engine\3d\Light\SpotLight.cpp" />
     <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -453,7 +452,7 @@
     <ClInclude Include="Engine\3d\ResourceObject.h">
       <Filter>Engine\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\3d\DirectionLight.h">
+    <ClInclude Include="Engine\3d\Light\DirectionLight.h">
       <Filter>Engine\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3d\Material.h">

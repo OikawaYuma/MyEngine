@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file AnimationModel.h
+* @ brief gltfでskeletonとAnimationを持つModel読むクラス
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file SpotLight.h
+* @ brief スポットライト用の構造体
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

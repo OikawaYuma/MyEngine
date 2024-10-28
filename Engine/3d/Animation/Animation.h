@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Animation.h
+* @ brief gltfのModelを動かすAnimationの機能をまとめたクラス
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

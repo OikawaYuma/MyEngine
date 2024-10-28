@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Object.h
+* @ brief Objectの情報を持つクラス
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

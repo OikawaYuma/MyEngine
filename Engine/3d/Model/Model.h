@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Model
+* @ brief gltfとobjでの通常モデルの読むクラス
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file ModelManager.h
+* @ brief 読み込んだModelを格納するクラス
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
