@@ -24,6 +24,7 @@
 
 #include "Material.h"
 #include "DirectionLight.h"
+#include "Particle/Particle.h"
 class LockOn;
 // ふるまい
 enum class Behavior {
@@ -50,6 +51,13 @@ public:
 /// </summary>
 	void TitleInit();
 	void TitleUpdate();
+
+/// <summary>
+/// GameOver
+/// </summary>
+	void GameOverInit();
+	void GameOverUpdate();
+	void GameOverDraw(Camera* camera);
 public:
 	// ダッシュ用ワーク
 	struct WorkDash {
@@ -115,6 +123,8 @@ public: // Setter
 	void SetHP(float hp) { hp_ = hp; }
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
 	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; }
+
+	void SetSpotLight(const SpotLight& spotLight) { spotLight_ = spotLight; }
 public: // Collider
 	void OnCollision(uint32_t attri) override;
 	Vector3 GetWorldPosition() const override;
@@ -190,6 +200,7 @@ private:
 
 	Material material_{};
 	DirectionalLight direLight_{};
+	SpotLight spotLight_{};
 
 	//　敵と衝突した後の再衝突用タイマー
 	bool isEnemyHit_ = false;
@@ -203,5 +214,8 @@ private:
 	bool isShot_ = false;
 	uint32_t shotTimer_ = 0;
 	const  uint32_t shotInterval_ = 5;
+
+private: // GameOver
+	std::unique_ptr<Object3d> deadSlimeObj_;
 };
 

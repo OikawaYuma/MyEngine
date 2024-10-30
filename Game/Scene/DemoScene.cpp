@@ -10,72 +10,46 @@
 
 void DemoScene::Init()
 {
-	camera = new Camera;
-	camera->Initialize();
-	Vector3 cameraPos = camera->GetTransform().translate;
-	cameraPos.y = 1;
-	cameraPos.z = -15;
-	camera->SetTranslate(cameraPos);
-	input = Input::GetInstance();
-	textureHandle = TextureManager::StoreTexture("Resources/uvChecker.png");
-	textureHandle2 = TextureManager::StoreTexture("Resources/white.png");
-	textureHandle3 = TextureManager::StoreTexture("Resources/rostock_laage_airport_4k.dds");
-	demoSprite = new Sprite();
-	demoSprite->Init({ 0.0f,0.0f }, { 600.0f,600.0f }, { 0.0f,0.0f }, { 1.0f,1.0f,1.0f,1.0f }, "Resources/uvChecker.png");
-	material.color = { 1.0f,1.0f,1.0f,1.0f };
-	material.enableLighting = true;
-	worldTransform.Initialize();
-	worldTransform.translation_.x = 0.0f;
-	worldTransform.scale_ = { 1,1,1 };
-	worldTransform2.Initialize();
-	worldTransform2.translation_.x = 5.0f;
-	worldTransform2.scale_ = { 2.0f,2.0f,2.0f };
-	worldTransform3.Initialize();
-	worldTransform3.translation_.x = -5.0f;
-	worldTransform3.scale_ = { 2.0f,1.0f,2.0f };
-	worldTransform.UpdateMatrix();
-	worldTransform2.UpdateMatrix();
-	worldTransform3.UpdateMatrix();
+
+
+	
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
+	camera_->SetTranslate({0.0f,3.0f,0.0f});
+	ground_ = std::make_unique<Ground>();
+	ground_->Init();
+	ground_->SetCamera(camera_.get());
+	obj_ = std::make_unique<Player>();
+	obj_->Init({ 1.0f, 0.5f,10.0f }, "ddd");
+	obj_->SetCamera(camera_.get());
+
+	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
+	spotLight_.position = {2.0f ,1.25f,5.0};
+	spotLight_.distance = 7.0f;
+	spotLight_.direction =
+		Normalize(Vector3{ -1.0f,-1.0f,0.0f });
+	spotLight_.intensity = 4.0f;
+	spotLight_.dacya = 2.0f;
+	spotLight_.cosAngle =
+		std::cos(std::numbers::pi_v<float> / 3.0f);
+
+	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
+	tex_ = TextureManager::GetInstance()->StoreTexture("Resources/HpUI.png");
+	obj2_ = std::make_unique<Object3d>();
+	obj2_->Init();
+	obj2_->SetModel("slimeDead.obj");
+
+	worldtransform_.Initialize();
+	worldtransform_.translation_ = { 0.0f,2.0f,5.0f };
+	worldtransform_.UpdateMatrix();
+	obj2_->SetWorldTransform(worldtransform_);
+
+	obj_->SetSpotLight(spotLight_);
+	
+	ground_->SetSpotLight(spotLight_);
+
 	postProcess_ = new PostProcess();
-	postProcess_->SetCamera(camera);
 	postProcess_->Init();
-	
-	skybox_ = new Skybox();
-	skybox_->Init(material);
-
-	ModelManager::GetInstance()->LoadAnimationModel("Resources/human", "sneakWalk.gltf");
-	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
-	ModelManager::GetInstance()->LoadModel("Resources/box", "box.obj");
-	;
-	object3d = new Object3d();
-	object3d->Init();
-	object3d2 = new Object3d();
-	object3d2->Init();
-	object3d3 = new Object3d();
-	object3d3->Init();
-
-	object3d3->SetMapTexture(textureHandle3);
-	object3d2->SetMapTexture(textureHandle3);
-	//object3d->SetSkybox(skybox_);
-	object3d->SetAnimationModel("sneakWalk.gltf");
-	object3d2->SetModel("player.obj");
-	object3d3->SetModel("box.obj");
-    particle = new Particle();
-    particle2 = new Particle();
-
-	demoRandPro = {
-		{1.0f,4.0f},
-		{1.0f,4.0f},
-		{0.0f,2.0f}
-	};
-	
-	demoEmitter_.count = 6;
-	demoEmitter_.frequency = 0.02f;
-	demoEmitter_.frequencyTime = 0.0f;
-	demoEmitter_.transform.scale = { 0.5f,0.5f,0.5f };
-	particle->Initialize(demoEmitter_);
-	particle2->Initialize(demoEmitter_);
-
 	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
 }
 
@@ -91,80 +65,40 @@ void DemoScene::Update()
 
 	ImGui::Begin("OBB,BALL");
 
-	ImGui::SliderFloat3("BALLro", &worldTransform2.rotation_.x, -5.0f, 10.0f);
-	ImGui::SliderFloat3("BALLtra", &worldTransform2.translation_.x, -5.0f, 10.0f);
 
-	ImGui::SliderFloat3("boxsca", &worldTransform3.rotation_.x, -5.0f, 10.0f);
-	ImGui::SliderFloat3("boxtran", &worldTransform3.translation_.x, -5.0f, 10.0f);
+	ImGui::DragFloat4("sColor", &spotLight_.color.x, 0.1f);
+	ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	ImGui::DragFloat3("sDis", &spotLight_.distance, 0.1f);
+	ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+
+	ImGui::Text("playerPosX %f", spotLight_.position.x);
+	ImGui::Text("playerPosZ %f", spotLight_.position.z);
 
 	ImGui::End();
 
-
-
-	Vector3 camerattt = camera->GetRotate();
-	if (Input::GetInstance()->PushKey(DIK_A)) {
-		camerattt.x -= 0.08f;
-	}
-	if (Input::GetInstance()->PushKey(DIK_D)) {
-		camerattt.x += 0.08f;
-	}
-	if (Input::GetInstance()->PushKey(DIK_W)) {
-		camerattt.y += 0.08f;
-	}if (Input::GetInstance()->PushKey(DIK_S)) {
-		camerattt.y -= 0.08f;
-	}
-	camera->SetRotate(camerattt);
-	sceneTime++;
-	////カメラの更新
-	camera->Update();
-	demoSprite->Update();
+	spotLight_.direction = Normalize(spotLight_.direction);
+	obj_->SetSpotLight(spotLight_);
+	ground_->SetSpotLight(spotLight_);
+	ground_->Update();
+	obj_->Update();
 	
+	camera_->Update();
 	
 	PostEffectChange();
 
+	obj2_->Update();
 	
-	if (Input::GetInstance()->TriggerKey(DIK_A)) {
-		rotateSize_ = 0.0f;
-	}
-	if (Input::GetInstance()->TriggerKey(DIK_D)) {
-		rotateSize_ = 0.05f;
-	}
 	
-	object3d->SetWorldTransform(worldTransform);
-	object3d2->SetWorldTransform(worldTransform2);
-	object3d3->SetWorldTransform(worldTransform3);
-	
-	object3d->Update();
-	object3d2->Update();
-	object3d3->Update();
-
-	/*if (IsCollisionAABB(worldTransform3.translation_, worldTransform3.scale_, worldTransform2.translation_, worldTransform2.scale_.x)) {
-		boxTexFlag = false;
-	}
-	else {
-		boxTexFlag = true;
-	}*/
-
-	
-
+	postProcess_->Update();
 }
 void DemoScene::Draw()
 {
-	//for (std::vector<Object3d*>::iterator itr = object3d_.begin(); itr != object3d_.end(); itr++) {
-	//	(*itr)->Draw(textureHandle, camera);
-	//}
-	//demoSprite->Draw(textureHandle,{1.0f,1.0f,1.0f,1.0f});
+	ground_->Draw();
+	obj_->Draw(camera_.get());
+	obj2_->Draw(tex_,camera_.get());
 	
-	object3d->Draw(textureHandle,camera);
-	object3d2->Draw(textureHandle, camera);
-	if (boxTexFlag) {
-		object3d3->Draw(textureHandle2, camera);
-	}
-	else {
-		object3d3->Draw(textureHandle, camera);
-	}
-	//particle->Draw(demoEmitter_, { worldTransform.translation_.x,worldTransform.translation_.y,worldTransform.translation_.z +5}, textureHandle, camera, demoRandPro, false);
-	//particle2->Draw(demoEmitter_, { worldTransform2.translation_.x,worldTransform2.translation_.y,worldTransform2.translation_.z +5}, textureHandle2, camera, demoRandPro, false);
 }
 
 void DemoScene::PostDraw()

@@ -61,10 +61,13 @@ PixelShaderOutput main(VertexShaderOutput input)
     // maskの値が0.5f（闘値）以下の場合はdiscardして抜く
     if (mask <= gMaterial.projectionInverse)
     {
-        discard;
+        output.color.rgb = float32_t3(0.35f, 0.025f, 0.025f);
+        return output;
+        //discard;
     }
     // Edgeっぽさを検出
     //float32_t edge = 1.0f - smoothstep(0.5f, 0.53f, mask);
+    
     output.color = gTexture.Sample(gSampler, input.texcoord);
     // Edgeっぽいほど指定した色を加算
    // output.color.rgb += edge * float32_t3(1.0f, 0.4f, 0.3f);

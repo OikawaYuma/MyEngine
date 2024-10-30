@@ -65,7 +65,7 @@ void Object3d::Init()
 	spotlight.cosAngle =
 		std::cos(std::numbers::pi_v<float> / 3.0f);
 
-	spotLightData_ = &spotlight;
+	spotLightData_;
 
 }
 
@@ -124,6 +124,7 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 	if (animationModel_) {
 		
 		wvpData->World = worldTransform_.matWorld_;
+		wvpData->WorldInverseTranspose = Inverse(Transpose(wvpData->World));
 		animationModel_->Draw(texture, { { 1.0f,1.0f,1.0f,1.0f },true
 			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.5f });
 	}
@@ -131,11 +132,13 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 		
 		wvpData->WVP =  worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
+		wvpData->WorldInverseTranspose = Inverse(Transpose(wvpData->World));
 		model_->Draw(texture);
 	}
 	else if (skybox_) {
 		wvpData->WVP = worldViewProjectionMatrix;
 		wvpData->World = worldTransform_.matWorld_;
+		wvpData->WorldInverseTranspose = Inverse(Transpose(wvpData->World));
 		skybox_->Draw(texture, { { 1.0f,1.0f,1.0f,1.0f },false
 			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.2f });
 	}

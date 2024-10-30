@@ -79,7 +79,7 @@ void TitleScene::Init()
 	loadingSpriteMoveFlag_ = false;
 
 	titleBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/title.wav");
-	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_, true);
+	//Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_, true);
 
 	// シーン遷移Flag
 	GamePlayFlag_ = false;

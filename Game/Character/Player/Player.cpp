@@ -23,7 +23,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	hommingBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/HommingBulletUI.png");
 	razerBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/RazerBeam.png");
 
-	hp_ = 1.0f;
+	hp_ = 0.3f;
 
 	reticleNear_ = std::make_unique<Sprite>();
 	reticleNear_->Init(
@@ -75,7 +75,6 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.translation_.y = 0.5f;
 
 	
-
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("player.obj");
@@ -102,11 +101,23 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
 	object_->SetMaterial(material_);
+
 	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	direLight_.direction = { 0.0f,-1.0f,0.0f };
-	direLight_.intensity = 1.0f;
+	direLight_.intensity = 0.6f;
 	
-	
+	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
+	spotLight_.position = worldTransform_.translation_;
+	spotLight_.distance = 7.0f;
+	spotLight_.direction =
+		Normalize(Vector3{ -1.0f,-1.0f,0.0f });
+	spotLight_.intensity = 4.0f;
+	spotLight_.dacya = 2.0f;
+	spotLight_.cosAngle =
+		std::cos(std::numbers::pi_v<float> / 3.0f);
+	object_->SetSpotLight(spotLight_);
+
+
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
@@ -117,22 +128,32 @@ void Player::Update()
 #ifdef Debug
 	
 #endif // DEBUG
+
 	/*ImGui::Begin("Light");
 	ImGui::DragFloat4("mColor", &material_.color.x, 0.1f);
 	ImGui::DragFloat("mShin", &material_.shininess, 0.1f);
 
 	ImGui::DragFloat4("dColor", &direLight_.color.x, 0.1f);
 	ImGui::DragFloat3("ddire", &direLight_.direction.x, 0.1f);
-
 	ImGui::DragFloat("dinten", &direLight_.intensity, 0.1f);
+
+	ImGui::DragFloat4("sColor", &spotLight_.color.x, 0.1f);
+	ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	ImGui::DragFloat3("sDis", &spotLight_.distance, 0.1f);
+	ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+
 	ImGui::Text("playerPosX %f", worldTransform_.translation_.x);
 	ImGui::Text("playerPosZ %f", worldTransform_.translation_.z);
-	ImGui::End();*/
+	ImGui::End();
 
 
 	direLight_.direction = Normalize(direLight_.direction);
+	spotLight_.direction = Normalize(spotLight_.direction);*/
 
 	object_->SetMaterial(material_);
+	object_->SetSpotLight(spotLight_);
 	object_->SetDirectionLight(direLight_);
 
 
@@ -167,7 +188,7 @@ void Player::Update()
 		behaviorRequest_ = std::nullopt;
 	}
 	// HPを元に基準となる大きさを決定する
-	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	worldTransform_.scale_ = { hp_+0.3f,hp_ + 0.3f,hp_ + 0.3f };
 	// 着地
 	if (worldTransform_.translation_.y <= 0.5f * hp_) {
 		worldTransform_.translation_.y = 0.5f * hp_;
@@ -470,6 +491,35 @@ void Player::TitleUpdate()
 	worldTransform_.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
+}
+
+void Player::GameOverInit()
+{
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/slimeDead/slimeDead.png");
+
+	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
+	deadSlimeObj_ = std::make_unique<Object3d>();
+	deadSlimeObj_->Init();
+	deadSlimeObj_->SetModel("slimeDead.obj");
+	
+	worldTransform_.Initialize();
+	worldTransform_.translation_ = {-1.0f,0.01f,221.0f };
+	worldTransform_.scale_ = { 5.0f,1.0f,5.0f };
+	worldTransform_.UpdateMatrix();
+	deadSlimeObj_->SetWorldTransform(worldTransform_);
+
+}
+
+void Player::GameOverUpdate()
+{
+	worldTransform_.UpdateMatrix();
+	deadSlimeObj_->SetWorldTransform(worldTransform_);
+	deadSlimeObj_->Update();
+}
+
+void Player::GameOverDraw(Camera* camera)
+{
+	deadSlimeObj_->Draw(skinTex_, camera);
 }
 
 void Player::Move()

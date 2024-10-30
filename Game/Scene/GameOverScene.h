@@ -32,6 +32,8 @@ public:
 	void Draw2d()override;
 	void Release()override;
 	int GameClose()override;
+
+	void DeleteObject();
 private:
 	Sprite* sprite = nullptr;
 	uint32_t titleTex_ = 1;
@@ -44,5 +46,24 @@ private:
 	std::list<std::unique_ptr<PlayerItem>> items_;
 	std::list<std::unique_ptr<WorldDesign>> worldDesigns_;
 	std::unique_ptr<Skydome> skydome_;
+
+	float thre_;
+	float threPorM_;
+	bool threFlag_ = false;
+	bool titleFlag_ = false;
+
+	std::unique_ptr<Sprite> pushASp_ = nullptr;
+	float pushSpriteAlpha_;
+	float pushSpriteAlphaPorM_;
+
+	float titleBerYPos = 0.0f;
+	float titleBerYPosPram = 0.5f;
+	std::unique_ptr<Sprite> titleBer_ = nullptr;
+	uint32_t pushATex_ = 1;
+	uint32_t gameOverTex_ = 1;
+
+	uint32_t gameOverBGM_ = 0;
+
+	uint32_t pushSE_ = 0;
 };
 

@@ -27,6 +27,7 @@ enum GameState {
 	WAITGAME,
 	STARTGAME,
 	PLAYGAME,
+	DEADGAME
 };
 
 
@@ -93,11 +94,16 @@ private:
 	std::unique_ptr<Sprite> startEffectSp2_;
 	uint32_t startEffectSpTex2_ = 0;
 
+	SpotLight spotLight_{};
+	float cosAngle_ = 0.0f;
 	uint32_t jumpNum_ = JUMPONE;
 	uint32_t jumpRoopNum = 0;
 	float loadpos = 0;
 	uint32_t endTimer = 0;
 	uint32_t startTimer = 0;
 	uint32_t gameBGM_;
+
+	uint32_t slimeDeadSE_;
+	bool GameOverFlag;
 };
 

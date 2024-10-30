@@ -17,7 +17,9 @@ public:
 	void Update();
 	void Draw(Camera* camera);
 public: // Getter
-	Object3d* GetWorldDesignObject(){ return object_.get(); }
+	Object3d* GetWorldDesignObject() { return object_.get(); };
+
+	void SetSpotLight(const SpotLight& spotLight) { spotLight_ = spotLight; }
 private:
 	std::unique_ptr<Object3d> object_;
 	uint32_t floorTex_ = 0;
@@ -26,5 +28,6 @@ private:
 
 	Material material_{};
 	DirectionalLight direLight_{};
+	SpotLight spotLight_{};
 };
 

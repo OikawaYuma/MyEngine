@@ -25,6 +25,18 @@ void GameScene::Init()
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 
+	cosAngle_ = 3.0f;
+	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
+	spotLight_.position = { 2.0f ,1.25f,5.0 };
+	spotLight_.distance = 7.0f;
+	spotLight_.direction =
+		Normalize(Vector3{ -1.0f,-1.0f,0.0f });
+	spotLight_.intensity = 4.0f;
+	spotLight_.dacya = 2.0f;
+	spotLight_.cosAngle =
+		std::cos(std::numbers::pi_v<float> / cosAngle_);
+	
+
 	gameStateMode_ = WAITGAME;
 	jumpNum_ = JUMPONE;
 	jumpRoopNum = 0;
@@ -90,6 +102,8 @@ void GameScene::Init()
 	cameraFlag_ = false;
 
 	gameBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/game.wav");
+	GameOverFlag = false;
+	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	
 }
 
@@ -99,6 +113,24 @@ void GameScene::Update()
 #ifdef DEBUG
 	GlobalVariables::GetInstance()->Update();
 #endif // DEBUG
+
+	//ImGui::Begin("OBB,BALL");
+
+
+	//ImGui::DragFloat4("sColor", &spotLight_.color.x, 0.1f);
+	//ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	//ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	//ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
+	//ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	//ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+	//ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
+	//ImGui::Text("playerPosX %f", spotLight_.position.x);
+	//ImGui::Text("playerPosZ %f", spotLight_.position.z);
+
+	//ImGui::End();
+	spotLight_.cosAngle =
+		std::cos(std::numbers::pi_v<float> / cosAngle_);
+	spotLight_.direction = Normalize(spotLight_.direction);
 	switch (gameStateMode_) {
 	case WAITGAME:
 	{
@@ -169,7 +201,7 @@ void GameScene::Update()
 						Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameBGM_, true);
 					}
 					postProcess_->SetThreshold(thre_);
-					Audio::SoundStopWave(0);
+					//Audio::SoundStopWave(0);
 					
 
 				}
@@ -216,7 +248,7 @@ void GameScene::Update()
 			}
 		}
 		else if (moveFlag2) {
-			startSpriteVelo_ = -4.0f;
+			startSpriteVelo_ = -5.0f;
 		}
 
 		if (startTimer >=360.0f) {
@@ -271,19 +303,25 @@ void GameScene::Update()
 		// 現状のゲームオーバー条件
 		// PlayerのHpが０になったら
 		if (player_->GetHP() <= 0) {
-			IScene::SetSceneNo(GAMEOVER);
+			
 			Audio::SoundStopWave(gameBGM_);
-			DeleteObject();
+			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), slimeDeadSE_, false);
+			gameStateMode_ = DEADGAME;
+			threPorM_ = -0.025f;
+			
 		}
 		// ロックオン
 		lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());
+		player_->SetSpotLight(spotLight_);
 		player_->Update();
 		followCamera_->Upadate();
+		ground_->SetSpotLight(spotLight_);
 		ground_->Update();
 		skydome_->Update();
 		// エネミーの弾発射処理
 		for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-			(*itr)->Update();
+			/*(*itr)->Update();*/
+
 			/*
 			//// enemy->Fire();
 			//if ((*itr)->GetFireTimer() >= (*itr)->kFireInterval) {
@@ -325,20 +363,38 @@ void GameScene::Update()
 
 
 		for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+			(*itr)->SetSpotLight(spotLight_);
 			(*itr)->Update();
+
 		}
 
+		
+
 		collisionManager_->CheckAllCollision();
+		break;
+	}
+	case DEADGAME:
+	{
+		thre_ -= threPorM_;;
+		if (thre_ >= 1.2f) {
+			DeleteObject();
+			Audio::GetInstance()->SoundStopWave(slimeDeadSE_);
+			IScene::SetSceneNo(GAMEOVER);
+		}
+		
+		postProcess_->SetThreshold(thre_);
 		break;
 	}
 	}
 	
 	
 	
+	
 }
 void GameScene::Draw()
 {
-	
+	skydome_->Draw(followCamera_->GetCamera());
+	ground_->Draw();
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
 	}
@@ -349,8 +405,8 @@ void GameScene::Draw()
 	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
 	}
-	ground_->Draw();
-	skydome_->Draw(followCamera_->GetCamera());
+	
+	
 	player_->Draw(followCamera_->GetCamera());
 	switch (gameStateMode_) {
 		case PLAYGAME:

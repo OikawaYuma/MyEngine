@@ -51,6 +51,7 @@ public: // Setter
 	void SetMaterial(const Material& material) { *materialData_ = material; }
 
 	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
+	void SetSpotLight(const SpotLight& spotLight) { *spotLightData_ = spotLight; }
 	void SetSpotlightPos(const Vector3& pos) { spotLightData_->position = pos; }
 public: // Getter
 	WorldTransform GetWorldTransform() { return worldTransform_; }
