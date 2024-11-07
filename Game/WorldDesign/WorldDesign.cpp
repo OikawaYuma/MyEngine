@@ -37,6 +37,9 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	object_->Update();
 	worldTransform_.UpdateMatrix();
 
+	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
+	shadowObject_->Init(&worldTransform_, filename + ".obj");
+	shadowObject_->Update();
 }
 
 void WorldDesign::Update()
@@ -46,11 +49,13 @@ void WorldDesign::Update()
 
 	worldTransform_.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_);
+	shadowObject_->Update();
 }
 
 void WorldDesign::Draw(Camera* camera)
 {
 	camera_ = camera;
+	shadowObject_->Draw(camera_);
 	object_->Draw(floorTex_, camera_);
 }
 

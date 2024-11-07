@@ -2,6 +2,7 @@
 #include "ImGuiCommon.h"
 #include "TextureManager.h"
 #include "Input.h"
+#include <Audio.h>
 void ClearScene::Init()
 {
 	sprite = new Sprite();
@@ -16,18 +17,49 @@ void ClearScene::Init()
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_.get());
 	postProcess_->Init();
-	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
+
+	postProcess_->SetDissolveInfo({ 1.0f, 1.0f, 1.0f });
+	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+
+	thre_ = 1.0f;
+	threPorM_ = 0.025f;
+	threFlag_ = false;
+
+	postProcess_->SetThreshold(thre_);
+	titleFlag_ = false;
 }
 void ClearScene::Update()
 {
+	
+
+
 	if (Input::GetInstance()->GetJoystickState()) {}
-	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A)) {
-		IScene::SetSceneNo(TITLE);
-	}
-	else if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		IScene::SetSceneNo(TITLE);
+	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A) && threFlag_) {
+		titleFlag_ = true;
+		postProcess_->SetDissolveInfo({ 1.0f,1.0f,1.0f });
+		//Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), pushSE_, false);
+		//threPorM_ = 0.025f;
 	}
 
+
+
+	if (!threFlag_) {
+		thre_ -= threPorM_;
+		if (thre_ <= 0.0f) {
+
+			threPorM_ *= -1.0f;
+			threFlag_ = true;
+		}
+	}
+	else if (threFlag_ && titleFlag_) {
+		thre_ -= threPorM_;
+		//Audio::GetInstance()->SoundStopWave(gameOverBGM_);
+		if (thre_ >= 1.2f) {
+			IScene::SetSceneNo(TITLE);
+		}
+
+	}
+	postProcess_->SetThreshold(thre_);
 	postProcess_->Update();
 	
 }

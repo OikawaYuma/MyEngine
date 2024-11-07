@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Character/base/BaseCharacter.h"
 #include "EnemyBase.h"
+#include "PlaneProjectionShadow.h"
 class Player;
 class Enemy: public EnemyBase
 {
@@ -28,6 +29,7 @@ public: // Collider
 	 void SetPlayer(Player* player) { player_ = player; }
 private:
 	std::unique_ptr<Object3d> object_;
+	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// model skin num

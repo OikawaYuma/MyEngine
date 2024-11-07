@@ -70,6 +70,7 @@ void TitleScene::Init()
 	/////////////////////////////////////////////////
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_->GetCamera());
+	postProcess_->SetDissolveInfo({ 1.0f,1.0f,1.0f });
 	postProcess_->Init();
 	thre_ = 0.0f;
 	threPorM_ = 0.025f;
@@ -79,7 +80,7 @@ void TitleScene::Init()
 	loadingSpriteMoveFlag_ = false;
 
 	titleBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/title.wav");
-	//Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_, true);
+	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), titleBGM_, true);
 
 	// シーン遷移Flag
 	GamePlayFlag_ = false;
@@ -247,7 +248,7 @@ void TitleScene::Update()
 
 					IScene::SetSceneNo(STAGE);
 					DeleteObject();
-					//Audio::SoundStopWave(titleBGM_);
+					Audio::SoundStopWave(titleBGM_);
 
 				}
 			

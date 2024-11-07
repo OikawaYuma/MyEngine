@@ -9,6 +9,7 @@
 #include "Object3d.h"
 #include "WorldTransform.h"
 #include "Camera.h"
+#include "PlaneProjectionShadow.h"
 
 class WorldDesign
 {
@@ -22,6 +23,7 @@ public: // Getter
 	void SetSpotLight(const SpotLight& spotLight) { spotLight_ = spotLight; }
 private:
 	std::unique_ptr<Object3d> object_;
+	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	uint32_t floorTex_ = 0;
 	WorldTransform worldTransform_;
 	Camera* camera_ = nullptr;

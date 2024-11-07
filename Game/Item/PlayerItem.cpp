@@ -22,6 +22,9 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	SetRadius(1.0f);
 	SetCollisonAttribute(0b0100);
 	SetCollisionMask(0b0001);
+	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
+	shadowObject_->Init(&worldTransform_, filename + ".obj");
+	shadowObject_->Update();
 }
 
 void PlayerItem::Update()
@@ -30,12 +33,12 @@ void PlayerItem::Update()
 	object_->SetWorldTransform(worldTransform_);
 
 	worldTransform_.UpdateMatrix();
-	
+	shadowObject_->Update();
 }
 
 void PlayerItem::Draw(Camera* camera)
 {
-
+	shadowObject_->Draw(camera);
 	object_->Draw(floorTex_, camera);
 }
 

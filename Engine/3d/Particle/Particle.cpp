@@ -10,7 +10,11 @@
 
 
 
-Particle::Particle() {};
+Particle::Particle() {}
+Particle::~Particle()
+{
+}
+;
 void Particle::Initialize(Emitter emitter) {
 	sWinAPI = WinAPI::GetInstance();
 	sDirectXCommon = DirectXCommon::GetInstance();
@@ -103,6 +107,8 @@ void Particle::Initialize(Emitter emitter) {
 	directionalLightData->direction = { 0.0f,-1.0f,0.0f };
 	directionalLightData->intensity = 1.0f;
 	emitter_ = emitter;
+	emitter_.count = emitter.count;
+	emitter_.transform = { emitter.transform.scale,{0.0f,0.0f,0.0f},{0.0f,0.0f,5.0f} };
 	emitter_.count = 6;
 	emitter_.frequency = 0.02f;// 0.5秒ごとに発生
 	emitter_.frequencyTime = 0.0f;// 発生頻度用の時刻、0で初期化
@@ -111,11 +117,10 @@ void Particle::Initialize(Emitter emitter) {
 //
 //};
 
-void Particle::Draw(Emitter emitter, const Vector3& worldTransform, uint32_t texture, Camera* camera, const RandRangePro& randRange, bool scaleAddFlag) {
+void Particle::Draw(const Vector3& worldTransform, uint32_t texture, Camera* camera, const RandRangePro& randRange, bool scaleAddFlag) {
 	pso_ = PSOParticle::GatInstance();
 
-	emitter_.count = emitter.count;
-	emitter_.transform = { emitter.transform.scale,{0.0f,0.0f,0.0f},worldTransform };
+	worldTransform;
 	randRange_ = randRange;
 
 	randRange_ =
@@ -198,8 +203,8 @@ Particle::ParticlePro Particle::MakeNewParticle(std::mt19937& randomEngine, cons
 {
 	RandRangePro ran = randRange;
 	std::uniform_real_distribution<float> distribution(-0.8f, 0.8f);
-	std::uniform_real_distribution<float> distriposX(ran.rangeX.x, ran.rangeX.y);//distriposX(-0.7f, -0.3
-	std::uniform_real_distribution<float> distriposY(ran.rangeY.x, ran.rangeY.y);//  distriposY(0.2f, 0.5f)
+	std::uniform_real_distribution<float> distriposX(ran.rangeX.x, ran.rangeX.y);// distriposX(-0.7f, -0.3
+	std::uniform_real_distribution<float> distriposY(ran.rangeY.x, ran.rangeY.y);// distriposY(0.2f, 0.5f)
 	std::uniform_real_distribution<float> distriposZ(ran.rangeZ.x, ran.rangeZ.y);// distriposZ(-0.5f, 0.3f
 	//std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
 	std::uniform_real_distribution<float> distTime(0.0f, 1.5f);

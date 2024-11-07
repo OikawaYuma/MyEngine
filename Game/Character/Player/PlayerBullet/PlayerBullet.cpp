@@ -32,6 +32,12 @@ void PlayerBullet::Init(const Vector3& pos, const Vector3& velocity)
 
 	// 衝突対象を自分の属性以外に設定
 	SetCollisionMask(0b0010);
+
+
+	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
+	shadowObject_->Init(&worldtransform_, "ball.obj");
+	//shadowObject_->Update();
+
 }
 
 void PlayerBullet::Update()
@@ -48,11 +54,15 @@ void PlayerBullet::Update()
 		isDead_ = true;
 
 	}
+
+	shadowObject_->Update();
 }
 
 void PlayerBullet::Draw(Camera* camera)
 {
+	shadowObject_->Draw(camera);
 	object_->Draw(texHandle_,camera);
+
 }
 
 void PlayerBullet::SetParent(const WorldTransform* parent)

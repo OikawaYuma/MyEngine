@@ -11,8 +11,23 @@
 void DemoScene::Init()
 {
 
+	emitter_.count = 4;
+	emitter_.frequency = 5.0f;
+	emitter_.frequencyTime = 0.0f;
 
-	
+	emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
+	emitter_.transform.scale = { 1.0f,1.0f,1.0f };
+	emitter_.transform.translate = { 0.0f,2.0f,15.0f };
+
+	randRangePro_ = {
+		{0.7f,0.9f},
+		{0.1f,0.4f},
+		{-0.5f,0.3f}
+	};
+
+	particle_ = std::make_unique<Particle>();
+	particle_->Initialize(emitter_);
+
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate({0.0f,3.0f,0.0f});
@@ -95,9 +110,10 @@ void DemoScene::Update()
 }
 void DemoScene::Draw()
 {
-	ground_->Draw();
-	obj_->Draw(camera_.get());
-	obj2_->Draw(tex_,camera_.get());
+	particle_->Draw({0.0f,0.0f,20.0f},tex_,camera_.get(), randRangePro_,true);
+	//ground_->Draw();
+	//obj_->Draw(camera_.get());
+	//obj2_->Draw(tex_,camera_.get());
 	
 }
 

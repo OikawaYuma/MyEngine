@@ -93,6 +93,15 @@ int GameManager::Run() {
 	PSOPostEffect* pSOPostEffect = PSOPostEffect::GatInstance();
 	pSOPostEffect->Init();
 	
+
+	// シーンのチェック
+	prevSceneNo_ = currentSceneNo_;
+	currentSceneNo_ = sceneArr_[currentSceneNo_]->GetSceneNo();
+
+	// シーン変更チェック
+	if (prevSceneNo_ != currentSceneNo_) {
+		sceneArr_[currentSceneNo_]->Init();
+	}
 	//post->Init();
 	sceneArr_[currentSceneNo_]->Init();
 

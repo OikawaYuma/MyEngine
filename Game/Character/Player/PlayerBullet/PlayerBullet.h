@@ -11,6 +11,7 @@
 #include "Object3d.h"
 #include "Collider.h"
 #include "ImGuiCommon.h"
+#include "PlaneProjectionShadow.h"
 
 class PlayerBullet : public Collider {
 public:
@@ -39,6 +40,8 @@ private:
 	WorldTransform worldtransform_;
 	Model* model_ = nullptr;
 	std::unique_ptr<Object3d> object_ = nullptr;
+	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
+
 	uint32_t textureHandle_ = 0;
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 	Vector3 velocity_{};

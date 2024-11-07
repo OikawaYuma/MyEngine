@@ -199,6 +199,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Scene\ResultScene.cpp" />
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
+    <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
@@ -299,6 +300,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\GameCamera\TitleCamera\TitleCamera.h" />
     <ClInclude Include="Game\Slime2d\Slime2d.h" />
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
+    <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

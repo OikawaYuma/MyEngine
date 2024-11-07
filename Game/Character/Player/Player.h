@@ -21,6 +21,7 @@
 #include "Character/Player/PlayerBullet/PlayerBullet.h"
 #include "Character/Player/PlayerRazer/PlayerRazer.h"
 #include "Sprite.h"
+#include "PlaneProjectionShadow.h"
 
 #include "Material.h"
 #include "DirectionLight.h"
@@ -132,6 +133,7 @@ public: // Collider
 private:
 	Camera* camera_ = nullptr;
 	std::unique_ptr<Object3d> object_;
+	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	std::unique_ptr<Object3d> nearReticleObj_;
 	std::unique_ptr<Object3d> farReticleObj_;
 

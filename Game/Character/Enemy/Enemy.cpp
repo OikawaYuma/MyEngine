@@ -18,6 +18,10 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
 	SetCollisionMask(0b001);
+
+	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
+	shadowObject_->Init(&worldTransform_, "player.obj");
+	shadowObject_->Update();
 }
 
 void Enemy::Update()
@@ -25,8 +29,8 @@ void Enemy::Update()
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	// 着地
-	if (worldTransform_.translation_.y <= 0.5f * hp_) {
-		worldTransform_.translation_.y = 0.5f * hp_;
+	if (worldTransform_.translation_.y <= 0.48f * hp_) {
+		worldTransform_.translation_.y = 0.48f * hp_;
 		// ジャンプ終了
 		//behaviorRequest_ = Behavior::kRoot;
 	}
@@ -34,11 +38,12 @@ void Enemy::Update()
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
-
+	shadowObject_->Update();
 }
 
 void Enemy::Draw(Camera* camera)
 {
+	shadowObject_->Draw(camera);
 	object_->Draw(skinTex_,camera);
 }
 
@@ -51,8 +56,8 @@ void Enemy::GameOverUpdate()
 	// 加速する
 	move = Add(move, accelerationVector);
 	// 着地
-	if (worldTransform_.translation_.y <= 0.5f) {
-		worldTransform_.translation_.y = 0.5f;
+	if (worldTransform_.translation_.y <= 0.48f) {
+		worldTransform_.translation_.y = 0.48f;
 		// ジャンプ初速
 		const float kJumpFirstSpeed = 1.0f;
 		// ジャンプ初速を与える
@@ -63,6 +68,7 @@ void Enemy::GameOverUpdate()
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
+	shadowObject_->Update();
 }
 
 void Enemy::Move()

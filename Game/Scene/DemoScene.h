@@ -45,6 +45,10 @@ private:
 	std::unique_ptr<Player> obj_;
 	std::unique_ptr<Ground> ground_;
 
+	std::unique_ptr<Particle> particle_;
+	Emitter emitter_{};
+	RandRangePro randRangePro_;
+
 	std::unique_ptr<Object3d> obj2_;
 	uint32_t tex_;
 	WorldTransform worldtransform_;

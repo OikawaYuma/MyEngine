@@ -9,9 +9,10 @@
 #include "IPostEffectState.h"
 #include "PSOProperty.h"
 #include "Matrix4x4.h"
-
+#include "Vector3.h"
 struct DissolveInfo {
 	float threshold;
+	Vector3 discardColor;
 };
 class PostProcess;
 class Dissolve : public IPostEffectState

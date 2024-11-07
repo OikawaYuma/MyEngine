@@ -91,6 +91,7 @@ void Dissolve::CommandRootParameter(PostProcess* postProcess)
 {
 	DirectXCommon* sDirectXCommon = DirectXCommon::GetInstance();
 	depthOutlinelData_->threshold = postProcess->GetThreshold();
+	depthOutlinelData_->discardColor = postProcess->GetDiisolveCollor();
 	// マテリアルCBufferの場所を設定
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	sDirectXCommon->GetCommandList()->SetGraphicsRootDescriptorTable(0, SRVManager::GetInstance()->GetGPUDescriptorHandle(sDirectXCommon->GetRenderIndex()));
