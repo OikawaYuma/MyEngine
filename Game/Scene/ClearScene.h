@@ -23,6 +23,11 @@ private:
 	uint32_t titleTex_ = 1;
 	PostProcess* postProcess_ = nullptr;
 	std::unique_ptr<Camera> camera_ = nullptr;
+
+	float thre_;
+	float threPorM_;
+	bool threFlag_ = false;
+	bool titleFlag_ = false;
 };
 ;
 

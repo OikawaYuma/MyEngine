@@ -2,6 +2,7 @@
 struct Material
 {
     float32_t projectionInverse;
+    float32_t3 discardColor;
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -61,7 +62,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     // maskの値が0.5f（闘値）以下の場合はdiscardして抜く
     if (mask <= gMaterial.projectionInverse)
     {
-        output.color.rgb = float32_t3(0.35f, 0.025f, 0.025f);
+       // output.color.rgb = float32_t3(0.35f, 0.025f, 0.025f);
+        output.color.rgb = gMaterial.discardColor;
         return output;
         //discard;
     }

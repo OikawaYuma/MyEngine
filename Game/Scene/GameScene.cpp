@@ -43,6 +43,7 @@ void GameScene::Init()
 	postProcess_ = new PostProcess();
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
+	postProcess_->SetDissolveInfo({1.0f,1.0f,1.0f});
 	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
@@ -295,10 +296,13 @@ void GameScene::Update()
 			});
 
 		// 現状のクリア条件
-		if (destroyCount_ >= 3) {
-			IScene::SetSceneNo(CLEAR);
+		if (destroyCount_ >= 4) {
+
 			Audio::SoundStopWave(gameBGM_);
-			DeleteObject();
+			postProcess_->SetDissolveInfo({ 1.0f, 1.0f, 1.0f });
+			gameStateMode_ = CLEARGAME;
+			threPorM_ = -0.025f;
+
 		}
 		// 現状のゲームオーバー条件
 		// PlayerのHpが０になったら
@@ -306,6 +310,7 @@ void GameScene::Update()
 			
 			Audio::SoundStopWave(gameBGM_);
 			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), slimeDeadSE_, false);
+			postProcess_->SetDissolveInfo({ 0.35f, 0.025f, 0.025f });
 			gameStateMode_ = DEADGAME;
 			threPorM_ = -0.025f;
 			
@@ -320,7 +325,7 @@ void GameScene::Update()
 		skydome_->Update();
 		// エネミーの弾発射処理
 		for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-			/*(*itr)->Update();*/
+			(*itr)->Update();
 
 			/*
 			//// enemy->Fire();
@@ -371,6 +376,18 @@ void GameScene::Update()
 		
 
 		collisionManager_->CheckAllCollision();
+		break;
+	}
+	case CLEARGAME:
+	{
+		thre_ -= threPorM_;;
+		if (thre_ >= 1.2f) {
+			DeleteObject();
+			//Audio::GetInstance()->SoundStopWave(slimeDeadSE_);
+			IScene::SetSceneNo(CLEAR);
+		}
+
+		postProcess_->SetThreshold(thre_);
 		break;
 	}
 	case DEADGAME:

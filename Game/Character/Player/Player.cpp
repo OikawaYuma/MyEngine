@@ -23,7 +23,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	hommingBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/HommingBulletUI.png");
 	razerBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/RazerBeam.png");
 
-	hp_ = 0.3f;
+	hp_ = 1.0f;
 
 	reticleNear_ = std::make_unique<Sprite>();
 	reticleNear_->Init(
@@ -121,6 +121,10 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
+
+	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
+	shadowObject_->Init(&worldTransform_, "player.obj");
+	shadowObject_->Update();
 }
 
 void Player::Update()
@@ -190,8 +194,8 @@ void Player::Update()
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_+0.3f,hp_ + 0.3f,hp_ + 0.3f };
 	// 着地
-	if (worldTransform_.translation_.y <= 0.5f * hp_) {
-		worldTransform_.translation_.y = 0.5f * hp_;
+	if (worldTransform_.translation_.y <=(hp_* 0.5f)) {
+		worldTransform_.translation_.y = (hp_ * 0.5f);
 		// ジャンプ終了
 		//behaviorRequest_ = Behavior::kRoot;
 	}
@@ -220,9 +224,7 @@ void Player::Update()
 		
 	default:
 		BehaviorRootUpdate();
-		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X)) {
-			behaviorRequest_ = Behavior::kAttack;
-		}
+		
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
 			behaviorRequest_ = Behavior::kDash;
 		}
@@ -272,11 +274,6 @@ void Player::Update()
 		}
 	}
 
-	
-
-
-	
-
 	Attack();
 	// 弾更新
 	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
@@ -291,10 +288,12 @@ void Player::Update()
 	object_->Update();
 	reticleNear_->Update();
 	reticleFar_->Update();
+	shadowObject_->Update();
 }
 
 void Player::Draw(Camera* camera)
 {
+	shadowObject_->Draw(camera);
 	object_->Draw(skinTex_, camera);
 	///
 	//レティクルの位置の確認用
@@ -420,10 +419,10 @@ void Player::TitleUpdate()
 	default:
 		BehaviorRootUpdate();
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X)) {
-			behaviorRequest_ = Behavior::kAttack;
+			//behaviorRequest_ = Behavior::kAttack;
 		}
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
-			behaviorRequest_ = Behavior::kDash;
+			//behaviorRequest_ = Behavior::kDash;
 		}
 		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_B)) {
 			behaviorRequest_ = Behavior::kJump;
@@ -491,6 +490,7 @@ void Player::TitleUpdate()
 	worldTransform_.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
+	shadowObject_->Update();
 }
 
 void Player::GameOverInit()
@@ -1018,9 +1018,10 @@ void Player::BehaviorRootJumpUpdate()
 	// 加速する
 	velo_ = Add(velo_,accelerationVector);
 
+
 	// 着地
-	if (worldTransform_.translation_.y <= 0.5f * hp_) {
-		worldTransform_.translation_.y = 0.5f * hp_;
+	if (worldTransform_.translation_.y <= (hp_ * 0.5f)) {
+		worldTransform_.translation_.y = (hp_ * 0.5f);
 		// ジャンプ終了
 		behaviorRequest_ = Behavior::kRoot;
 	}

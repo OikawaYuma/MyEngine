@@ -33,11 +33,14 @@ void GameOverScene::Init()
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_->GetCamera());
 	postProcess_->Init();
+	
+	postProcess_->SetDissolveInfo({ 0.35f, 0.025f, 0.025f });
 	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
 
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
+
 	postProcess_->SetThreshold(thre_);
 	titleFlag_ = false;
 
@@ -87,6 +90,7 @@ void GameOverScene::Update()
 	if (Input::GetInstance()->GetJoystickState()) {}
 	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A) && threFlag_) {
 		titleFlag_ = true;
+		postProcess_->SetDissolveInfo({ 1.0f,1.0f,1.0f });
 		Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), pushSE_, false);
 		//threPorM_ = 0.025f;
 	}
@@ -113,7 +117,7 @@ void GameOverScene::Update()
 		Audio::GetInstance()->SoundStopWave(gameOverBGM_);
 		if (thre_ >= 1.2f) {
 			DeleteObject();
-			IScene::SetSceneNo(STAGE);
+			IScene::SetSceneNo(TITLE);
 		}
 
 	}

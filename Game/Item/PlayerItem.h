@@ -8,7 +8,7 @@
 #include "WorldTransform.h"
 #include "Camera.h"
 #include "Collider.h"
-
+#include "PlaneProjectionShadow.h"
 class Player;
 class PlayerItem : public Collider
 {
@@ -34,6 +34,7 @@ public: // Setter
 private:
 	Player* player_ = nullptr;
 	std::unique_ptr<Object3d> object_;
+	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 
 	bool isDead_ = false;
 	uint32_t floorTex_ = 0;

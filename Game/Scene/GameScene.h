@@ -27,6 +27,7 @@ enum GameState {
 	WAITGAME,
 	STARTGAME,
 	PLAYGAME,
+	CLEARGAME,
 	DEADGAME
 };
 

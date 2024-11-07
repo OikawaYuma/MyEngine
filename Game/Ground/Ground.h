@@ -8,6 +8,7 @@
 #include "WorldTransform.h"
 #include "Object3d.h"
 #include "Camera.h"
+#include "PlaneProjectionShadow.h"
 
 class Ground
 {

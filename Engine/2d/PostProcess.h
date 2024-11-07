@@ -31,6 +31,7 @@
 #include "Effect/Bloom.h"
 #include "Effect/DepthOutline.h"
 #include "Effect/FullScreen.h"
+#include "Effect/Dissolve.h"
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxcompiler.lib")
@@ -54,10 +55,14 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW CreateBufferView();
 
 	void SetCamera(Camera *camera) { camera_ = camera; }
-	void SetThreshold(float threshold) { threshold_ = threshold; }
+	void SetThreshold(float threshold) { dissolveInfo_.threshold = threshold; }
 	void SetDeviation(float deviation) { deviation_ = deviation; }
 
-	float GetThreshold(){ return threshold_; }
+	float GetThreshold(){ return dissolveInfo_.threshold; }
+
+	void SetDissolveInfo(Vector3 discardColor) { dissolveInfo_.discardColor = discardColor; }
+	Vector3 GetDiisolveCollor() { return dissolveInfo_.discardColor; }
+
 	float GetDeviation() { return deviation_; }
 	BloomInfo GetBloominfo() { return bloomInfo_; }
 	void SetBloomInfo(BloomInfo bloominfo) { bloomInfo_ = bloominfo; }
@@ -144,5 +149,7 @@ private:
 	BloomInfo bloomInfo_ = { 10.0f,0.3f,1.0f, 1 };
 	DepthOutlineInfo depthOutlineInfo_;
 	FullScreenInfo hsvInfo_;
+	DissolveInfo dissolveInfo_;
+	
 };
 
