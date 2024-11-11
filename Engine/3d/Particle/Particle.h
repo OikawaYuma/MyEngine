@@ -15,6 +15,7 @@
 #include <cassert>
 #include <dxcapi.h>
 #include <random>
+#include "Model.h"
 
 #include "function.h"
 #include <wrl.h>
@@ -44,6 +45,7 @@ struct ParticleForGPU {
 
 struct Emitter {
 	Transform transform; //!< エミッタのTransform
+	Vector3 velocity_;
 	uint32_t count; //!< 発生数
 	float frequency; //!< 発生頻度
 	float frequencyTime; //!< 頻度用時刻
@@ -70,44 +72,61 @@ public:
 	Particle();
 	~Particle();
 
-	void Initialize(Emitter emitter);
-	//void Update();
-	void Draw(const Vector3& worldTransform, uint32_t texture, Camera* camera, const RandRangePro& randRange, bool scaleAddFlag);
+	void Init();
+	void Update(const RandRangePro& randRange, bool scaleAddFlag);
+	void Draw();
 	void Release();
-	void SetTextureManager(TextureManager* textureManager) {
-		textureManager_ = textureManager;
-	}
 	ParticlePro MakeNewParticle(std::mt19937& randomEngine, const Vector3& scale, const Vector3& translate, const RandRangePro& randRange);
 
 	std::list<ParticlePro> Emission(const Emitter& emitter, std::mt19937& randEngine,const RandRangePro& randRange);
-	D3D12_VERTEX_BUFFER_VIEW CreateBufferView();
+
+public: // Setter
+	void SetModel(const std::string& filePath);
+	// tex
+	void SetTexture(const uint32_t tex) { tex_ = tex; }
+
+	void SetWorldTransform(const WorldTransform& worldTransform) { worldTransform_ = worldTransform; }
+
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
+	void SetEmitter(Emitter emitter) { emitter_ = emitter; }
+
 private:
+	// 借りてくる
+	WinAPI* sWinAPI = nullptr;
+	DirectXCommon* sDirectXCommon = nullptr;
+	PSOParticle* pso_ = nullptr;
+
+	Camera* camera_ = nullptr;
+
+	Model* model_ = nullptr;
+
 	const static uint32_t kNumMaxInstance = 10000; // インスタンス数
+
+	uint32_t tex_ = 0;
+
+	uint32_t numInstance_ = 0; // 描画すべきインスタンス数
+
+	WorldTransform worldTransform_{};
+	
+	Microsoft::WRL::ComPtr < ID3D12Resource> vertexResource_ = nullptr;
+	// 頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+
+	VertexData* vertexData_ = nullptr;
+
 	// Instancing用のTransformMatrixリソースを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResorce = nullptr;
-	PSOParticle* pso_ = nullptr;
-	Microsoft::WRL::ComPtr < ID3D12Resource> vertexResourceSprite_ = nullptr;
-	WinAPI* sWinAPI;
-	DirectXCommon* sDirectXCommon;
-	Mesh* mesh_;
-	TextureManager* textureManager_ = nullptr;
-	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSprite_{};
-
-	VertexData* vertexDataSprite_ = nullptr;
-
-	// Sprite用のTransformationMatrix用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
-	Microsoft::WRL::ComPtr < ID3D12Resource> transformationMatrixResouceSprite;
+	ParticleForGPU* instancingData = nullptr;
 	// データを書き込む
-
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
 
-	Particle* particle_ = nullptr;
+	// Sprite用のTransformationMatrix用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
+	Microsoft::WRL::ComPtr < ID3D12Resource> transformationMatrixResouceSprite;
 
-
-	Microsoft::WRL::ComPtr < ID3D12Resource> indexResourceSprite;
-	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite{};
+	Microsoft::WRL::ComPtr < ID3D12Resource> indexResource_;
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
 
 	// 実際に頂点リソースを作る
@@ -115,22 +134,24 @@ private:
 	// 頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
 	// 頂点リソースにデータを書き込む
+
 	Material* materialData;
 	std::list<ParticlePro> particles_;
 	//ParticlePro particles_[kNumMaxInstance];
 	std::list<Transform>  transforms_;
-	ParticleForGPU* instancingData = nullptr;
+	
+
 	// 平行光源用
 	Microsoft::WRL::ComPtr < ID3D12Resource> directionalLightResource;
 	// データを書き込む
 	DirectionalLight* directionalLightData;
-	Transform transformUv;
 
+	Transform transformUv;
 	uint32_t SRVIndex_;
 
 	// Δtを定義。とりあえず60fps固定してあるが、
 	//実時間を計測して可変fpsで動かせるようにしておくとなお良い
-	const float kDeltaTime = 1.0f / 45.0f;
+	const float kDeltaTime = 1.0f / 60.0f;
 	Emitter emitter_{};
 	RandRangePro randRange_;
 };

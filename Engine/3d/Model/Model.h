@@ -49,7 +49,7 @@ class Model
 {
 public:
 	
-	ModelData GetModelData() { return modelData_; }
+	
 	Model();
 	~Model();
 	void Initialize(const std::string& directoryPath, const std::string& filePath);
@@ -71,6 +71,10 @@ public:
 
 	Node ReadNode(aiNode* node);
 	void ApplyAnimation(SkeletonData& skeleton, const AnimationData& animation, float animationTime);
+
+public: //Getter
+	// Particleにモデルのデータを貸し出す用
+	ModelData GetModelData() { return modelData_; }
 
 private:
 
