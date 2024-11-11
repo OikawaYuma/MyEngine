@@ -16,17 +16,21 @@ void DemoScene::Init()
 	emitter_.frequencyTime = 0.0f;
 
 	emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
-	emitter_.transform.scale = { 1.0f,1.0f,1.0f };
-	emitter_.transform.translate = { 0.0f,2.0f,15.0f };
+	emitter_.transform.scale = { 0.5f,0.5f,0.5f };
+	emitter_.transform.translate = { 0.0f,1.0f,25.0f };
 
 	randRangePro_ = {
-		{0.7f,0.9f},
-		{0.1f,0.4f},
-		{-0.5f,0.3f}
+		{-2.5f,2.5f},
+		{-2.5f,2.5f},
+		{-2.5f,2.5f}
 	};
-
+	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/ball", "ball.obj");
 	particle_ = std::make_unique<Particle>();
-	particle_->Initialize(emitter_);
+	particle_->SetModel("ball.obj");
+	particle_->SetEmitter(emitter_);
+	particle_->Init();
+	
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -49,19 +53,23 @@ void DemoScene::Init()
 		std::cos(std::numbers::pi_v<float> / 3.0f);
 
 	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
-	tex_ = TextureManager::GetInstance()->StoreTexture("Resources/HpUI.png");
+	tex_ = TextureManager::GetInstance()->StoreTexture("Resources/uvChecker.png");
 	obj2_ = std::make_unique<Object3d>();
 	obj2_->Init();
-	obj2_->SetModel("slimeDead.obj");
+	obj2_->SetModel("player.obj");
 
 	worldtransform_.Initialize();
-	worldtransform_.translation_ = { 0.0f,2.0f,5.0f };
+	worldtransform_.translation_ = { 0.0f,2.0f,40.0f };
 	worldtransform_.UpdateMatrix();
 	obj2_->SetWorldTransform(worldtransform_);
 
 	obj_->SetSpotLight(spotLight_);
 	
 	ground_->SetSpotLight(spotLight_);
+	// パーティクル
+	particle_->SetWorldTransform(worldtransform_);
+	particle_->SetTexture(tex_);
+	particle_->SetCamera(camera_.get());
 
 	postProcess_ = new PostProcess();
 	postProcess_->Init();
@@ -102,18 +110,18 @@ void DemoScene::Update()
 	camera_->Update();
 	
 	PostEffectChange();
-
+	
 	obj2_->Update();
-	
-	
+	particle_->SetWorldTransform(worldtransform_);
+	particle_->Update(randRangePro_, true);
 	postProcess_->Update();
 }
 void DemoScene::Draw()
 {
-	particle_->Draw({0.0f,0.0f,20.0f},tex_,camera_.get(), randRangePro_,true);
+	particle_->Draw();
 	//ground_->Draw();
 	//obj_->Draw(camera_.get());
-	//obj2_->Draw(tex_,camera_.get());
+	obj2_->Draw(tex_,camera_.get());
 	
 }
 
