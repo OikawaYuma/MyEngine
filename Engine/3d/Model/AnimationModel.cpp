@@ -386,14 +386,17 @@ void AnimationModel::Update() {
 
 
 void AnimationModel::Draw(uint32_t texture, const Material& material, const DirectionalLight& dire) {
-
+	
 	vbvs[0] = vertexBufferView_;
 	vbvs[1] = skinCluster_.influenceBufferView;
-	//NodeAnimation& rootNodeAnimation = animation_.nodeAnimations[modelData_.rootNode.name]; // rootNodeのAnimationを取得
-	//Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyframes, animationTime);
-	//Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyframes, animationTime);
-	//Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyframes, animationTime);
-	//aniMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+
+	directXCommon_->GetCommandList()->SetComputeRootDescriptorTable(0, skinCluster_.paletteResource);
+	directXCommon_->GetCommandList()->SetComputeRootDescriptorTable(1, );
+	directXCommon_->GetCommandList()->SetComputeRootDescriptorTable(2, );
+	directXCommon_->GetCommandList()->SetComputeRootDescriptorTable(3, );
+	directXCommon_->GetCommandList()->SetComputeRootConstantBufferView(4, );
+
+
 
 	textureManager_ = TextureManager::GetInstance();
 	// 色のデータを変数から読み込み
@@ -401,14 +404,10 @@ void AnimationModel::Draw(uint32_t texture, const Material& material, const Dire
 	materialData_->enableLighting = material.enableLighting;
 	materialData_->shininess = 0.5f;
 	directionalLightData->direction = dire.direction;
-	//directionalLightData->direction =  Normalize(directionalLightData->direction);
-	//directXCommon_->GetCommandList()->SetGraphicsRootSignature(pso_->GetProperty().rootSignature.Get());
-	//directXCommon_->GetCommandList()->SetPipelineState(pso_->GetProperty().graphicsPipelineState.Get());    //PSOを設定
-	//directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);    //VBVを設定
+
 	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);    //VBVを設定
 	directXCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);    //VBVを設定
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
-	//directXCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	// マテリアルCBufferの場所を設定
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 

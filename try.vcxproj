@@ -200,6 +200,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
+    <ClCompile Include="Engine\Interface\PSO\PSOComputeShader.cpp" />
+    <ClCompile Include="Engine\Interface\Heap\UAVManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
@@ -301,6 +303,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Slime2d\Slime2d.h" />
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
+    <ClInclude Include="Engine\Interface\PSO\PSOComputeShader.h" />
+    <ClInclude Include="Engine\Interface\Heap\UAVManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">
@@ -311,6 +315,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Resources\shader\Skinning.CS.hlsl" />
     <FxCompile Include="Resources\shader\Skybox.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

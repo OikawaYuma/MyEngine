@@ -325,6 +325,8 @@
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
     <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
+    <ClCompile Include="Engine\Interface\PSO\PSOComputeShader.cpp" />
+    <ClCompile Include="Engine\Interface\Heap\UAVManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -598,6 +600,8 @@
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
     <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
+    <ClInclude Include="Engine\Interface\PSO\PSOComputeShader.h" />
+    <ClInclude Include="Engine\Interface\Heap\UAVManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">
@@ -666,6 +670,7 @@
     <FxCompile Include="Resources\shader\Vignetting.PS.hlsl">
       <Filter>Resources\shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shader\Skinning.CS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shader\Object3d.hlsli">

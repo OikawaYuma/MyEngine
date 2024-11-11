@@ -2,7 +2,9 @@
 #include <thread>
 #include "ImGuiCommon.h"
 #include <SRVManager.h>
+#include "UAVManager.h"
 #include <d3dx12.h>
+#include "VertexData.h"
 
 /*----------------------------------------------------------
    このクラスはシングルトンパターンのを元に設計する
@@ -379,8 +381,13 @@ void DirectXCommon::CreateDescriptorHeap() {
 	rtvDescriptorHeap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, rtvDescriptorSize_, false);
 	// DSVようのヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
 	dsvDescriptorHeap_ = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, dsvDescriptorSize_, false);
+	// SRVの初期化
 	SRVManager* sSRVManager = SRVManager::GetInstance();
 	sSRVManager->Init();
+	// UAVの初期化
+	UAVManager* sUAVManager = UAVManager::GetInstance();
+	sUAVManager->Init();
+
 	// SwapChainからResouceを引っ張ってくる
 	hr = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResources_[0]));
 	//うまく取得できなければ起動できない
@@ -411,6 +418,29 @@ void DirectXCommon::RTVInit() {
 		device_, WinAPI::kClientWidth_, WinAPI::kClientHeight_,
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
 	device_->CreateRenderTargetView(renderTextureResource_.Get(), &rtvDesc_, rtvHandles_[2]);
+}
+
+void DirectXCommon::UAVInit()
+{
+	//D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc{};
+	//uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+	//uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+	//uavDesc.Buffer.FirstElement = 0;
+	//uavDesc.Buffer.NumElements;
+	//uavDesc.Buffer.CounterOffsetInBytes = 0;
+	//uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_NONE;
+	//uavDesc.Buffer.StructureByteStride = sizeof(VertexData);
+
+	//// 第二引数は今はnullptrにしておく
+	//device_->CreateUnorderedAccessView(
+	//,,,uavDescriptorHeap_.Get());
+
+	//D3D12_COMPUTE_PIPELINE_STATE_DESC computePipelineStateDesc{};
+	//computePipelineStateDesc.CS = {
+	//	.pShaderBytecode = computePipelineStateDesc->
+
+	//}
+
 }
 
 void DirectXCommon::CrateRenderTexture()

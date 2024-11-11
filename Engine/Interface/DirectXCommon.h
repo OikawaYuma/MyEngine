@@ -86,6 +86,11 @@ public:
 	void RTVInit();
 
 	/// <summary>
+	/// UAVの初期化
+	/// </summary>
+	void UAVInit();
+
+	/// <summary>
 	/// RenderTextureの生成
 	/// </summary>
 	void CrateRenderTexture();
@@ -221,7 +226,7 @@ private:
 	// ディスクリプタヒープの生成
 	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> rtvDescriptorHeap_ = nullptr;
 	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> dsvDescriptorHeap_ = nullptr; // DSVようのヒープでディスクリプタの数は1。DSVはShader内で触るものではないので、ShaderVisibleはfalse
-
+	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> uavDescriptorHeap_ = nullptr;
 
 
 	//RTVの設定
