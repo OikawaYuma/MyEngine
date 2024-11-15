@@ -1,6 +1,7 @@
 #include "PSOPostEffect.h"
 #include "Effect/GrayScale.h"
 #include "Effect/Vignette.h"
+#include "Effect/LuminanceOutline.h"
 #include "Effect/DepthOutline.h"
 #include "Effect/Dissolve.h"
 #include "Effect/FullScreen.h"
@@ -20,7 +21,8 @@ void PSOPostEffect::Init()
 	effectArr_[PostEffectMode::kVignetting] = std::make_unique<Vignette>();
 	effectArr_[PostEffectMode::kGaussianFilter] = std::make_unique<GaussianBlur>();
 	effectArr_[PostEffectMode::kDissolve] = std::make_unique<Dissolve>();
-	effectArr_[PostEffectMode::kOutline] = std::make_unique<DepthOutline>();
+	effectArr_[PostEffectMode::kLuminanceOutline] = std::make_unique<LuminanceOutline>();
+	effectArr_[PostEffectMode::kDepthOutline] = std::make_unique<DepthOutline>();
 	effectArr_[PostEffectMode::kRadialBlur] = std::make_unique<RadialBlur>();
 	effectArr_[PostEffectMode::kRandom] = std::make_unique<Random>();
 	effectArr_[PostEffectMode::kBloom] = std::make_unique<Bloom>();

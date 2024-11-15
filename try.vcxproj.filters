@@ -325,6 +325,7 @@
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
     <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
+    <ClCompile Include="Engine\2d\PostEffect\Effect\LuminanceOutline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -598,6 +599,7 @@
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
     <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
+    <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

@@ -333,7 +333,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip
 			m4.m[i][j] = 0;
 		}
 	}
-	m4.m[0][0] = 1 / aspectRatio * 1 / std::tan(fovY / 2);
+	m4.m[0][0] = 1 / aspectRatio * (1 / std::tan(fovY / 2));
 	m4.m[1][1] = 1 / std::tan(fovY / 2);
 	m4.m[2][2] = farClip / (farClip - nearClip);
 	m4.m[2][3] = 1;
@@ -355,7 +355,7 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 		m4.m[1][1] = -(height / 2);
 		m4.m[2][2] = maxDepth - minDepth;
 		m4.m[3][0] = left + (width / 2);
-		m4.m[3][1] = top + height / 2;
+		m4.m[3][1] = top + (height / 2);
 		m4.m[3][2] = minDepth;
 		m4.m[3][3] = 1;
 

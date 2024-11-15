@@ -7,6 +7,7 @@ void FollowCamera::Init()
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate({ 0,5,-30 });
+	camera_->SetFarClip(100.0f);
 	cameraTime_ = 1.0f;
 
 }

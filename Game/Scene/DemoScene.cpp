@@ -200,7 +200,7 @@ void DemoScene::PostEffectChange()
 
 	if (ImGui::TreeNode("DepthOutline")) {
 		if (ImGui::Button("DepthOutline On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kOutline);
+			IPostEffectState::SetEffectNo(PostEffectMode::kDepthOutline);
 		}
 		ImGui::TreePop();
 	}
