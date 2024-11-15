@@ -106,5 +106,8 @@ private:
 
 	uint32_t slimeDeadSE_;
 	bool GameOverFlag;
+
+	// クリア条件
+	int clearFlagCount_ = 0;
 };
 

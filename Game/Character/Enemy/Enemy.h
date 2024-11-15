@@ -38,6 +38,7 @@ private:
 	int radius_ = 1;
 	Player* player_ = nullptr;
 	Vector3 move{ 0,0,-0.1f };
+	float glavity_= 0.0f;
 	float hp_ = 1.0f;
 };
 

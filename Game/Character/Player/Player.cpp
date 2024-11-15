@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "ModelManager.h"
 #include "Input.h"
+#include "Audio.h"
 
 #include "ImGuiCommon.h"
 #include "LockOn/LockOn.h"
@@ -23,7 +24,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	hommingBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/HommingBulletUI.png");
 	razerBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/RazerBeam.png");
 
-	hp_ = 1.0f;
+	hp_ = 0.7f;
 
 	reticleNear_ = std::make_unique<Sprite>();
 	reticleNear_->Init(
@@ -72,8 +73,9 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = translate;
-	worldTransform_.translation_.y = 0.5f;
-
+	worldTransform_.scale_ = { hp_ + 0.3f,hp_ + 0.3f,hp_ + 0.3f };
+	worldTransform_.translation_.y = worldTransform_.scale_.y;
+	
 	
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
@@ -118,6 +120,8 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	object_->SetSpotLight(spotLight_);
 
 
+
+
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
@@ -125,6 +129,12 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, "player.obj");
 	shadowObject_->Update();
+
+	////////////////////////////////////////////
+	// SE
+	/////////////////////////////////////////////
+	//jumpSE_ = Audio::GetInstance()->SoundLoadWave("Resources/jump3.wav");
+	bulletShotSE_ = Audio::GetInstance()->SoundLoadWave("Resources/bullet.wav");
 }
 
 void Player::Update()
@@ -194,8 +204,8 @@ void Player::Update()
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_+0.3f,hp_ + 0.3f,hp_ + 0.3f };
 	// 着地
-	if (worldTransform_.translation_.y <=(hp_* 0.5f)) {
-		worldTransform_.translation_.y = (hp_ * 0.5f);
+	if (worldTransform_.translation_.y <= (hp_+ 0.3f)) {
+		worldTransform_.translation_.y = (hp_ + 0.3f);
 		// ジャンプ終了
 		//behaviorRequest_ = Behavior::kRoot;
 	}
@@ -283,11 +293,29 @@ void Player::Update()
 	for (std::list<PlayerRazer*>::iterator itr = razers_.begin(); itr != razers_.end(); itr++) {
 		(*itr)->Update();
 	}
+
+	if (worldTransform_.translation_.x >= 30.0f) {
+		worldTransform_.translation_.x = 30.0f;
+	}
+	else if (worldTransform_.translation_.x <= -30.0f) {
+		worldTransform_.translation_.x = -30.0f;
+	}
+	if (worldTransform_.translation_.z <= 65.0f) {
+		worldTransform_.translation_.z = 65.0f;
+	}
+	else if (worldTransform_.translation_.z >= 470.0f) {
+		worldTransform_.translation_.z = 470.0f;
+	}
+
+
+
+
 	worldTransform_.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	reticleNear_->Update();
 	reticleFar_->Update();
+	
 	shadowObject_->Update();
 }
 
@@ -310,19 +338,22 @@ void Player::Draw(Camera* camera)
 
 void Player::DrawUI()
 {
-	reticleNear_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
-	reticleFar_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
+	
 	hpUI_->Draw(playerHpUITex_, { 1.0f,1.0f,1.0f,1.0f });
 	hpUIBlue_->Draw(skinTex_, { 1.0f,1.0f,1.0f,1.0f });
 
 	switch (bulletMode_) {
 	case BulletMode::NormalBullet:
+		reticleNear_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
+		reticleFar_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
 		bulletModeUI->Draw(normalBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	case BulletMode::HommingBullet:
 		bulletModeUI->Draw(hommingBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	case BulletMode::LaserBeam:
+		reticleNear_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
+		reticleFar_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
 		bulletModeUI->Draw(razerBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	}
@@ -542,15 +573,7 @@ void Player::Move()
 		
 	}
 
-	if (worldTransform_.translation_.x >= 30.0f) {
-		worldTransform_.translation_.x = 30.0f;
-	}
-	else if (worldTransform_.translation_.x <= -30.0f) {
-		worldTransform_.translation_.x = -30.0f;
-	}
-	else if (worldTransform_.translation_.z <= 65.0f) {
-		worldTransform_.translation_.z = 65.0f;
-	}
+	
 
 	angletime += 0.05f;
 	if (1.0f <= angletime ) {
@@ -680,8 +703,6 @@ void Player::Aim()
 	farReticleObj_->Update();
 }
 
-
-
 void Player::Attack()
 {
 	shotTimer_++;
@@ -689,6 +710,7 @@ void Player::Attack()
 	case BulletMode::NormalBullet:
 
 		if (Input::GetInstance()->PushJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) && shotInterval_ <= shotTimer_) {
+			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), bulletShotSE_, false);
 			shotTimer_ = 0;
 			// 自キャラの座標をコピー
 			Vector3 position = {
@@ -713,6 +735,7 @@ void Player::Attack()
 			velocity.z *= kBulletSpeed;;
 
 			hp_ -= 0.01f;
+			worldTransform_.translation_.y -= 0.01f;
 			// 弾を生成し、初期化
 			PlayerBullet* newBullet = new PlayerBullet();
 			newBullet->Init(GetWorldPosition(), velocity);
@@ -945,6 +968,7 @@ void Player::HitEnemySlime()
 {
 	if (!isEnemyHit_) {
 		hp_ -= 0.1f;
+		worldTransform_.translation_.y -= 0.1f;
 		isEnemyHit_ = true;
 	}
 }
@@ -1018,10 +1042,9 @@ void Player::BehaviorRootJumpUpdate()
 	// 加速する
 	velo_ = Add(velo_,accelerationVector);
 
-
 	// 着地
-	if (worldTransform_.translation_.y <= (hp_ * 0.5f)) {
-		worldTransform_.translation_.y = (hp_ * 0.5f);
+	if (worldTransform_.translation_.y <= (hp_ + 0.3f)) {
+		worldTransform_.translation_.y = (hp_ + 0.3f);
 		// ジャンプ終了
 		behaviorRequest_ = Behavior::kRoot;
 	}
