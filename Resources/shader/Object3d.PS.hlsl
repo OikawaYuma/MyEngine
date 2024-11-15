@@ -4,13 +4,15 @@
 //}
 #include "Object3d.hlsli"
 
-struct Material {
+struct Material
+{
     float32_t4 color;
     int32_t enableLighting;
     float32_t4x4 uvTransform;
     float32_t shininess;
 };
-struct DirectionalLight {
+struct DirectionalLight
+{
     float32_t4 color; //!< ライトの色
     float32_t3 direction; //!< ライトの向き
     float intensity; //!< 輝度
@@ -28,7 +30,8 @@ struct SpotLight
     float32_t cosAngle; //!< スポットライトの余弦
     
 };
-struct Camera {
+struct Camera
+{
     float32_t3 worldPosition;
 };
 ConstantBuffer<Material> gMaterial : register(b0);
@@ -40,7 +43,8 @@ Texture2D<float32_t4> gTexture : register(t0);
 
 SamplerState gSampler : register(s0);
 
-struct PixelShaderOutput {
+struct PixelShaderOutput
+{
     float32_t4 color : SV_TARGET0;
 };
 
@@ -49,16 +53,19 @@ PixelShaderOutput main(VertexShaderOutput input)
 
     PixelShaderOutput output;
     
-    if (output.color.a == 0.0) {
+    if (output.color.a == 0.0)
+    {
         discard;
     }
-    float4 transformedUV = mul(float32_t4(input.texcoord,0.0f, 1.0f), gMaterial.uvTransform);
+    float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-    if (textureColor.a == 0.0) {
+    if (textureColor.a == 0.0)
+    {
         discard;
     }
     output.color = gMaterial.color * textureColor;
-    if (gMaterial.enableLighting != 0) {
+    if (gMaterial.enableLighting != 0)
+    {
         float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
         float cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
         
@@ -79,7 +86,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t3 spotLightDirectionOnSurface = normalize(input.worldPosition - gSpotLight.position);
         
         float32_t distance = length(gSpotLight.position - input.worldPosition); // ポイントライトへ距離
-        float32_t factor =3.0f / (distance * distance); // 逆二乗則による減衰係数
+        float32_t factor = 3.0f / (distance * distance); // 逆二乗則による減衰係数
         float32_t cosAngle = dot(spotLightDirectionOnSurface, gSpotLight.direction);
         float32_t falloffFactor = saturate((cosAngle - gSpotLight.cosAngle) / (1.0f - gSpotLight.cosAngle));
         
@@ -90,12 +97,27 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t spotSpecularPow = pow(saturate(spotNDotE), 30.0f); // 反射強度
         
         float32_t3 spotDiffuse =
-        gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity * falloffFactor* factor;
+        gMaterial.color.rgb * textureColor.rgb * gSpotLight.color.rgb * cos * gSpotLight.intensity * falloffFactor * factor;
        
         float32_t3 spotSpecular =
         gSpotLight.color.rgb * gSpotLight.intensity * spotSpecularPow * float32_t3(0.1f, 0.1f, 0.1f) * falloffFactor * factor;
         // 拡散反射+鏡面反射
-        output.color.rgb = directionDiffuse + directionSpecular + spotDiffuse + spotSpecular;
+        
+        float32_t nl = max(0, dot(input.normal, -gDirectionalLight.direction));
+        if (nl <= 0.01f)
+        {
+            nl = 0.3f;
+        }
+        else if (nl <= 0.3f)
+        {
+            nl = 0.5f;
+        }
+        else
+        {
+            nl = 1.0f;
+        }
+        //output.color.rgb = directionDiffuse + directionSpecular + spotDiffuse + spotSpecular * nl;
+        output.color.rgb *= nl;
         
         // 以下はこの方法でもできるということ　attenuationFactorは距離による減衰のこと
         //gSpotLight.color.rgb * gSpotLight.intensity * attenuationFactor * falloffFactor
@@ -111,7 +133,8 @@ PixelShaderOutput main(VertexShaderOutput input)
         //// αは今まで通り
         output.color.a = gMaterial.color.a * textureColor.a;
     }
-    else {
+    else
+    {
         output.color = gMaterial.color * textureColor;
     }
     

@@ -172,6 +172,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\utility\function.cpp" />
     <ClCompile Include="Engine\2d\ImGuiCommon.cpp" />
     <ClCompile Include="Game\Utilty\Loder.cpp" />
+    <ClCompile Include="Engine\2d\PostEffect\Effect\LuminanceOutline.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Interface\Mesh.cpp" />
     <ClCompile Include="Engine\Interface\WinAPI.cpp" />
@@ -301,6 +302,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Slime2d\Slime2d.h" />
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
+    <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

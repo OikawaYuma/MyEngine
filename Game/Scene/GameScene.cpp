@@ -44,7 +44,7 @@ void GameScene::Init()
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
 	postProcess_->SetDissolveInfo({1.0f,1.0f,1.0f});
-	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+	IPostEffectState::SetEffectNo(PostEffectMode::kDepthOutline);
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
