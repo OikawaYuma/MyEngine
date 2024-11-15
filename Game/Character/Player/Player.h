@@ -26,6 +26,8 @@
 #include "Material.h"
 #include "DirectionLight.h"
 #include "Particle/Particle.h"
+
+
 class LockOn;
 // ふるまい
 enum class Behavior {
@@ -216,6 +218,8 @@ private:
 	bool isShot_ = false;
 	uint32_t shotTimer_ = 0;
 	const  uint32_t shotInterval_ = 5;
+	uint32_t bulletShotSE_ = 0;
+	uint32_t jumpSE_ = 0;
 
 private: // GameOver
 	std::unique_ptr<Object3d> deadSlimeObj_;

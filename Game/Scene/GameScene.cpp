@@ -36,7 +36,7 @@ void GameScene::Init()
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
 	
-
+	
 	gameStateMode_ = WAITGAME;
 	jumpNum_ = JUMPONE;
 	jumpRoopNum = 0;
@@ -106,6 +106,9 @@ void GameScene::Init()
 	GameOverFlag = false;
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	
+
+	// クリア条件の敵を倒した数の設定
+	clearFlagCount_ = (int)enemys_.size();
 }
 
 void GameScene::Update()
@@ -296,7 +299,7 @@ void GameScene::Update()
 			});
 
 		// 現状のクリア条件
-		if (destroyCount_ >= 4) {
+		if ((int)destroyCount_ >= clearFlagCount_) {
 
 			Audio::SoundStopWave(gameBGM_);
 			postProcess_->SetDissolveInfo({ 1.0f, 1.0f, 1.0f });

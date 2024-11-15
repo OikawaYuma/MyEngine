@@ -10,15 +10,19 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("player.obj");
-	
+	hp_ = 0.7f;
+	glavity_ = 0;
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy2.png");
 	worldTransform_.translation_ = translate;
+	// HPを元に基準となる大きさを決定する
+	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	worldTransform_.translation_.y = worldTransform_.scale_.y;
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
 	SetCollisionMask(0b001);
-
+	
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, "player.obj");
 	shadowObject_->Update();
@@ -29,10 +33,8 @@ void Enemy::Update()
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	// 着地
-	if (worldTransform_.translation_.y <= 0.48f * hp_) {
-		worldTransform_.translation_.y = 0.48f * hp_;
-		// ジャンプ終了
-		//behaviorRequest_ = Behavior::kRoot;
+	if (worldTransform_.translation_.y <= worldTransform_.scale_.y) {
+		worldTransform_.translation_.y = worldTransform_.scale_.y;
 	}
 	Move();
 	object_->SetWorldTransform(worldTransform_);
@@ -56,8 +58,8 @@ void Enemy::GameOverUpdate()
 	// 加速する
 	move = Add(move, accelerationVector);
 	// 着地
-	if (worldTransform_.translation_.y <= 0.48f) {
-		worldTransform_.translation_.y = 0.48f;
+	if (worldTransform_.translation_.y <= worldTransform_.scale_.y) {
+		worldTransform_.translation_.y = worldTransform_.scale_.y;
 		// ジャンプ初速
 		const float kJumpFirstSpeed = 1.0f;
 		// ジャンプ初速を与える
@@ -94,17 +96,19 @@ void Enemy::Move()
 	move.x = directionToPlayer.x;
 	move.z = directionToPlayer.y;
 	// 重量加速度
-	const float kGravityAcceleration = 0.075f;
+	const float kGravityAcceleration = 0.005f;
+	glavity_ += kGravityAcceleration;
 	// 加速度ベクトル
-	Vector3 accelerationVector = { 0, -kGravityAcceleration, 0 };
+	Vector3 accelerationVector = { 0, -glavity_, 0 };
 	// 加速する
 	move = Add(move, accelerationVector);
 
 	// 着地
-	if (worldTransform_.translation_.y <= 0.5f) {
-		worldTransform_.translation_.y = 0.5f;
+	if (worldTransform_.translation_.y <= worldTransform_.scale_.y) {
+		worldTransform_.translation_.y = worldTransform_.scale_.y;
 		// ジャンプ初速
-		const float kJumpFirstSpeed = 1.0f;
+		const float kJumpFirstSpeed = 2.0f;
+		glavity_ = 0.0f;
 		// ジャンプ初速を与える
 		move.y = kJumpFirstSpeed;
 	}
@@ -121,6 +125,7 @@ void Enemy::OnCollision(uint32_t attri)
 	}
 	else if (attri == 0b1000) {
 		hp_ -= 0.2f;
+		worldTransform_.translation_.y -= 0.2f;
 		if (hp_ <= 0.4f) {
 			isDead_ = true;
 		}

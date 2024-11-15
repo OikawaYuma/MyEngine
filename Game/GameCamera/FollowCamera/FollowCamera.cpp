@@ -31,25 +31,26 @@ void FollowCamera::Upadate()
 	Vector3 cameraRotate = camera_->GetRotate();
 	destinationAngleY_ = cameraRotate.y;
 	
-	if (lockOn_->GetTarget()) {
-		Vector3 lockOnPos = lockOn_->GetTargetPosition();
-		// 追従対象からロックオン対象へのベクトル
-		Vector3 sub = Subtract(lockOnPos , target_->translation_);
+	//if (lockOn_->GetTarget()) {
+	//	Vector3 lockOnPos = lockOn_->GetTargetPosition();
+	//	// 追従対象からロックオン対象へのベクトル
+	//	Vector3 sub = Subtract(lockOnPos , target_->translation_);
 
-		// Y軸回り角度
-		cameraRotate.y = std::atan2(sub.x, sub.z);
-	}
-	else if (Input::GetInstance()->GetJoystickState()) {
+	//	// Y軸回り角度
+	//	cameraRotate.y = std::atan2(sub.x, sub.z);
+	//}
+	//else 
+		if (Input::GetInstance()->GetJoystickState()) {
 		cameraRotate.y += Input::GetInstance()->JoyStickParmRX(0.03f);
 		
-		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+		/*if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
 			resetAngleFlag = true;
 			resetAngleTime_ = 0;
 			
-		}
+		}*/
 	}
 	
-	if (resetAngleFlag) {
+	/*if (resetAngleFlag) {
 		resetAngleTime_ += 0.1f;
 		if (target_) {
 			Vector3 offset = { 0,2,-30 };
@@ -62,7 +63,7 @@ void FollowCamera::Upadate()
 		if (resetAngleTime_ > 1.0f) {
 			resetAngleFlag = false;
 		}
-	}
+	}*/
 	/*
 	if (cameraRotate.y != destinationAngleY_) {
 		angletime += 0.1f;

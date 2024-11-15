@@ -35,7 +35,7 @@ private:
 	// 最大距離
 	float maxDistance_ = 50.0f;
 	// 角度範囲
-	float angleRange_ = 1.57f;
+	float angleRange_ = 0.785f;
 
 private:
 	uint32_t lockOnMarkTex_;
