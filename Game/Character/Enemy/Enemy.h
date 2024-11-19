@@ -17,6 +17,14 @@ public:
 	void Update();
 	void Draw(Camera* camera) ;
 
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void ClearInit();
+	void ClearUpdate();
+	void ClearDraw(Camera* camera);
+
 public:
 	void GameOverUpdate();
 public:
@@ -40,5 +48,9 @@ private:
 	Vector3 move{ 0,0,-0.1f };
 	float glavity_= 0.0f;
 	float hp_ = 1.0f;
+
+	DirectionalLight direLight_{};
+private: // GameOver
+	std::unique_ptr<Object3d> deadSlimeObj_;
 };
 

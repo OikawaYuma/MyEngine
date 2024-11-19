@@ -49,15 +49,21 @@ public:
 	void DrawUI();
 
 
-/// <summary>
-/// Title
-/// </summary>
+	/// <summary>
+	/// Title
+	/// </summary>
 	void TitleInit();
 	void TitleUpdate();
 
-/// <summary>
-/// GameOver
-/// </summary>
+	/// <summary>
+	/// 
+	/// </summary>
+	void ClearInit();
+	void ClearUpdate();
+
+	/// <summary>
+	/// GameOver
+	/// </summary>
 	void GameOverInit();
 	void GameOverUpdate();
 	void GameOverDraw(Camera* camera);
@@ -112,6 +118,9 @@ public:
 	
 	// 調整項目の適用
 	void ApplyGlobalVariables();
+public: // AjustParm
+	void AdustParm();
+	void ColorAdust();
 
 public:
 	const std::list<PlayerBullet*>& Getbullet() const { return bullets_; }
@@ -131,6 +140,8 @@ public: // Setter
 public: // Collider
 	void OnCollision(uint32_t attri) override;
 	Vector3 GetWorldPosition() const override;
+
+
 	
 private:
 	Camera* camera_ = nullptr;
@@ -174,6 +185,7 @@ private: // 貸出
 	LockOn* lockOn_ = nullptr;
 
 private:
+	float slimeBasedAlpha_ = 0.8f;
 
 	float angletime = 0.0f;
 	float preAngle_ = 0.0f;

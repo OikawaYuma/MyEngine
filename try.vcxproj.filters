@@ -326,6 +326,7 @@
     <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\LuminanceOutline.cpp" />
+    <ClCompile Include="Game\GameCamera\ClearCamera\ClearCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -600,6 +601,7 @@
     <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
+    <ClInclude Include="Game\GameCamera\ClearCamera\ClearCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

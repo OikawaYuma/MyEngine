@@ -55,6 +55,7 @@ public: // Setter
 	void SetSpotlightPos(const Vector3& pos) { spotLightData_->position = pos; }
 public: // Getter
 	WorldTransform GetWorldTransform() { return worldTransform_; }
+	Material GetMaterial() { return *materialData_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 private:

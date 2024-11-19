@@ -7,11 +7,6 @@
 #include <Audio.h>
 void GameOverScene::Init()
 {
-	sprite = new Sprite();
-	sprite->Init(
-		{ 0, 0 }, { 1280, 720 },
-		{ 0,0 }, { 1.0f,1.0f,1.0,1.0 },
-		"Resources/noise1.png");
 	titleTex_ = TextureManager::StoreTexture("Resources/GameOverSkydome2.png");
 
 	camera_ = std::make_unique<GameOverCamera>();
@@ -131,7 +126,6 @@ void GameOverScene::Update()
 	}
 	postProcess_->SetThreshold(thre_);
 	pushSpriteAlpha_ += pushSpriteAlphaPorM_;
-	sprite->SetColor({ 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 	pushASp_->Update();
 	titleBer_->Update();
 	postProcess_->Update();

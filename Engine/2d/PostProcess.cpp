@@ -25,6 +25,7 @@ void PostProcess::Draw(){
 	
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	sDirectXCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 	pso_->SetCommand(this);
 	// 描画（DrawCall/ドローコール）
 	//sDirectXCommon->GetCommandList()->DrawInstanced(6, 1, 0, 0);

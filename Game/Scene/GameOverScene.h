@@ -35,7 +35,6 @@ public:
 
 	void DeleteObject();
 private:
-	Sprite* sprite = nullptr;
 	uint32_t titleTex_ = 1;
 	PostProcess* postProcess_ = nullptr;
 	std::unique_ptr<GameOverCamera> camera_ = nullptr;

@@ -97,17 +97,13 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 
 	// 色のデータを変数から読み込み
-	coolTimeAlpha_ = 1.0f;
+	coolTimeAlpha_ = 0.8f;
 	material_.color = { 1.0f,1.0f,1.0f,coolTimeAlpha_ };
 	material_.enableLighting = true;
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
 	object_->SetMaterial(material_);
 
-	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
-	direLight_.direction = { 0.0f,-1.0f,0.0f };
-	direLight_.intensity = 0.6f;
-	
 	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	spotLight_.position = worldTransform_.translation_;
 	spotLight_.distance = 7.0f;
@@ -119,7 +115,10 @@ void Player::Init(const Vector3& translate, const std::string filename)
 		std::cos(std::numbers::pi_v<float> / 3.0f);
 	object_->SetSpotLight(spotLight_);
 
-
+	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
+	direLight_.direction = { 0.0f,-1.0f,0.0f };
+	direLight_.intensity = 0.6f;
+	object_->SetDirectionLight(direLight_);
 
 
 	object_->SetWorldTransform(worldTransform_);
@@ -139,6 +138,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 void Player::Update()
 {
+	ColorAdust();
 #ifdef Debug
 	
 #endif // DEBUG
@@ -160,11 +160,11 @@ void Player::Update()
 
 	ImGui::Text("playerPosX %f", worldTransform_.translation_.x);
 	ImGui::Text("playerPosZ %f", worldTransform_.translation_.z);
-	ImGui::End();
+	ImGui::End();*/
 
 
 	direLight_.direction = Normalize(direLight_.direction);
-	spotLight_.direction = Normalize(spotLight_.direction);*/
+	spotLight_.direction = Normalize(spotLight_.direction);
 
 	object_->SetMaterial(material_);
 	object_->SetSpotLight(spotLight_);
@@ -322,17 +322,18 @@ void Player::Update()
 void Player::Draw(Camera* camera)
 {
 	shadowObject_->Draw(camera);
-	object_->Draw(skinTex_, camera);
-	///
-	//レティクルの位置の確認用
-	//nearReticleObj_->Draw(skinTex_, camera);
-	//farReticleObj_->Draw(skinTex_, camera);
 	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
 		(*itr)->Draw(camera);
 	}
 	for (std::list<PlayerRazer*>::iterator itr = razers_.begin(); itr != razers_.end(); itr++) {
 		(*itr)->Draw(camera);
 	}
+	object_->Draw(skinTex_, camera);
+	///
+	//レティクルの位置の確認用
+	//nearReticleObj_->Draw(skinTex_, camera);
+	//farReticleObj_->Draw(skinTex_, camera);
+
 
 }
 
@@ -383,6 +384,33 @@ void Player::TitleInit()
 	object_->Init();
 	object_->SetModel("player.obj");
 
+	//BehaviorRootJumpInit();
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
+	InitFloatingGimmmick();
+	SetCollisonAttribute(0b0001);
+	SetCollisionMask(0b0110);
+	behaviorRequest_ = Behavior::kTitlePlayer;
+}
+
+void Player::ClearInit()
+{
+	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
+
+	worldTransform_.Initialize();
+	worldTransform_.translation_ = { -2.838254928588867f,1.0f,231.0f };
+	worldTransform_.translation_.y = 0.5f;
+
+	coolTimeAlpha_ = 0.8f;
+	material_.color = { 1.0f,1.0f,1.0f,coolTimeAlpha_ };
+	material_.enableLighting = true;
+	material_.uvTransform = MakeIdentity4x4();
+	material_.shininess = 60.0f;
+	object_->SetMaterial(material_);
+
+	object_ = std::make_unique<Object3d>();
+	object_->Init();
+	object_->SetModel("player.obj");
+
 
 	//BehaviorRootJumpInit();
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
@@ -390,6 +418,35 @@ void Player::TitleInit()
 	SetCollisonAttribute(0b0001);
 	SetCollisionMask(0b0110);
 	behaviorRequest_ = Behavior::kTitlePlayer;
+}
+
+void Player::ClearUpdate()
+{
+	// 重量加速度
+	const float kGravityAcceleration = 0.075f;
+	// 加速度ベクトル
+	Vector3 accelerationVector = { 0, -kGravityAcceleration, 0 };
+	// 加速する
+	velo_ = Add(velo_, accelerationVector);
+	
+
+	// HPを元に基準となる大きさを決定する
+	worldTransform_.scale_ = { hp_ + 0.3f,hp_ + 0.3f,hp_ + 0.3f };
+	// 着地
+	if (worldTransform_.translation_.y <= (hp_ + 0.3f)) {
+		worldTransform_.translation_.y = (hp_ + 0.3f);
+		// ジャンプ初速
+		const float kJumpFirstSpeed = 1.0f;
+		// ジャンプ初速を与える
+		velo_.y = kJumpFirstSpeed;
+	}
+
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, { 0.0f,velo_.y,0.0f });
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+	worldTransform_.UpdateMatrix();
+	shadowObject_->Update();
 }
 
 void Player::TitleUpdate()
@@ -532,12 +589,13 @@ void Player::GameOverInit()
 	deadSlimeObj_ = std::make_unique<Object3d>();
 	deadSlimeObj_->Init();
 	deadSlimeObj_->SetModel("slimeDead.obj");
-	
+
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {-1.0f,0.01f,221.0f };
 	worldTransform_.scale_ = { 5.0f,1.0f,5.0f };
 	worldTransform_.UpdateMatrix();
 	deadSlimeObj_->SetWorldTransform(worldTransform_);
+	object_->Update();
 
 }
 
@@ -949,7 +1007,7 @@ void Player::HitEnemyCoolTime()
 		if (coolTimeAlpha_ <= 0.0f) {
 			coolTimeAlphaPorM_ *= -1.0f;
 		}
-		else if (coolTimeAlpha_ >= 1.0f) {
+		else if (coolTimeAlpha_ >= slimeBasedAlpha_) {
 			coolTimeAlphaPorM_ *= -1.0f;
 		}
 
@@ -957,9 +1015,11 @@ void Player::HitEnemyCoolTime()
 		if (coolTimer_ >= 120) {
 			isEnemyHit_ = false;
 			coolTimer_ = 0;
-			coolTimeAlpha_ = 1.0f;
 		}
 		material_.color = { 1.0f, 1.0f, 1.0f, coolTimeAlpha_ };
+	}
+	else {
+		material_.color = { 1.0f, 1.0f, 1.0f, slimeBasedAlpha_ };
 	}
 
 }
@@ -1078,6 +1138,15 @@ void Player::ApplyGlobalVariables()
 #endif // DEBUG
 
 
+}
+
+void Player::ColorAdust()
+{
+	
+	/*ImGui::Begin("calor");
+	ImGui::DragFloat4("color : ", &material_.color.x,0.01f);
+	ImGui::End();*/
+	object_->SetMaterial({ .color = material_.color });
 }
 
 Vector3 Player::GetReticleWorldPosition()

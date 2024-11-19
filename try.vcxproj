@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\GameCamera\ClearCamera\ClearCamera.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_draw.cpp" />
@@ -203,6 +204,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\GameCamera\ClearCamera\ClearCamera.h" />
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
     <ClInclude Include="Engine\Externals\imgui\imgui.h" />
     <ClInclude Include="Engine\Externals\imgui\imgui_impl_dx12.h" />

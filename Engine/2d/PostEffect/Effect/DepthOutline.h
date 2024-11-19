@@ -8,10 +8,12 @@
 #include "IPostEffectState.h"
 #include "PSOProperty.h"
 #include "Matrix4x4.h"
+#include "Vector2.h"
 
 struct DepthOutlineInfo {
 	Matrix4x4 projectionInverse;
 	float farClip;
+	Vector2 diffSize;
 };
 class PostProcess;
 class DepthOutline : public IPostEffectState

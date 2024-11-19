@@ -92,7 +92,8 @@ void DepthOutline::CommandRootParameter(PostProcess* postProcess)
 	DirectXCommon* sDirectXCommon = DirectXCommon::GetInstance();
 	Camera* camera = postProcess->GetCamera();
 	depthOutlinelData_->projectionInverse = Inverse(camera->GetProjectionMatrix());
-	depthOutlinelData_->farClip = postProcess->GetFarClip();
+	depthOutlinelData_->farClip = postProcess->GetDepthOutlineInfo().farClip;
+	depthOutlinelData_->diffSize = postProcess->GetDepthOutlineInfo().diffSize;
 	// マテリアルCBufferの場所を設定
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	sDirectXCommon->GetCommandList()->SetGraphicsRootDescriptorTable(0, SRVManager::GetInstance()->GetGPUDescriptorHandle(sDirectXCommon->GetRenderIndex()));

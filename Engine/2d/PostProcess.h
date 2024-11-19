@@ -80,8 +80,8 @@ public:
 	Camera* GetCamera() { return camera_; }
 	uint32_t GetNoisetex() { return noiseTexture_; }
 
-	float GetFarClip() { return depthOutlineInfo_.farClip; }
-	void SerFarClip(const float& farClip) { depthOutlineInfo_.farClip = farClip; }
+	DepthOutlineInfo GetDepthOutlineInfo() { return depthOutlineInfo_; }
+	void SerDepthOutlineInfo(const DepthOutlineInfo& DepthOutlineInfo) { depthOutlineInfo_ = DepthOutlineInfo; }
 
 private:
 	// シーンを保持するメンバ変数
@@ -147,7 +147,7 @@ private:
 	Vector3 valueColor = { 0.2125f, 0.7154f, 0.0721f };
 
 	BloomInfo bloomInfo_ = { 10.0f,0.3f,1.0f, 1 };
-	DepthOutlineInfo depthOutlineInfo_;
+	DepthOutlineInfo depthOutlineInfo_ = { .diffSize = {0.0f,0.0f} };
 	FullScreenInfo hsvInfo_;
 	DissolveInfo dissolveInfo_;
 	

@@ -105,6 +105,7 @@ private:
 	uint32_t gameBGM_;
 
 	uint32_t slimeDeadSE_;
+	uint32_t gameClearSE_;
 	bool GameOverFlag;
 
 	// クリア条件

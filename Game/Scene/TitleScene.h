@@ -70,5 +70,7 @@ private:
 	bool GamePlayFlag_ = false;
 	uint32_t startTimer = 0;
 	uint32_t startTimer2 = 0;
+
+	DepthOutlineInfo depthOutlineInfo_ = { .farClip = 0.133f,.diffSize = {9.290f,16.0100f}};
 };
 

@@ -82,7 +82,6 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t3 directionSpecular =
             gDirectionalLight.color.rgb * gDirectionalLight.intensity * directionSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
         
-        
         float32_t3 spotLightDirectionOnSurface = normalize(input.worldPosition - gSpotLight.position);
         
         float32_t distance = length(gSpotLight.position - input.worldPosition); // ポイントライトへ距離
@@ -103,7 +102,8 @@ PixelShaderOutput main(VertexShaderOutput input)
         gSpotLight.color.rgb * gSpotLight.intensity * spotSpecularPow * float32_t3(0.1f, 0.1f, 0.1f) * falloffFactor * factor;
         // 拡散反射+鏡面反射
         
-        float32_t nl = max(0, dot(input.normal, -gDirectionalLight.direction));
+       // output.color.rgb *= gMaterial.color.rgb;
+        float32_t nl = max(0, dot(input.normal, -gDirectionalLight.direction)) * gMaterial.shininess;
         if (nl <= 0.01f)
         {
             nl = 0.3f;
@@ -116,8 +116,8 @@ PixelShaderOutput main(VertexShaderOutput input)
         {
             nl = 1.0f;
         }
-        //output.color.rgb = directionDiffuse + directionSpecular + spotDiffuse + spotSpecular * nl;
-        output.color.rgb *= nl;
+        output.color.rgb *=nl;
+       // output.color.rgb *= nl;
         
         // 以下はこの方法でもできるということ　attenuationFactorは距離による減衰のこと
         //gSpotLight.color.rgb * gSpotLight.intensity * attenuationFactor * falloffFactor

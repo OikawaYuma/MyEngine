@@ -75,7 +75,7 @@ void TitleScene::Init()
 	thre_ = 0.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
-	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+	IPostEffectState::SetEffectNo(PostEffectMode::kDepthOutline);
 
 	loadingSpriteMoveFlag_ = false;
 
@@ -88,6 +88,23 @@ void TitleScene::Init()
 
 void TitleScene::Update()
 {
+
+	ImGui::Begin("OBB,BALL");
+
+
+	ImGui::DragFloat("sColor", &depthOutlineInfo_.farClip, 0.0001f);
+	ImGui::DragFloat2("sde", &depthOutlineInfo_.diffSize.x, 0.01f);
+	//ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	//ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	//ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
+	//ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	//ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+	//ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
+	//ImGui::Text("playerPosX %f", spotLight_.position.x);
+	//ImGui::Text("playerPosZ %f", spotLight_.position.z);
+
+	ImGui::End();
+	postProcess_->SerDepthOutlineInfo({ .farClip = depthOutlineInfo_.farClip,.diffSize = depthOutlineInfo_.diffSize });
 	if (camera_->GetTimer() >= 200) {
 		threFlag_ = true;
 	}

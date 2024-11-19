@@ -44,7 +44,7 @@ void GameScene::Init()
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
 	postProcess_->SetDissolveInfo({1.0f,1.0f,1.0f});
-	IPostEffectState::SetEffectNo(PostEffectMode::kDepthOutline);
+	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
@@ -105,6 +105,7 @@ void GameScene::Init()
 	gameBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/game.wav");
 	GameOverFlag = false;
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
+	gameClearSE_ = Audio::GetInstance()->SoundLoadWave("Resources/clearSE.wav");
 	
 
 	// クリア条件の敵を倒した数の設定
@@ -117,21 +118,23 @@ void GameScene::Update()
 #ifdef DEBUG
 	GlobalVariables::GetInstance()->Update();
 #endif // DEBUG
-
+	DepthOutlineInfo farclipSize = postProcess_->GetDepthOutlineInfo();
 	//ImGui::Begin("OBB,BALL");
 
 
-	//ImGui::DragFloat4("sColor", &spotLight_.color.x, 0.1f);
-	//ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
-	//ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
-	//ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
-	//ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
-	//ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
-	//ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
-	//ImGui::Text("playerPosX %f", spotLight_.position.x);
-	//ImGui::Text("playerPosZ %f", spotLight_.position.z);
+	//ImGui::DragFloat("sColor", &farclipSize.farClip, 0.0001f);
+	//ImGui::DragFloat2("sde", &farclipSize.diffSize.x, 0.01f);
+	////ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	////ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	////ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
+	////ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	////ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+	////ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
+	////ImGui::Text("playerPosX %f", spotLight_.position.x);
+	////ImGui::Text("playerPosZ %f", spotLight_.position.z);
 
 	//ImGui::End();
+	postProcess_->SerDepthOutlineInfo({.farClip = farclipSize.farClip,.diffSize = farclipSize.diffSize});
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
 	spotLight_.direction = Normalize(spotLight_.direction);
@@ -302,7 +305,8 @@ void GameScene::Update()
 		if ((int)destroyCount_ >= clearFlagCount_) {
 
 			Audio::SoundStopWave(gameBGM_);
-			postProcess_->SetDissolveInfo({ 1.0f, 1.0f, 1.0f });
+			postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
+			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameClearSE_, false);
 			gameStateMode_ = CLEARGAME;
 			threPorM_ = -0.025f;
 
@@ -428,11 +432,6 @@ void GameScene::Draw()
 	
 	
 	player_->Draw(followCamera_->GetCamera());
-	switch (gameStateMode_) {
-		case PLAYGAME:
-			player_->DrawUI();
-			break;
-	}
 	
 	lockOn_->Draw();
 	
@@ -440,6 +439,13 @@ void GameScene::Draw()
 
 void GameScene::Draw2d()
 {
+
+	switch (gameStateMode_) {
+	case PLAYGAME:
+		player_->DrawUI();
+		break;
+	}
+
 	LoadStringSp_->Draw(LoadStringSpTex_, { 1.0f,1.0f,1.0f,1.0f });
 	slime2DSp1_->Draw();
 	slime2DSp2_->Draw();

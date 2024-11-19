@@ -18,10 +18,6 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
 	object_->SetMaterial(material_);
-	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
-	direLight_.direction = { 0.0f,-1.0f,0.0f };
-	direLight_.intensity = 0.6f;
-	object_->SetDirectionLight(direLight_);
 
 	/*spotLight_.color = { -3.7f,-3.7f,-3.7f,1.0f };
 	spotLight_.position = worldTransform_.translation_;
