@@ -20,6 +20,8 @@
 #include "LockOn/LockOn.h"
 #include "Camera.h"
 #include "Slime2d/Slime2d.h"
+#include "Score/Score.h"
+#include "GameTimer/GameTimer.h"
 /*--------------------------------------------
 ゲームのスタート演出のための待ちを管理するための構造体
 ---------------------------------------------*/
@@ -54,7 +56,7 @@ private:
 
 
 	
-
+	// オブジェクト
 	std::unique_ptr<Player> player_;
 	std::list<std::unique_ptr<Enemy>> enemys_;
 	std::unique_ptr<Ground> ground_;
@@ -63,8 +65,14 @@ private:
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<FollowCamera> followCamera_;
 	std::unique_ptr<LockOn> lockOn_;
+	// スコア
+	std::unique_ptr<Score> score_;
+	// ゲーム用タイマー
+	std::unique_ptr<GameTimer> gameTimer_;
 	
 	PostProcess* postProcess_ = nullptr;
+
+	PostProcess* postProcess2_ = nullptr;
 	uint32_t gameStateMode_ = PLAYGAME;
 	float thre_ = 0.0f;
 	float threPorM_ = 0.025f;

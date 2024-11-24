@@ -11,16 +11,19 @@ void GameScene::Init()
 	player_->SetCamera(followCamera_->GetCamera());
 	// 自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(player_->GetWorldTransform());
-	Loder::LoadJsonFile("Resources/json", "stage", player_.get(),enemys_, items_, worldDesigns_);
+
+	ground_ = std::make_unique<Ground>();
+	Loder::LoadJsonFile("Resources/json", "stage2", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
+	ground_->SetCamera(followCamera_->GetCamera());
+
 	followCamera_->PosAdustment();
 
 	lockOn_ = std::make_unique<LockOn>();
 	lockOn_->Init();
 	player_->SetLockOn(lockOn_.get());
 	followCamera_->SetLockOn(lockOn_.get());
-	ground_ = std::make_unique<Ground>();
-	ground_->Init();
-	ground_->SetCamera(followCamera_->GetCamera());
+	
+
 	
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
@@ -44,7 +47,14 @@ void GameScene::Init()
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
 	postProcess_->SetDissolveInfo({1.0f,1.0f,1.0f});
-	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
+
+	postProcess2_ = new PostProcess();
+	postProcess2_->Init();
+	postProcess2_->SetCamera(followCamera_->GetCamera());
+	postProcess2_->SetDissolveInfo({ 1.0f,1.0f,1.0f });
+	postProcess2_->SetEffectNo(PostEffectMode::kDissolve);
+
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
@@ -107,6 +117,14 @@ void GameScene::Init()
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	gameClearSE_ = Audio::GetInstance()->SoundLoadWave("Resources/clearSE.wav");
 	
+
+	// スコア
+	score_ = std::make_unique<Score>();
+	score_->Init();
+
+	// ゲームタイマー
+	gameTimer_ = std::make_unique<GameTimer>();
+	gameTimer_->Init();
 
 	// クリア条件の敵を倒した数の設定
 	clearFlagCount_ = (int)enemys_.size();
@@ -275,7 +293,7 @@ void GameScene::Update()
 
 			}
 		}
-		postProcess_->SetThreshold(thre_);
+		postProcess2_->SetThreshold(thre_);
 		startSpritePos_.y += startSpriteVelo_;
 		startEffectSp_->SetPosition(startSpritePos_);
 		startEffectSp_->Update();
@@ -283,6 +301,8 @@ void GameScene::Update()
 	}
 	case PLAYGAME: 
 	{
+		score_->Update();
+		gameTimer_->Update();
 		startSpritePos2_.y += 12.0f;
 		startEffectSp2_->SetPosition(startSpritePos2_);
 		startEffectSp2_->Update();
@@ -439,7 +459,8 @@ void GameScene::Draw()
 
 void GameScene::Draw2d()
 {
-
+	score_->Draw();
+	gameTimer_->Draw();
 	switch (gameStateMode_) {
 	case PLAYGAME:
 		player_->DrawUI();
@@ -458,6 +479,7 @@ void GameScene::PostDraw()
 {
 	
 	postProcess_->Draw();
+	//postProcess2_->Draw();
 	
 }
 

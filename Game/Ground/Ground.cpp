@@ -3,14 +3,14 @@
 #include "ModelManager.h"
 #include "ImGuiCommon.h"
 
-void Ground::Init()
+void Ground::Init(const Vector3& translate, const Vector3& scale, const std::string filename)
 {
-	ModelManager::GetInstance()->LoadModel("Resources/ground", "ground.obj");
 	worldTransform_.Initialize();
-	worldTransform_.translation_.z = 950.0f;
+	worldTransform_.translation_ = translate;
+	worldTransform_.scale_ = scale;
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
-	object_->SetModel("ground.obj");
+	object_->SetModel(filename + ".obj");
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 
@@ -21,7 +21,7 @@ void Ground::Init()
 
 	worldTransform_.UpdateMatrix();
 	//object_->SetMaterial({ {1.0f,1.0f,1.0f,1.0f} , false });
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/ground/ground.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/ground/" + filename +".png");
 }
 
 void Ground::Update()

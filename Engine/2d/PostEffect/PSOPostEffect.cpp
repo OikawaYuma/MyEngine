@@ -15,7 +15,6 @@
 
 void PSOPostEffect::Init()
 {
-	currentEffectNo_ = IPostEffectState::GetEffectNo();
 	effectArr_[PostEffectMode::kFullScreen] = std::make_unique<FullScreen>();
 	effectArr_[PostEffectMode::kGrayscale] = std::make_unique<GrayScale>();
 	effectArr_[PostEffectMode::kVignetting] = std::make_unique<Vignette>();
@@ -26,26 +25,30 @@ void PSOPostEffect::Init()
 	effectArr_[PostEffectMode::kRadialBlur] = std::make_unique<RadialBlur>();
 	effectArr_[PostEffectMode::kRandom] = std::make_unique<Random>();
 	effectArr_[PostEffectMode::kBloom] = std::make_unique<Bloom>();
-	effectArr_[currentEffectNo_]->Init();
-	property = effectArr_[currentEffectNo_]->CreatePipelineStateObject();
-}
-
-void PSOPostEffect::EffectChangeCheck()
-{
-	// シーンのチェック
-	prevEffectNo_ = currentEffectNo_;
-	currentEffectNo_ = IPostEffectState::GetEffectNo();
-
-	// シーン変更チェック
-	if (prevEffectNo_ != currentEffectNo_) {
-		effectArr_[currentEffectNo_]->Init();
-		property = effectArr_[currentEffectNo_]->CreatePipelineStateObject();
+	for (int i = 0; i < PostEffectMode::kNumPostEffect; i++) {
+		effectArr_[i]->Init();
 	}
 }
 
-void PSOPostEffect::SetCommand(PostProcess* postProcess)
+void PSOPostEffect::EffectChangeCheck(uint32_t effectNo)
 {
-	effectArr_[currentEffectNo_]->CommandRootParameter(postProcess);
+	//// シーンのチェック
+	prevEffectNo_ = currentEffectNo_;
+	currentEffectNo_ = effectNo;
+
+	//// シーン変更チェック
+	//if (prevEffectNo_ != currentEffectNo_) {
+	//	effectArr_[effectNo]->Init();
+	//	property = effectArr_[effectNo]->CreatePipelineStateObject();
+	//}
+}
+
+void PSOPostEffect::SetCommand(PostProcess* postProcess, uint32_t effectNo)
+{	
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootSignature(effectArr_[effectNo]->GetProperty().rootSignature.Get());
+	DirectXCommon::GetInstance()->GetCommandList()->SetPipelineState(effectArr_[effectNo]->GetProperty().graphicsPipelineState.Get());    //PSOを設定
+
+	effectArr_[effectNo]->CommandRootParameter(postProcess);
 }
 
 

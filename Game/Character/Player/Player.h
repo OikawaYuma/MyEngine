@@ -210,6 +210,8 @@ private:
 	Vector3 velo_{};
 	// ワールド変換データ
 	WorldTransform worldTransform_{};
+	const float movingRange_ = 195.0f;
+
 	// model skin num
 	uint32_t skinTex_ = 0;
 
