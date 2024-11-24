@@ -32,10 +32,10 @@ public:
 
 	void Init();
 
-	void EffectChangeCheck();
-	void SetCommand(PostProcess* postProcess);
+	void EffectChangeCheck(uint32_t effectNo);
+	void SetCommand(PostProcess* postProcess,uint32_t effectNo);
 
-	PSOProperty GetProperty() { return property; }
+	
 
 private:
 	HRESULT hr_;
@@ -46,7 +46,7 @@ private:
 	// 描画先のRTVを設定する
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
 
-	PSOProperty property;
+	
 	// エフェクトを保持するメンバ変数
 	std::unique_ptr<IPostEffectState> effectArr_[PostEffectMode::kNumPostEffect];
 	

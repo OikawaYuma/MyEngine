@@ -119,6 +119,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Fade\Fade.cpp" />
+    <ClCompile Include="Game\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Game\GameCamera\ClearCamera\ClearCamera.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_demo.cpp" />
@@ -202,8 +204,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\GameCamera\TitleCamera\TitleCamera.cpp" />
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
+    <ClCompile Include="Game\Score\Score.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Fade\Fade.h" />
+    <ClInclude Include="Game\GameTimer\GameTimer.h" />
     <ClInclude Include="Game\GameCamera\ClearCamera\ClearCamera.h" />
     <ClInclude Include="Engine\Externals\imgui\imconfig.h" />
     <ClInclude Include="Engine\Externals\imgui\imgui.h" />
@@ -305,6 +310,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Light\SpotLight.h" />
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
+    <ClInclude Include="Game\Score\Score.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

@@ -20,7 +20,7 @@ class Bloom : public IPostEffectState
 {
 public:
 
-
+	
 
 	void Init() override;
 	/// <summary>
@@ -82,5 +82,5 @@ private:
 	// 頂点リソースにデータを書き込む
 	BloomInfo* bloomData_;
 
-
+	
 };

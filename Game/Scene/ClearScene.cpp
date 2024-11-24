@@ -10,9 +10,7 @@ void ClearScene::Init()
 
 	camera_ = std::make_unique<ClearCamera>();
 	camera_->Init();
-	ground_ = std::make_unique<Ground>();
-	ground_->Init();
-	ground_->SetCamera(camera_->GetCamera());
+
 
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
@@ -20,8 +18,9 @@ void ClearScene::Init()
 	player_ = std::make_unique<Player>();
 	player_->SetCamera(camera_->GetCamera());
 
-	Loder::LoadJsonFile("Resources/json", "gameOverStage", player_.get(), enemys_, items_, worldDesigns_);
-
+	ground_ = std::make_unique<Ground>();
+	Loder::LoadJsonFile("Resources/json", "gameOverStage", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
+	ground_->SetCamera(camera_->GetCamera());
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->ClearInit();
 	}
@@ -33,7 +32,7 @@ void ClearScene::Init()
 	postProcess_->Init();
 
 	postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
-	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
 
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;

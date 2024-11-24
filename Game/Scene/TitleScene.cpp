@@ -53,20 +53,20 @@ void TitleScene::Init()
 	camera_ = std::make_unique<TitleCamera>();
 	camera_->Init();
 	
-
+	player_ = std::make_unique<Player>();
+	player_->SetCamera(camera_->GetCamera());
 
 	ground_ = std::make_unique<Ground>();
-	ground_->Init();
+	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), enemys_, items_, worldDesigns_,ground_.get());
+
 	ground_->SetCamera(camera_->GetCamera());
 
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 
-	player_ = std::make_unique<Player>();
-	player_->SetCamera(camera_->GetCamera());
 	
-	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), enemys_, items_, worldDesigns_);
-	player_->TitleInit();
+	
+player_->TitleInit();
 	/////////////////////////////////////////////////
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_->GetCamera());
@@ -75,7 +75,7 @@ void TitleScene::Init()
 	thre_ = 0.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
-	IPostEffectState::SetEffectNo(PostEffectMode::kDepthOutline);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
 
 	loadingSpriteMoveFlag_ = false;
 

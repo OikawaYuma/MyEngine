@@ -327,6 +327,9 @@
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\LuminanceOutline.cpp" />
     <ClCompile Include="Game\GameCamera\ClearCamera\ClearCamera.cpp" />
+    <ClCompile Include="Game\Score\Score.cpp" />
+    <ClCompile Include="Game\GameTimer\GameTimer.cpp" />
+    <ClCompile Include="Game\Fade\Fade.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -602,6 +605,9 @@
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
     <ClInclude Include="Game\GameCamera\ClearCamera\ClearCamera.h" />
+    <ClInclude Include="Game\Score\Score.h" />
+    <ClInclude Include="Game\GameTimer\GameTimer.h" />
+    <ClInclude Include="Game\Fade\Fade.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

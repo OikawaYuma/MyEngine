@@ -13,7 +13,7 @@
 class Ground
 {
 public:
-	void Init();
+	void Init(const Vector3& translate, const Vector3& scale, const std::string filename);
 	void Update();
 	void Draw();
 public: // Setter

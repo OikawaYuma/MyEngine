@@ -16,6 +16,8 @@ void Bloom::Init()
 	// 書き込むためのアドレスを取得
 	depthOutlineResource_->Map(0, nullptr, reinterpret_cast<void**>(&bloomData_));
 
+	SetPropery(CreatePipelineStateObject());
+
 }
 
 PSOProperty Bloom::CreatePipelineStateObject()

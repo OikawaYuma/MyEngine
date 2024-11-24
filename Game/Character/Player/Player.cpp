@@ -33,6 +33,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 		{ 0.5f , 0.5f },
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		"Resources/Reticle.png");
+
 	reticleFar_ = std::make_unique<Sprite>();
 	reticleFar_->Init(
 		{ 720.0f ,360.0f },
@@ -294,17 +295,17 @@ void Player::Update()
 		(*itr)->Update();
 	}
 
-	if (worldTransform_.translation_.x >= 30.0f) {
-		worldTransform_.translation_.x = 30.0f;
+	if (worldTransform_.translation_.x >= movingRange_) {
+		worldTransform_.translation_.x = movingRange_;
 	}
-	else if (worldTransform_.translation_.x <= -30.0f) {
-		worldTransform_.translation_.x = -30.0f;
+	else if (worldTransform_.translation_.x <= -movingRange_) {
+		worldTransform_.translation_.x = -movingRange_;
 	}
-	if (worldTransform_.translation_.z <= 65.0f) {
-		worldTransform_.translation_.z = 65.0f;
+	if (worldTransform_.translation_.z <= -movingRange_) {
+		worldTransform_.translation_.z = -movingRange_;
 	}
-	else if (worldTransform_.translation_.z >= 470.0f) {
-		worldTransform_.translation_.z = 470.0f;
+	else if (worldTransform_.translation_.z >= movingRange_) {
+		worldTransform_.translation_.z = movingRange_;
 	}
 
 

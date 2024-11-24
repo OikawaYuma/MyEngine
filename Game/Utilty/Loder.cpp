@@ -14,7 +14,7 @@
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
 
-void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, std::list<std::unique_ptr<Enemy>>& enemys, std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns)
+void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, std::list<std::unique_ptr<Enemy>>& enemys, std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns, Ground* ground)
 {
 	// 連結してフルパスを得る
 	const std::string fullpath = kDefaultBaseDirectory + "/" + fileName + ".json";
@@ -152,6 +152,14 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
 			wood->Init(objectData.transform.scale, objectData.transform.translate, objectData.filename);
 			worldDesigns.push_back(std::move(wood));
+		}
+		else if (objectData.filename.compare("ground") == 0) {
+			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
+			ground->Init(objectData.transform.translate, { objectData.transform.scale.x,objectData.transform.scale.z,objectData.transform.scale.y }, objectData.filename);
+		}
+		else if (objectData.filename.compare("ground2") == 0) {
+			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
+			ground->Init(objectData.transform.translate, { objectData.transform.scale.x,objectData.transform.scale.z,objectData.transform.scale.y }, objectData.filename);
 		}
 
 	}

@@ -13,7 +13,6 @@ enum PostEffectMode {
 	kFullScreen,
 	kGrayscale,
 	kVignetting,
-	kSmoothing,
 	kGaussianFilter,
 	kLuminanceOutline,
 	kDepthOutline,
@@ -28,8 +27,6 @@ class PostProcess;
 // シーン内での処理を行う基底クラス
 class IPostEffectState {
 protected:
-	// シーン番号を管理する変数
-	static int effectNo_;
 public:
 
 	/// <summary>
@@ -87,9 +84,12 @@ public:
 	// 仮想デストラクタを用意しないと警告される
 	virtual ~IPostEffectState();
 
-	// シーン番号のゲッター
-	static int GetEffectNo();
-	static void SetEffectNo(int effectNo);
+	PSOProperty GetProperty() { return property_; }
+	void SetPropery(PSOProperty property) { property_ = property; };
+
+protected:
+	PSOProperty property_;
+
 
 
 };

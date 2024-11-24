@@ -35,9 +35,9 @@ void DemoScene::Init()
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 	camera_->SetTranslate({0.0f,3.0f,0.0f});
-	ground_ = std::make_unique<Ground>();
+	/*ground_ = std::make_unique<Ground>();
 	ground_->Init();
-	ground_->SetCamera(camera_.get());
+	ground_->SetCamera(camera_.get());*/
 	obj_ = std::make_unique<Player>();
 	obj_->Init({ 1.0f, 0.5f,10.0f }, "ddd");
 	obj_->SetCamera(camera_.get());
@@ -73,7 +73,7 @@ void DemoScene::Init()
 
 	postProcess_ = new PostProcess();
 	postProcess_->Init();
-	IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
+	postProcess_->SetEffectNo(PostEffectMode::kFullScreen);
 }
 
 void DemoScene::Update()
@@ -161,7 +161,7 @@ void DemoScene::PostEffectChange()
 	};
 	if (ImGui::TreeNode("Base(now hsv)")) {
 		if (ImGui::Button("Base On ")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kFullScreen);
+			postProcess_->SetEffectNo(PostEffectMode::kFullScreen);
 		}
 
 
@@ -173,14 +173,14 @@ void DemoScene::PostEffectChange()
 
 	if (ImGui::TreeNode("GrayScale")) {
 		if (ImGui::Button("GrayScale On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kGrayscale);
+			postProcess_->SetEffectNo(PostEffectMode::kGrayscale);
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("Viggnet")) {
 		if (ImGui::Button("Viggnet On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kVignetting);
+			postProcess_->SetEffectNo(PostEffectMode::kVignetting);
 		}
 		ImGui::SliderFloat("darkness 1", &viggnetDarkness.x, 0.0f, 16.0f);
 		ImGui::SliderFloat("darkness 2", &viggnetDarkness.y, 0.0f, 1.0f);
@@ -189,7 +189,7 @@ void DemoScene::PostEffectChange()
 
 	if (ImGui::TreeNode("GaussianFilter")) {
 		if (ImGui::Button("Gaussian On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kGaussianFilter);
+			postProcess_->SetEffectNo(PostEffectMode::kGaussianFilter);
 		}
 		ImGui::SliderFloat("Devaition", &gauss, 0.01f, 10.0f);
 		ImGui::TreePop();
@@ -200,21 +200,21 @@ void DemoScene::PostEffectChange()
 
 	if (ImGui::TreeNode("DepthOutline")) {
 		if (ImGui::Button("DepthOutline On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kDepthOutline);
+			postProcess_->SetEffectNo(PostEffectMode::kDepthOutline);
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("Radial Blur")) {
 		if (ImGui::Button("Radial Blur On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kRadialBlur);
+			postProcess_->SetEffectNo(PostEffectMode::kRadialBlur);
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("Dissolve")) {
 		if (ImGui::Button("Dissolve On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+			postProcess_->SetEffectNo(PostEffectMode::kDissolve);
 		}
 		ImGui::SliderFloat("Devaition", &threa, 0.00f, 1.0f);
 		ImGui::TreePop();
@@ -222,14 +222,14 @@ void DemoScene::PostEffectChange()
 
 	if (ImGui::TreeNode("Random")) {
 		if (ImGui::Button("Random On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kRandom);
+			postProcess_->SetEffectNo(PostEffectMode::kRandom);
 		}
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("Bloom")) {
 		if (ImGui::Button("Bloom On")) {
-			IPostEffectState::SetEffectNo(PostEffectMode::kBloom);
+			postProcess_->SetEffectNo(PostEffectMode::kBloom);
 		}
 
 		ImGui::SliderFloat("luminance", &bloomInfo.luminance, 0.2f, 0.7f);

@@ -83,7 +83,13 @@ public:
 	DepthOutlineInfo GetDepthOutlineInfo() { return depthOutlineInfo_; }
 	void SerDepthOutlineInfo(const DepthOutlineInfo& DepthOutlineInfo) { depthOutlineInfo_ = DepthOutlineInfo; }
 
+	// シーン番号のゲッター
+	int GetEffectNo() { return effectNo_; };
+	void SetEffectNo(int effectNo) { effectNo_ = effectNo; };
+	
 private:
+	// タイトルシーンで初期化
+	int effectNo_ = PostEffectMode::kBloom;
 	// シーンを保持するメンバ変数
 	//std::unique_ptr<IPostEffectState> effectArr_[POSTEFFECTMODE::EFFECTNUM];
 
@@ -150,6 +156,7 @@ private:
 	DepthOutlineInfo depthOutlineInfo_ = { .diffSize = {0.0f,0.0f} };
 	FullScreenInfo hsvInfo_;
 	DissolveInfo dissolveInfo_;
+	
 	
 };
 

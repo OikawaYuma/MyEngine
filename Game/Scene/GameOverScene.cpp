@@ -12,16 +12,18 @@ void GameOverScene::Init()
 	camera_ = std::make_unique<GameOverCamera>();
 	camera_->Init();
 	ground_ = std::make_unique<Ground>();
-	ground_->Init();
+	player_ = std::make_unique<Player>();
+	Loder::LoadJsonFile("Resources/json", "gameOverStage", player_.get(), enemys_, items_, worldDesigns_,ground_.get());
 	ground_->SetCamera(camera_->GetCamera());
+
+
 
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 	skydome_->SetSkydomeTexture(titleTex_);
-	player_ = std::make_unique<Player>();
+	
 	player_->SetCamera(camera_->GetCamera());
 
-	Loder::LoadJsonFile("Resources/json", "gameOverStage", player_.get(), enemys_, items_, worldDesigns_);
 	player_->GameOverInit();
 	/////////////////////////////////////////////////
 
@@ -30,7 +32,7 @@ void GameOverScene::Init()
 	postProcess_->Init();
 	
 	postProcess_->SetDissolveInfo({ 0.35f, 0.025f, 0.025f });
-	IPostEffectState::SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
 
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
