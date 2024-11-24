@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Character\Enemy\EnemyApear.cpp" />
     <ClCompile Include="Game\Fade\Fade.cpp" />
     <ClCompile Include="Game\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Game\GameCamera\ClearCamera\ClearCamera.cpp" />
@@ -207,6 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Score\Score.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
     <ClInclude Include="Game\Fade\Fade.h" />
     <ClInclude Include="Game\GameTimer\GameTimer.h" />
     <ClInclude Include="Game\GameCamera\ClearCamera\ClearCamera.h" />

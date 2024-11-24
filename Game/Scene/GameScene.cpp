@@ -301,8 +301,9 @@ void GameScene::Update()
 	}
 	case PLAYGAME: 
 	{
-		score_->Update();
-		gameTimer_->Update();
+		gameTimer_->Start();
+		score_->Update(gameTimer_->GetGameTime());
+		
 		startSpritePos2_.y += 12.0f;
 		startEffectSp2_->SetPosition(startSpritePos2_);
 		startEffectSp2_->Update();
@@ -322,7 +323,7 @@ void GameScene::Update()
 			});
 
 		// 現状のクリア条件
-		if ((int)destroyCount_ >= clearFlagCount_) {
+		/*if ((int)destroyCount_ >= clearFlagCount_) {
 
 			Audio::SoundStopWave(gameBGM_);
 			postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
@@ -330,7 +331,7 @@ void GameScene::Update()
 			gameStateMode_ = CLEARGAME;
 			threPorM_ = -0.025f;
 
-		}
+		}*/
 		// 現状のゲームオーバー条件
 		// PlayerのHpが０になったら
 		if (player_->GetHP() <= 0) {
@@ -401,7 +402,7 @@ void GameScene::Update()
 		}
 
 		
-
+		gameTimer_->Update(startSpritePos2_.y);
 		collisionManager_->CheckAllCollision();
 		break;
 	}

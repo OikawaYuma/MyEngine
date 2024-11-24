@@ -15,10 +15,14 @@ class Score
 {
 public:
 	void Init();
-	void Update();
+	void Update(const int &time);
 	void Draw();
 private:
 	int gameNumber_[10];
     std::unique_ptr<Sprite> scoreSprite_[6];
+
+    int digitScore_[6];
+
+    int sumScore_;
 };
 

@@ -69,6 +69,8 @@ private:
 	std::unique_ptr<Score> score_;
 	// ゲーム用タイマー
 	std::unique_ptr<GameTimer> gameTimer_;
+
+	
 	
 	PostProcess* postProcess_ = nullptr;
 
