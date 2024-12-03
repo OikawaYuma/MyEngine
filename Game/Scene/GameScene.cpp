@@ -23,8 +23,6 @@ void GameScene::Init()
 	player_->SetLockOn(lockOn_.get());
 	followCamera_->SetLockOn(lockOn_.get());
 	
-
-	
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 
@@ -38,7 +36,6 @@ void GameScene::Init()
 	spotLight_.dacya = 2.0f;
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
-	
 	
 	gameStateMode_ = WAITGAME;
 	jumpNum_ = JUMPONE;
@@ -122,12 +119,16 @@ void GameScene::Init()
 	score_ = std::make_unique<Score>();
 	score_->Init();
 
+	killCount_ = 0;
 	// ゲームタイマー
 	gameTimer_ = std::make_unique<GameTimer>();
 	gameTimer_->Init();
 
 	// クリア条件の敵を倒した数の設定
 	clearFlagCount_ = (int)enemys_.size();
+
+	enemyApear_.Init();
+	enemyApear_.SetPlayer(player_.get());
 }
 
 void GameScene::Update()
@@ -150,7 +151,7 @@ void GameScene::Update()
 	////ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
 	////ImGui::Text("playerPosX %f", spotLight_.position.x);
 	////ImGui::Text("playerPosZ %f", spotLight_.position.z);
-
+	
 	//ImGui::End();
 	postProcess_->SerDepthOutlineInfo({.farClip = farclipSize.farClip,.diffSize = farclipSize.diffSize});
 	spotLight_.cosAngle =
@@ -302,7 +303,8 @@ void GameScene::Update()
 	case PLAYGAME: 
 	{
 		gameTimer_->Start();
-		score_->Update(gameTimer_->GetGameTime());
+		enemyApear_.Update(enemys_);
+		
 		
 		startSpritePos2_.y += 12.0f;
 		startEffectSp2_->SetPosition(startSpritePos2_);
@@ -310,11 +312,12 @@ void GameScene::Update()
 		enemys_.remove_if([=](std::unique_ptr<Enemy>& bullet) {
 			if (bullet->IsDead()) {
 				destroyCount_++;
+				killCount_++;;
 				return true;
 			}
 			return false;
 			});
-
+		score_->Update(gameTimer_->GetGameTime(), killCount_);
 		items_.remove_if([](std::unique_ptr<PlayerItem>& bullet) {
 			if (bullet->IsDead()) {
 				return true;
@@ -334,14 +337,12 @@ void GameScene::Update()
 		}*/
 		// 現状のゲームオーバー条件
 		// PlayerのHpが０になったら
-		if (player_->GetHP() <= 0) {
-			
+		if (player_->GetHP() <= 0.3f) {
 			Audio::SoundStopWave(gameBGM_);
 			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), slimeDeadSE_, false);
 			postProcess_->SetDissolveInfo({ 0.35f, 0.025f, 0.025f });
 			gameStateMode_ = DEADGAME;
-			threPorM_ = -0.025f;
-			
+			threPorM_ = -0.025f;	
 		}
 		// ロックオン
 		lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());
@@ -460,10 +461,11 @@ void GameScene::Draw()
 
 void GameScene::Draw2d()
 {
-	score_->Draw();
+	
 	gameTimer_->Draw();
 	switch (gameStateMode_) {
 	case PLAYGAME:
+		score_->Draw();
 		player_->DrawUI();
 		break;
 	}

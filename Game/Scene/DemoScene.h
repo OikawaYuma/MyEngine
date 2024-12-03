@@ -34,10 +34,12 @@ public:
 
 	void PostEffectChange();
 
+	void ParticleEmitter();
+
 private:
 	
 	
-	PostProcess* postProcess_ = nullptr;
+	std::unique_ptr<PostProcess> postProcess_;
 	
 	Vector3 hsv = {1.0f,1.0f,1.0f};
 
@@ -53,7 +55,16 @@ private:
 	uint32_t tex_;
 	WorldTransform worldtransform_;
 	SpotLight spotLight_{};
+	Vector3 move_;
+	float gravity_;
 
-	
+	float preGravity_;
+	float prePower_;
+	Vector3 preParticleScale_;
+
+	Material material_{};
+
+	uint32_t gameBGM_;
+	uint32_t slimeDeadSE_;
 };
 

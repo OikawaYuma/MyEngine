@@ -17,9 +17,9 @@ void Score::Init()
 	}
 }
 
-void Score::Update(const int& time)
+void Score::Update(const int& time, const int& killCount)
 {
-	sumScore_ = (600 - time) * 10;
+	sumScore_ = (600 - time) * 10 + killCount *50;
 	
 
 	for (int i = 0; i < 6; i++) {

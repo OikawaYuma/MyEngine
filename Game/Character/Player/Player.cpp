@@ -24,23 +24,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	hommingBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/HommingBulletUI.png");
 	razerBulletUITex_ = TextureManager::GetInstance()->StoreTexture("Resources/bulletUI/RazerBeam.png");
 
-	hp_ = 0.7f;
-
-	reticleNear_ = std::make_unique<Sprite>();
-	reticleNear_->Init(
-		{ 640.0f ,360.0f },
-		{ 64.0f, 64.0f },
-		{ 0.5f , 0.5f },
-		{ 1.0f, 1.0f, 1.0f, 1.0f },
-		"Resources/Reticle.png");
-
-	reticleFar_ = std::make_unique<Sprite>();
-	reticleFar_->Init(
-		{ 720.0f ,360.0f },
-		{ 48.0f, 48.0f },
-		{ 0.5f , 0.5f },
-		{ 1.0f, 1.0f, 1.0f, 1.0f },
-		"Resources/Reticle.png");
+	hp_ = 1.0f;
 
 	hpUIBlue_ = std::make_unique<Sprite>();
 	hpUIBlue_->Init(
@@ -65,16 +49,20 @@ void Player::Init(const Vector3& translate, const std::string filename)
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		"Resources/bulletUI/NormalBulletUI.png");
 
-
+	bulletSize_ = hp_ / 2;
 	worldTransform3DReticleNear_.Initialize();
+	worldTransform3DReticleNear_.scale_ = { bulletSize_,bulletSize_,bulletSize_ };
 	worldTransform3DReticleFar_.Initialize();
-
+	worldTransform3DReticleFar_.scale_ = {0.5f,0.5f,0.5f };
+	
 	ModelManager::GetInstance()->LoadModel("Resources/player", "player.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/ball", "ball.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/player", "Reticle3.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/player", "Reticle4.obj");
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = translate;
-	worldTransform_.scale_ = { hp_ + 0.3f,hp_ + 0.3f,hp_ + 0.3f };
+	worldTransform_.scale_ = { hp_ ,hp_ ,hp_ };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
 	
 	
@@ -84,11 +72,11 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	nearReticleObj_ = std::make_unique<Object3d>();
 	nearReticleObj_->Init();
-	nearReticleObj_->SetModel("player.obj");
+	nearReticleObj_->SetModel("Reticle3.obj");
 
 	farReticleObj_ = std::make_unique<Object3d>();
 	farReticleObj_->Init();
-	farReticleObj_->SetModel("player.obj");
+	farReticleObj_->SetModel("Reticle2.obj");
 
 
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
@@ -121,7 +109,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	direLight_.intensity = 0.6f;
 	object_->SetDirectionLight(direLight_);
 
-
+	nearReticleObj_->SetMaterial(material_);
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
@@ -129,6 +117,12 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, "player.obj");
 	shadowObject_->Update();
+
+	reticleShadowObject_ = std::make_unique<PlaneProjectionShadow>();
+	reticleShadowObject_->Init(&worldTransform3DReticleNear_, "Reticle4.obj");
+	reticleShadowObject_->Update();
+
+	reticleY_ = 0;
 
 	////////////////////////////////////////////
 	// SE
@@ -203,10 +197,12 @@ void Player::Update()
 		behaviorRequest_ = std::nullopt;
 	}
 	// HPを元に基準となる大きさを決定する
-	worldTransform_.scale_ = { hp_+0.3f,hp_ + 0.3f,hp_ + 0.3f };
+	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	bulletSize_ = hp_ / 2;
+	worldTransform3DReticleNear_.scale_ = { bulletSize_,bulletSize_,bulletSize_ };
 	// 着地
-	if (worldTransform_.translation_.y <= (hp_+ 0.3f)) {
-		worldTransform_.translation_.y = (hp_ + 0.3f);
+	if (worldTransform_.translation_.y <= (hp_)) {
+		worldTransform_.translation_.y = (hp_);
 		// ジャンプ終了
 		//behaviorRequest_ = Behavior::kRoot;
 	}
@@ -227,7 +223,7 @@ void Player::Update()
 		});
 
 
-	Aim();
+	
 
 	switch (behavior_) {
 		// 通常行動
@@ -284,7 +280,7 @@ void Player::Update()
 			break;
 		}
 	}
-
+	Aim();
 	Attack();
 	// 弾更新
 	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
@@ -308,32 +304,36 @@ void Player::Update()
 		worldTransform_.translation_.z = movingRange_;
 	}
 
-
-
-
 	worldTransform_.UpdateMatrix();
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
-	reticleNear_->Update();
-	reticleFar_->Update();
 	
 	shadowObject_->Update();
+	reticleShadowObject_->Update();
 }
 
 void Player::Draw(Camera* camera)
 {
 	shadowObject_->Draw(camera);
+	reticleShadowObject_->Draw(camera);
 	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
 		(*itr)->Draw(camera);
 	}
 	for (std::list<PlayerRazer*>::iterator itr = razers_.begin(); itr != razers_.end(); itr++) {
 		(*itr)->Draw(camera);
 	}
+	
+	switch (bulletMode_) {
+	case BulletMode::NormalBullet:
+		nearReticleObj_->Draw(skinTex_, camera);
+		break;
+	case BulletMode::HommingBullet:
+		break;
+	case BulletMode::LaserBeam:
+		break;
+	}
 	object_->Draw(skinTex_, camera);
-	///
-	//レティクルの位置の確認用
-	//nearReticleObj_->Draw(skinTex_, camera);
-	//farReticleObj_->Draw(skinTex_, camera);
+
 
 
 }
@@ -346,16 +346,12 @@ void Player::DrawUI()
 
 	switch (bulletMode_) {
 	case BulletMode::NormalBullet:
-		reticleNear_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
-		reticleFar_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
 		bulletModeUI->Draw(normalBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	case BulletMode::HommingBullet:
 		bulletModeUI->Draw(hommingBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	case BulletMode::LaserBeam:
-		reticleNear_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
-		reticleFar_->Draw(playerReticleTex_, { 1.0f,1.0f,1.0f,1.0f });
 		bulletModeUI->Draw(razerBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	}
@@ -612,6 +608,118 @@ void Player::GameOverDraw(Camera* camera)
 	deadSlimeObj_->Draw(skinTex_, camera);
 }
 
+void Player::DemoUpdate()
+{
+	ColorAdust();
+#ifdef Debug
+
+#endif // DEBUG
+
+	/*ImGui::Begin("Light");
+	ImGui::DragFloat4("mColor", &material_.color.x, 0.1f);
+	ImGui::DragFloat("mShin", &material_.shininess, 0.1f);
+
+	ImGui::DragFloat4("dColor", &direLight_.color.x, 0.1f);
+	ImGui::DragFloat3("ddire", &direLight_.direction.x, 0.1f);
+	ImGui::DragFloat("dinten", &direLight_.intensity, 0.1f);
+
+	ImGui::DragFloat4("sColor", &spotLight_.color.x, 0.1f);
+	ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	ImGui::DragFloat3("sDis", &spotLight_.distance, 0.1f);
+	ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+
+	ImGui::Text("playerPosX %f", worldTransform_.translation_.x);
+	ImGui::Text("playerPosZ %f", worldTransform_.translation_.z);
+	ImGui::End();*/
+
+
+	direLight_.direction = Normalize(direLight_.direction);
+	spotLight_.direction = Normalize(spotLight_.direction);
+
+	object_->SetMaterial(material_);
+	object_->SetSpotLight(spotLight_);
+	object_->SetDirectionLight(direLight_);
+
+
+	hpUIBlue_->SetPosition({ hp_ * 200 + 50.0f,25.0f });
+	hpUIBlue_->SetSize({ hp_ * 200,50.0f });
+	hpUIBlue_->Update();
+
+	HitEnemyCoolTime();
+
+	//ApplyGlobalVariables();
+	if (behaviorRequest_) {
+		// 振る舞いを変更する
+		behavior_ = behaviorRequest_.value();
+		// 各振る舞いごとの初期化を実行
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInit();
+
+			break;
+		case Behavior::kAttack:
+			BehaviorRootAttackInit();
+			break;
+		case Behavior::kDash:
+			BehaviorRootDashInit();
+			break;
+		case Behavior::kJump:
+			BehaviorRootJumpInit();
+			break;
+		}
+		// 振る舞いリクエストをリセット
+		behaviorRequest_ = std::nullopt;
+	}
+	// HPを元に基準となる大きさを決定する
+	worldTransform_.scale_ = { hp_ + 0.3f,hp_ + 0.3f,hp_ + 0.3f };
+	// 着地
+	if (worldTransform_.translation_.y <= (hp_ + 0.3f)) {
+		worldTransform_.translation_.y = (hp_ + 0.3f);
+		// ジャンプ終了
+		//behaviorRequest_ = Behavior::kRoot;
+	}
+
+	if (hp_ <= 0.3) {
+		hp_ = 1.0f;
+	}
+
+	Aim();
+
+	switch (behavior_) {
+		// 通常行動
+	case Behavior::kRoot:
+
+	default:
+		/*BehaviorRootUpdate();
+
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
+			behaviorRequest_ = Behavior::kDash;
+		}
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_B)) {
+			behaviorRequest_ = Behavior::kJump;
+		}*/
+		break;
+	case Behavior::kAttack:
+		BehaviorRootAttackUpdate();
+		break;
+	case Behavior::kDash:
+		BehaviorRootDashUpdate();
+		break;
+	case Behavior::kJump:
+		BehaviorRootJumpUpdate();
+		break;
+	}
+
+	worldTransform_.UpdateMatrix();
+	object_->SetWorldTransform(worldTransform_);
+	object_->Update();
+
+	shadowObject_->Update();
+}
+
 void Player::Move()
 {
 	velo_ = {0,0,0};
@@ -642,87 +750,34 @@ void Player::Move()
 		LerpShortAngle(worldTransform_.rotation_.y, preAngle_, angletime);
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velo_);
 
-	
+	worldTransform_.UpdateMatrix();
 
 }
 
 void Player::Aim()
 {
-	// スプライトの現在座標を取得
-	Vector2 spritePosition = reticleNear_->GetPosition();
 	Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A);
 	// ゲームパッド状態取得
 	if (Input::GetInstance()->GetJoystickState()) {
 		//spritePosition.x += Input::GetInstance()->JoyStickParmRX(12.0f);
-		spritePosition.y -= Input::GetInstance()->JoyStickParmRY(12.0f);
-	}
-	else {
-
-		if (Input::GetInstance()->PushKey(DIK_RIGHTARROW)) {
-			spritePosition.x += 5;
+		reticleY_ += Input::GetInstance()->JoyStickParmRY(0.5f);
+		if (reticleY_ <= bulletSize_) {
+			reticleY_ = bulletSize_;
 		}
-		if (Input::GetInstance()->PushKey(DIK_LEFTARROW)) {
-			spritePosition.x -= 5;
-		}
-		if (Input::GetInstance()->PushKey(DIK_UPARROW)) {
-			spritePosition.y -= 5;
-		}
-		if (Input::GetInstance()->PushKey(DIK_DOWNARROW)) {
-			spritePosition.y += 5;
+		else if (reticleY_ >= 30.0f) {
+			reticleY_ = 30.0f;
 		}
 	}
-	reticleNear_->SetPosition(spritePosition);
-	// ビューポート
-	Matrix4x4 matViewport =
-		MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
 
-	/*--------合成行列の逆行列--------------*/
-		// ビュープロジェクションビューポート合成行列
-	Matrix4x4 matVPV =
-		Multiply(Multiply(camera_->GetViewMatrix(), camera_->GetProjectionMatrix()), matViewport);
-
-	// 合成行列の逆行列を計算する
-	Matrix4x4 matInverseVPV = Inverse(matVPV);
-
-	/////////////////////以下はデバック用//////////////////////////////////
-	Matrix4x4 matInverseVPVReturn = Inverse(matInverseVPV);
-#ifdef DEBUG
-	ImGui::Begin("camera keisan");
-	MatrixScreenPrintf(matVPV, "matvpv");
-	MatrixScreenPrintf(matInverseVPV, "matvpv");
-	MatrixScreenPrintf(matVPV, "matvpv");
-	ImGui::Text("matvpv", matVPV);
-	ImGui::Text("%matinversevpv", matInverseVPV);
-	ImGui::Text("%matinversevpvinverse", matInverseVPVReturn);
-	ImGui::End();
-#endif // DEBUG
-
-
-	////////////////////////////////////////////////////////////////////
-
-	/*--------2点のワールド行列--------------*/
-	// スクリーン座標
-	Vector3 posNear = Vector3(static_cast<float>(reticleNear_->GetPosition().x), (float)reticleNear_->GetPosition().y, 0);
-	Vector3 posFar = Vector3(static_cast<float>(reticleNear_->GetPosition().x), float(reticleNear_->GetPosition().y), 1);
-
-	// スクリーン座標系からワールド座標系へ
-	posNear = Transform1(posNear, matInverseVPV);
-	posFar = Transform1(posFar, matInverseVPV);
-
-	/*---------3Dレティクルの座標系さん-------*/
-	// スティックレイの方向
-	Vector3 spriteDierection;
-	spriteDierection.x = posFar.x - posNear.x;
-	spriteDierection.y = posFar.y - posNear.y;
-	spriteDierection.z = posFar.z - posNear.z;
-	spriteDierection = Normalize(spriteDierection);
-
-	// カメラから照準オブジェクトの距離
-	const float kDistanceTextObjectNear = 40.0f;
+	const float kDistanceTextObjectNear = 30.0f;
 	const float kDistanceTextObjectFar = 20.0f;
-	worldTransform3DReticleNear_.translation_.x = posNear.x + spriteDierection.x * kDistanceTextObjectNear;
-	worldTransform3DReticleNear_.translation_.y = posNear.y + spriteDierection.y * kDistanceTextObjectNear;
-	worldTransform3DReticleNear_.translation_.z = posNear.z + spriteDierection.z * kDistanceTextObjectNear;
+	
+	cameraDirection_ = { 0.0f,0.0f,1.0f };
+	cameraDirection_ = TransformNormal(cameraDirection_, camera_->GetCameraMatrix());
+	cameraDirection_.y = 0.0f;
+	worldTransform3DReticleNear_.translation_.x = worldTransform_.translation_.x + cameraDirection_.x * kDistanceTextObjectNear;
+	worldTransform3DReticleNear_.translation_.y = worldTransform_.translation_.y + reticleY_;
+	worldTransform3DReticleNear_.translation_.z = worldTransform_.translation_.z + cameraDirection_.z * kDistanceTextObjectNear;
 	worldTransform3DReticleNear_.UpdateMatrix();
 
 	worldTransform3DReticleFar_.translation_.x = GetReticleWorldPosition().x - GetWorldPosition().x;
@@ -735,26 +790,20 @@ void Player::Aim()
 	worldTransform3DReticleFar_.translation_.z = GetWorldPosition().z + worldTransform3DReticleFar_.translation_.z * kDistanceTextObjectFar;
 	worldTransform3DReticleFar_.UpdateMatrix();
 
-	{
-		Vector3 posReti = {
-			worldTransform3DReticleFar_.matWorld_.m[3][0],
-			worldTransform3DReticleFar_.matWorld_.m[3][1],
-			worldTransform3DReticleFar_.matWorld_.m[3][2],
-		};
+	Vector3 velocity(0, 0, 1.0f);
+	// 自機から照準オブジェクトへのベクトル
+	velocity.x = GetReticleWorldPosition().x - GetWorldPosition().x;
+	velocity.y = GetReticleWorldPosition().y - GetWorldPosition().y;
+	velocity.z = GetReticleWorldPosition().z - GetWorldPosition().z;
 
-		// ビューポート行列
-		Matrix4x4 matView = MakeViewportMatrix(0, 0, WinAPI::kClientWidth_, WinAPI::kClientHeight_, 0, 1);
+	velocity = Normalize(velocity);
+	// Y軸周り角度（Θy）
+	worldTransform3DReticleFar_.rotation_.y = std::atan2(velocity.x, velocity.z);
+	worldTransform3DReticleNear_.rotation_.y = std::atan2(velocity.x, velocity.z);
+	float velocityXZ = sqrt((velocity.x * velocity.x) + (velocity.z * velocity.z));
 
-		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
-		Matrix4x4 matViewProjectionViewport =
-			Multiply(camera_->GetViewprojectionMatrix(), matView);
-
-		// ワールド→スクリーン座標変換(ここで3Dから2dになる)
-		posReti = Transform1(posReti, matViewProjectionViewport);
-
-		// スプライトのレティクルに座標返還
-		reticleFar_->SetPosition(Vector2(posReti.x, posReti.y));
-	}
+	worldTransform3DReticleFar_.rotation_.x = std::atan2(-velocity.y, velocityXZ);
+	worldTransform3DReticleNear_.rotation_.x = std::atan2(-velocity.y, velocityXZ);
 
 	nearReticleObj_->SetWorldTransform(worldTransform3DReticleNear_);
 	farReticleObj_->SetWorldTransform(worldTransform3DReticleFar_);
@@ -797,7 +846,7 @@ void Player::Attack()
 			worldTransform_.translation_.y -= 0.01f;
 			// 弾を生成し、初期化
 			PlayerBullet* newBullet = new PlayerBullet();
-			newBullet->Init(GetWorldPosition(), velocity);
+			newBullet->Init(GetWorldPosition(), velocity, bulletSize_);
 			// 弾を登録する
 			bullets_.push_back(newBullet);
 		}
@@ -830,7 +879,7 @@ void Player::Attack()
 
 			// 弾を生成し、初期化
 			PlayerBullet* newBullet = new PlayerBullet();
-			newBullet->Init(GetWorldPosition(), velocity);
+			newBullet->Init(GetWorldPosition(), velocity, bulletSize_);
 			// 弾を登録する
 			bullets_.push_back(newBullet);
 
@@ -838,7 +887,9 @@ void Player::Attack()
 		break;
 	case BulletMode::HommingBullet:
 		if (lockOn_->GetTarget()) {
-			if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+			if (Input::GetInstance()->PushJoyButton(XINPUT_GAMEPAD_RIGHT_SHOULDER) && shotInterval_ <= shotTimer_) {
+				Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), bulletShotSE_, false);
+				shotTimer_ = 0;
 				// 自キャラの座標をコピー
 				Vector3 position = {
 					worldTransform_.matWorld_.m[3][0],
@@ -846,7 +897,7 @@ void Player::Attack()
 					worldTransform_.matWorld_.m[3][2] };
 
 				// 弾の速度
-				const float kBulletSpeed = 1.0f;
+				const float kBulletSpeed = 3.0f;
 				Vector3 velocity(0, 0, kBulletSpeed);
 				// 自機から照準オブジェクトへのベクトル
 				velocity.x = lockOn_->GetTarget()->GetWorldPosition().x - GetWorldPosition().x;
@@ -860,13 +911,11 @@ void Player::Attack()
 				velocity.y *= kBulletSpeed;
 				velocity.z *= kBulletSpeed;;
 
-				// 速度ベクトルを自機の向きに合わせて回転させる
-				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+				hp_ -= 0.01f;
+				worldTransform_.translation_.y -= 0.01f;
 
-				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
-				// 弾を生成し、初期化
 				PlayerBullet* newBullet = new PlayerBullet();
-				newBullet->Init(GetWorldPosition(), velocity);
+				newBullet->Init(GetWorldPosition(), velocity, bulletSize_);
 				//newBullet->SetParent(worldTransform_.parent_);
 				// 弾を登録する
 				bullets_.push_back(newBullet);
@@ -901,7 +950,7 @@ void Player::Attack()
 				//velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 				// 弾を生成し、初期化
 				PlayerBullet* newBullet = new PlayerBullet();
-				newBullet->Init(GetWorldPosition(), velocity);
+				newBullet->Init(GetWorldPosition(), velocity, bulletSize_);
 				//newBullet->SetParent(worldTransform_.parent_);
 				// 弾を登録する
 				bullets_.push_back(newBullet);
@@ -1104,8 +1153,8 @@ void Player::BehaviorRootJumpUpdate()
 	velo_ = Add(velo_,accelerationVector);
 
 	// 着地
-	if (worldTransform_.translation_.y <= (hp_ + 0.3f)) {
-		worldTransform_.translation_.y = (hp_ + 0.3f);
+	if (worldTransform_.translation_.y <= (hp_)) {
+		worldTransform_.translation_.y = (hp_);
 		// ジャンプ終了
 		behaviorRequest_ = Behavior::kRoot;
 	}

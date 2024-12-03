@@ -31,9 +31,9 @@ private:
 	// ロックオン対象
 	const Enemy* target_ = nullptr;
 	// 最小距離
-	float minDistance_ = 10.0f;
+	float minDistance_ = 30.0f;
 	// 最大距離
-	float maxDistance_ = 50.0f;
+	float maxDistance_ = 80.0f;
 	// 角度範囲
 	float angleRange_ = 0.785f;
 

@@ -15,7 +15,7 @@ class Score
 {
 public:
 	void Init();
-	void Update(const int &time);
+	void Update(const int &time, const int& killCount);
 	void Draw();
 private:
 	int gameNumber_[10];
