@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Init(const Vector3& pos, const Vector3& velocity);
+	void Init(const Vector3& pos, const Vector3& velocity,const float& size);
 
 	/// <summary>
 	/// 更新

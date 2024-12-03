@@ -2,7 +2,7 @@
 #include "TextureManager.h"
 
 //#include "GameScene.h"
-void PlayerBullet::Init(const Vector3& pos, const Vector3& velocity)
+void PlayerBullet::Init(const Vector3& pos, const Vector3& velocity, const float& size)
 {
 	// NULLポインタチェック
 	//assert(model);
@@ -23,7 +23,7 @@ void PlayerBullet::Init(const Vector3& pos, const Vector3& velocity)
 	worldtransform_.Initialize();
 	// 引数で受け取った初期座標をセット
 	worldtransform_.translation_ = pos;
-	worldtransform_.scale_ = { 0.5f,0.5f,0.5f };
+	worldtransform_.scale_ = { size,size,size };
 	SetRadius(worldtransform_.scale_.x);
 	worldtransform_.UpdateMatrix();
 	velocity_ = velocity;

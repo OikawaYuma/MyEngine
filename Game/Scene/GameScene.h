@@ -12,6 +12,7 @@
 #include <memory>
 #include "Character/Player/Player.h"
 #include "Character/Enemy/Enemy.h"
+#include "Character/Enemy/EnemyApear.h"
 #include "Ground/Ground.h"
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
@@ -53,9 +54,6 @@ public:
 	//const std::list<EnemyBullet*>& GetEnemyBullets() const { return enemyBullets_; }
 
 private:
-
-
-	
 	// オブジェクト
 	std::unique_ptr<Player> player_;
 	std::list<std::unique_ptr<Enemy>> enemys_;
@@ -67,6 +65,7 @@ private:
 	std::unique_ptr<LockOn> lockOn_;
 	// スコア
 	std::unique_ptr<Score> score_;
+	int killCount_ = 0;
 	// ゲーム用タイマー
 	std::unique_ptr<GameTimer> gameTimer_;
 
@@ -120,5 +119,7 @@ private:
 
 	// クリア条件
 	int clearFlagCount_ = 0;
+
+	EnemyApear enemyApear_;
 };
 

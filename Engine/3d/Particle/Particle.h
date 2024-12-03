@@ -42,6 +42,18 @@ struct ParticleForGPU {
 	Matrix4x4 World;
 	Vector4 color;
 };
+struct RandRangePro {
+	Vector2 rangeX;
+	Vector2 rangeY;
+	Vector2 rangeZ;
+};
+
+struct BoundP {
+	bool isBound;
+	float power;
+	float gravity;
+	
+};
 
 struct Emitter {
 	Transform transform; //!< エミッタのTransform
@@ -49,13 +61,11 @@ struct Emitter {
 	uint32_t count; //!< 発生数
 	float frequency; //!< 発生頻度
 	float frequencyTime; //!< 頻度用時刻
+	RandRangePro randRangeXYZ; //!xyzの発生範囲の設定
+	float size;
+	BoundP boundPro;
 };
 
-struct RandRangePro {
-	Vector2 rangeX;
-	Vector2 rangeY;
-	Vector2 rangeZ;
-};
 
 class Particle
 {
@@ -66,6 +76,7 @@ public:
 		Vector4 color;
 		float lifeTime;
 		float currentTime;
+		bool isfall;
 	};
 
 
@@ -73,12 +84,17 @@ public:
 	~Particle();
 
 	void Init();
-	void Update(const RandRangePro& randRange, bool scaleAddFlag);
+	void Update(bool scaleAddFlag);
 	void Draw();
 	void Release();
-	ParticlePro MakeNewParticle(std::mt19937& randomEngine, const Vector3& scale, const Vector3& translate, const RandRangePro& randRange);
+	ParticlePro MakeNewParticle(std::mt19937& randomEngine);
 
-	std::list<ParticlePro> Emission(const Emitter& emitter, std::mt19937& randEngine,const RandRangePro& randRange);
+	std::list<ParticlePro> Emission(std::mt19937& randEngine);
+
+	void CreateParticle();
+
+	void Bound();
+
 
 public: // Setter
 	void SetModel(const std::string& filePath);
@@ -90,6 +106,11 @@ public: // Setter
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
 	void SetEmitter(Emitter emitter) { emitter_ = emitter; }
+
+	void SetMaterial(const Material& material) { *materialData_ = material; }
+
+	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
+
 
 private:
 	// 借りてくる
@@ -135,7 +156,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW materialBufferView{};
 	// 頂点リソースにデータを書き込む
 
-	Material* materialData;
+	Material* materialData_;
 	std::list<ParticlePro> particles_;
 	//ParticlePro particles_[kNumMaxInstance];
 	std::list<Transform>  transforms_;
