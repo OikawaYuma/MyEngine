@@ -445,16 +445,16 @@ void GameScene::Draw()
 {
 	skydome_->Draw(followCamera_->GetCamera());
 	ground_->Draw();
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+	/*for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
-	}
+	}*/
 
 	/*for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
 	}*/
-	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+	/*for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
-	}
+	}*/
 	
 	Object3dManager::GetInstance()->Draw(followCamera_->GetCamera());
 	player_->Draw(followCamera_->GetCamera());

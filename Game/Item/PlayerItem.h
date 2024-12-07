@@ -4,7 +4,6 @@
 */
 
 #pragma once
-#include "Object3d.h"
 #include "WorldTransform.h"
 #include "Camera.h"
 #include "Collider.h"
@@ -33,12 +32,12 @@ public: // Setter
 
 private:
 	Player* player_ = nullptr;
-	std::unique_ptr<Object3d> object_;
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 
 	bool isDead_ = false;
 	uint32_t floorTex_ = 0;
 	WorldTransform worldTransform_;
+	Vector4 color_;
 
 
 };

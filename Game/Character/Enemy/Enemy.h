@@ -36,10 +36,11 @@ public: // Collider
 	 bool IsDead() { return isDead_; }
 	 void SetPlayer(Player* player) { player_ = player; }
 private:
-	std::unique_ptr<Object3d> object_;
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
+	// 
+	Vector4 color_;
 	// model skin num
 	uint32_t skinTex_ = 0;
 	bool isDead_ = false;

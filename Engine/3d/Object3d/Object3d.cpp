@@ -120,7 +120,7 @@ void Object3d::Update()
 
 void Object3d::Draw(Camera* camera )
 {
-	if (instancingWorld_[0]) {
+	if (instancingWorld_.size()>=1) {
 		for (uint32_t index = 0; index < objectNum_; ++index) {
 			instancingData_[index].World = instancingWorld_[index]->matWorld_;
 			instancingData_[index].WVP = Multiply(instancingData_[index].World, camera->GetViewprojectionMatrix());
@@ -132,13 +132,25 @@ void Object3d::Draw(Camera* camera )
 				instancingColor_[index]->w);
 		}
 	}
-	else if (!instancingWorld_[0]) {
+	else if (!instancingWorld_.size()<=0) {
 		
 			instancingData_[0].World = worldTransform_.matWorld_;
 			instancingData_[0].WVP = Multiply(instancingData_[0].World, camera->GetViewprojectionMatrix());
 			instancingData_[0].WorldInverseTranspose = Inverse(Transpose(instancingData_[0].World));
 			instancingData_[0].color = { 1.0f,1.0f,1.0f,1.0f };
 		
+	}
+
+	std::list<WorldTransform*>::iterator itrA = instancingWorld_.begin();
+	for (; itrA != instancingWorld_.end(); ++itrA) {
+		instancingData_[itrA].World = instancingWorld_[index]->matWorld_;
+		instancingData_[itrA].WVP = Multiply(instancingData_[index].World, camera->GetViewprojectionMatrix());
+		instancingData_[index].WorldInverseTranspose = Inverse(Transpose(instancingData_[index].World));
+		instancingData_[index].color = Vector4(
+			instancingColor_[index]->x,
+			instancingColor_[index]->y,
+			instancingColor_[index]->z,
+			instancingColor_[index]->w);
 	}
 
 	cameraForGPUData_->worldPosition = camera->GetTransform().translate;

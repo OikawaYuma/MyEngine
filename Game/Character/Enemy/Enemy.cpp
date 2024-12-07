@@ -1,15 +1,12 @@
 #include "Enemy.h"
 #include "ModelManager.h"
 #include "TextureManager.h"
+#include "Object3dManager.h"
 #include <numbers>
 #include "Character/Player/Player.h"
 void Enemy::Init(const Vector3& translate, const std::string filename)
 {
-	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");
-	;
-	object_ = std::make_unique<Object3d>();
-	object_->Init();
-	object_->SetModel("player.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");;
 	hp_ = 0.7f;
 	glavity_ = 0;
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy2.png");
@@ -17,16 +14,17 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
-	object_->SetWorldTransform(worldTransform_);
-	object_->SetSkinTex(skinTex_);
-	object_->Update();
+
 	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
 	SetCollisionMask(0b001);
-	
+	color_ = { 1.0f,1.0f,1.0f,1.0f };
+	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, skinTex_, &color_);
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
-	shadowObject_->Init(&worldTransform_, "player.obj");
+	shadowObject_->Init(&worldTransform_, filename);
 	shadowObject_->Update();
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor());
+
 }
 
 void Enemy::Update()
@@ -38,16 +36,14 @@ void Enemy::Update()
 		worldTransform_.translation_.y = worldTransform_.scale_.y;
 	}
 	Move();
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
+
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }
 
 void Enemy::Draw(Camera* camera)
 {
-	shadowObject_->Draw(camera);
-	object_->Draw(camera);
+
 }
 
 void Enemy::ClearInit()
@@ -62,7 +58,6 @@ void Enemy::ClearInit()
 	worldTransform_.scale_ = { 3.0f,1.0f,3.0f };
 	worldTransform_.UpdateMatrix();
 	deadSlimeObj_->SetWorldTransform(worldTransform_);
-	object_->Update();
 }
 
 void Enemy::ClearUpdate()
@@ -95,8 +90,6 @@ void Enemy::GameOverUpdate()
 	}
 	// 移動
 	worldTransform_.translation_ = Add(worldTransform_.translation_, {0.0f,move.y,0.0f});
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }

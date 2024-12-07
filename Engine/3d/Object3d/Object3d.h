@@ -62,12 +62,12 @@ public: // Setter
 	void SetAnimationModel(const std::string& filePath);
 	void SetSkybox(Skybox* skybox) { skybox_ = skybox; }
 	void SetWorldTransform(const WorldTransform& worldtransform) { worldTransform_ = worldtransform; };
-	void SetWorldTransformInstancing(WorldTransform* worldtransform) { instancingWorld_[objectNum_] = worldtransform; };
+	void SetWorldTransformInstancing(WorldTransform* worldtransform) { instancingWorld_.push_back(worldtransform); };
 	void SetTransform(Transform transform);
 	void SetMapTexture(uint32_t maptexture) { mapTexture_ = maptexture; };
 	void SetObjectNum(uint32_t objectNum) { objectNum_= objectNum; }
 	void SetMaterial(const Material& material) { *materialData_ = material; }
-	void SetMaterialInstancing(Vector4* color) { instancingColor_[objectNum_] = color; }
+	void SetMaterialInstancing(Vector4* color) { instancingColor_.push_back(color); }
 	void SetSkinTex(uint32_t skinTex) { skinTex_ = skinTex; }
 	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
 	void SetSpotLight(const SpotLight& spotLight) { *spotLightData_ = spotLight; }
@@ -86,9 +86,9 @@ private:
 
 
 	uint32_t objectNum_ = 0;
-	WorldTransform* instancingWorld_[kNumMaxInstance_]{nullptr};
-	Vector4* instancingColor_[kNumMaxInstance_]{};
-	Object3dForGPU* instancingData_ = nullptr;
+	std::list<WorldTransform*> instancingWorld_;
+	std::list<Vector4*> instancingColor_{};
+	std::list<Object3dForGPU*> instancingData_{};
 
 	uint32_t SRVIndex_ = 0;
 
