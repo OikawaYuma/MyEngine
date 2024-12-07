@@ -22,6 +22,7 @@ void Ground::Init(const Vector3& translate, const Vector3& scale, const std::str
 	worldTransform_.UpdateMatrix();
 	//object_->SetMaterial({ {1.0f,1.0f,1.0f,1.0f} , false });
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/ground/" + filename +".png");
+	object_->SetSkinTex(skinTex_);
 }
 
 void Ground::Update()
@@ -37,5 +38,5 @@ void Ground::Update()
 
 void Ground::Draw()
 {
-	object_->Draw(skinTex_, camera_);
+	object_->Draw(camera_);
 }

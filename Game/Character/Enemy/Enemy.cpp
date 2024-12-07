@@ -18,6 +18,7 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
 	object_->SetWorldTransform(worldTransform_);
+	object_->SetSkinTex(skinTex_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
@@ -46,7 +47,7 @@ void Enemy::Update()
 void Enemy::Draw(Camera* camera)
 {
 	shadowObject_->Draw(camera);
-	object_->Draw(skinTex_,camera);
+	object_->Draw(camera);
 }
 
 void Enemy::ClearInit()
@@ -73,7 +74,7 @@ void Enemy::ClearUpdate()
 
 void Enemy::ClearDraw(Camera* camera)
 {
-	deadSlimeObj_->Draw(skinTex_, camera);
+	deadSlimeObj_->Draw(camera);
 }
 
 void Enemy::GameOverUpdate()

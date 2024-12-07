@@ -59,7 +59,7 @@ VertexShaderOutput main(VertexShaderInput input)
     output.texcoord = input.texcoord;
     //　良くない
     output.normal = normalize(mul(skinned.normal, (float32_t3x3)gTransformationMatrix.World));
-
+    output.color = float32_t4(1.0f, 1.0f, 1.0f, 0.8f);
     return output;
 };
 //float4 main( float4 pos : POSITION ) : SV_POSITION

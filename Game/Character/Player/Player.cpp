@@ -65,21 +65,22 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.scale_ = { hp_ ,hp_ ,hp_ };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
 	
-	
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("player.obj");
-
+	object_->SetSkinTex(skinTex_);
+	object_->SetObjectNum(1);
 	nearReticleObj_ = std::make_unique<Object3d>();
 	nearReticleObj_->Init();
 	nearReticleObj_->SetModel("Reticle3.obj");
-
+	nearReticleObj_->SetSkinTex(skinTex_);
 	farReticleObj_ = std::make_unique<Object3d>();
 	farReticleObj_->Init();
 	farReticleObj_->SetModel("Reticle2.obj");
 
 
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
+	
 	InitFloatingGimmmick();
 	SetCollisonAttribute(0b0001);
 	SetCollisionMask(0b0110);
@@ -110,7 +111,9 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	object_->SetDirectionLight(direLight_);
 
 	nearReticleObj_->SetMaterial(material_);
+	object_->SetWorldTransformInstancing(&worldTransform_);
 	object_->SetWorldTransform(worldTransform_);
+	object_->SetSkinTex(skinTex_);
 	object_->Update();
 	worldTransform_.UpdateMatrix();
 
@@ -325,14 +328,14 @@ void Player::Draw(Camera* camera)
 	
 	switch (bulletMode_) {
 	case BulletMode::NormalBullet:
-		nearReticleObj_->Draw(skinTex_, camera);
+		nearReticleObj_->Draw(camera);
 		break;
 	case BulletMode::HommingBullet:
 		break;
 	case BulletMode::LaserBeam:
 		break;
 	}
-	object_->Draw(skinTex_, camera);
+	object_->Draw(camera);
 
 
 
@@ -380,7 +383,7 @@ void Player::TitleInit()
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("player.obj");
-
+	object_->SetSkinTex(skinTex_);
 	//BehaviorRootJumpInit();
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
 	InitFloatingGimmmick();
@@ -407,7 +410,7 @@ void Player::ClearInit()
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("player.obj");
-
+	object_->SetSkinTex(skinTex_);
 
 	//BehaviorRootJumpInit();
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
@@ -586,7 +589,7 @@ void Player::GameOverInit()
 	deadSlimeObj_ = std::make_unique<Object3d>();
 	deadSlimeObj_->Init();
 	deadSlimeObj_->SetModel("slimeDead.obj");
-
+	deadSlimeObj_->SetSkinTex(skinTex_);
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {-1.0f,0.01f,221.0f };
 	worldTransform_.scale_ = { 5.0f,1.0f,5.0f };
@@ -605,7 +608,7 @@ void Player::GameOverUpdate()
 
 void Player::GameOverDraw(Camera* camera)
 {
-	deadSlimeObj_->Draw(skinTex_, camera);
+	deadSlimeObj_->Draw(camera);
 }
 
 void Player::DemoUpdate()

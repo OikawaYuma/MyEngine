@@ -61,6 +61,7 @@ void PSOParticle::CreateRootSignature() {
 	rootParamerters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;  // CBVを使う
 	rootParamerters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;  // PixelShaderで使う
 	rootParamerters[0].Descriptor.ShaderRegister = 0; //レジスタ番号0とバインド
+
 	descriptorRange2_[0].BaseShaderRegister = 0; // 0から始まる
 	descriptorRange2_[0].NumDescriptors = 1; // 数は1つ
 	descriptorRange2_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う

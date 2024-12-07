@@ -54,7 +54,7 @@ public:
 	~Model();
 	void Initialize(const std::string& directoryPath, const std::string& filePath);
 	void Update();
-	void Draw(uint32_t texture);
+	void Draw(uint32_t texture, uint32_t instance);
 
 
 	void SetTextureManager(TextureManager* textureManager) {

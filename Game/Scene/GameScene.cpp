@@ -1,9 +1,12 @@
 #include "GameScene.h"
 #include "Loder.h"
 #include "ImGuiCommon.h"
+#include "Object3dManager.h"
 #include <Audio.h>
 void GameScene::Init()
 {
+	Object3dManager::GetInstance()->Init();
+	
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Init();
 
@@ -13,7 +16,7 @@ void GameScene::Init()
 	followCamera_->SetTarget(player_->GetWorldTransform());
 
 	ground_ = std::make_unique<Ground>();
-	Loder::LoadJsonFile("Resources/json", "stage2", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
+	Loder::LoadJsonFile("Resources/json", "stage3", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
 	ground_->SetCamera(followCamera_->GetCamera());
 
 	followCamera_->PosAdustment();
@@ -114,6 +117,7 @@ void GameScene::Init()
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	gameClearSE_ = Audio::GetInstance()->SoundLoadWave("Resources/clearSE.wav");
 	
+
 
 	// スコア
 	score_ = std::make_unique<Score>();
@@ -401,7 +405,7 @@ void GameScene::Update()
 			(*itr)->Update();
 
 		}
-
+		Object3dManager::GetInstance()->Update();
 		
 		gameTimer_->Update(startSpritePos2_.y);
 		collisionManager_->CheckAllCollision();
@@ -445,14 +449,14 @@ void GameScene::Draw()
 		(*itr)->Draw(followCamera_->GetCamera());
 	}
 
-	for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+	/*for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
-	}
+	}*/
 	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Draw(followCamera_->GetCamera());
 	}
 	
-	
+	Object3dManager::GetInstance()->Draw(followCamera_->GetCamera());
 	player_->Draw(followCamera_->GetCamera());
 	
 	lockOn_->Draw();

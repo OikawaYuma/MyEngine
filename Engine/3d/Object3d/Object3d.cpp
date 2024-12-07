@@ -1,21 +1,13 @@
 #include "Object3d.h"
 #include "Modelmanager.h"
 #include "Object3dCommon.h"
+#include <SRVManager.h>
 void Object3d::Init()
 {
 	DirectXCommon* directXCommon = DirectXCommon::GetInstance();
 	worldTransform_.Initialize();
 
-	//バッファリソース
-	// データを書き込む
-	wvpData = nullptr;
-	// WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
-	wvpResource = Mesh::CreateBufferResource(directXCommon->GetDevice(), sizeof(TransformationMatrix));
-	// 書き込むためのアドレスを取得
-	wvpResource->Map(0, nullptr, reinterpret_cast<void**>(&wvpData));
-	//単位行列を書き込んでいく
-	wvpData->WVP = MakeIdentity4x4();
-	wvpData->World = MakeIdentity4x4();
+
 	// カメラ用
 	cameraForGPUData_ = nullptr;
 	cameraForGPUResource_ = Mesh::CreateBufferResource(directXCommon->GetDevice(), sizeof(CameraForGPU));
@@ -67,10 +59,54 @@ void Object3d::Init()
 
 	spotLightData_;
 
+	// instancing
+	// Sprite用のTransformationMatrix用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
+	object3dData_.instancingResource = Mesh::CreateBufferResource(directXCommon->GetDevice(), sizeof(Object3dForGPU) * kNumMaxInstance_);
+	// 書き込むためのアドレスを取得
+	object3dData_.instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
+	// 単位行列を書き込んでおく
+	SRVIndex_ = SRVManager::Allocate();
+	SRVManager::CreateSRVforStructuredBuffer(SRVIndex_, object3dData_.instancingResource.Get(), kNumMaxInstance_, sizeof(Object3dForGPU));
+	object3dData_.instancingSrvHandleCPU = SRVManager::GetCPUDescriptorHandle(SRVIndex_);
+	object3dData_.instancingSrvHandleGPU = SRVManager::GetGPUDescriptorHandle(SRVIndex_);
+	//for (uint32_t index = 0; index < kNumMaxInstance_; ++index) {
+		instancingData_[objectNum_].WVP = MakeIdentity4x4();
+		instancingData_[objectNum_].World = MakeIdentity4x4();
+		instancingData_[objectNum_].WorldInverseTranspose = MakeIdentity4x4();
+		instancingData_[objectNum_].color = { 1.0f,1.0f,1.0f,1.0f };
+	//}
+
 }
 
 void Object3d::Update()
 {
+	/*for (uint32_t index = 0; index < kNumMaxInstance_; ++index) {
+		instancingData_[index].World = worldTransform_.matWorld_;
+		instancingData_[index].WVP = instancingData_[index].World;
+		instancingData_[index].WorldInverseTranspose = MakeIdentity4x4();
+	}*/
+
+	if (instancingWorld_[0]) {
+		for (uint32_t index = 0; index < objectNum_; ++index) {
+			instancingData_[index].World =instancingWorld_[index]->matWorld_;
+			instancingData_[index].WVP = instancingData_[index].World;
+			instancingData_[index].WorldInverseTranspose = MakeIdentity4x4();
+			instancingData_[index].color = 
+				Vector4(
+					instancingColor_[index]->x,
+					instancingColor_[index]->y, 
+					instancingColor_[index]->z,
+					instancingColor_[index]->w);
+		}
+	}
+	else if (!instancingWorld_[0]) {
+		
+			instancingData_[0].World = worldTransform_.matWorld_;
+			instancingData_[0].WVP = instancingData_[0].World;
+			instancingData_[0].WorldInverseTranspose = MakeIdentity4x4();
+			instancingData_[0].color = { 1.0f,1.0f,1.0f,1.0f };
+		
+	}
 	worldTransform_.UpdateMatrix();
 	if (animationModel_) {
 		animationModel_->Update();
@@ -82,8 +118,30 @@ void Object3d::Update()
 
 }
 
-void Object3d::Draw(uint32_t texture, Camera* camera )
+void Object3d::Draw(Camera* camera )
 {
+	if (instancingWorld_[0]) {
+		for (uint32_t index = 0; index < objectNum_; ++index) {
+			instancingData_[index].World = instancingWorld_[index]->matWorld_;
+			instancingData_[index].WVP = Multiply(instancingData_[index].World, camera->GetViewprojectionMatrix());
+			instancingData_[index].WorldInverseTranspose = Inverse(Transpose(instancingData_[index].World));
+			instancingData_[index].color = Vector4(
+				instancingColor_[index]->x,
+				instancingColor_[index]->y,
+				instancingColor_[index]->z,
+				instancingColor_[index]->w);
+		}
+	}
+	else if (!instancingWorld_[0]) {
+		
+			instancingData_[0].World = worldTransform_.matWorld_;
+			instancingData_[0].WVP = Multiply(instancingData_[0].World, camera->GetViewprojectionMatrix());
+			instancingData_[0].WorldInverseTranspose = Inverse(Transpose(instancingData_[0].World));
+			instancingData_[0].color = { 1.0f,1.0f,1.0f,1.0f };
+		
+	}
+
+	cameraForGPUData_->worldPosition = camera->GetTransform().translate;
 	DirectXCommon* directXCommon = DirectXCommon::GetInstance();
 	if (animationModel_) {
 		PSOAnimationModel* pso = PSOAnimationModel::GatInstance();
@@ -108,38 +166,31 @@ void Object3d::Draw(uint32_t texture, Camera* camera )
 
 	
 	
-	cameraForGPUData_->worldPosition = camera->GetTransform().translate;
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldTransform_.matWorld_,camera->GetViewprojectionMatrix());
+	
 	
 	
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけば良い
 	directXCommon->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
-	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
+	directXCommon->GetCommandList()->SetGraphicsRootDescriptorTable(1, object3dData_.instancingSrvHandleGPU);
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
 	directXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(5, spotLightResource_->GetGPUVirtualAddress());
 	
 	// 3Dモデルが割り当てられていれば描画する
 	if (animationModel_) {
-		
-		wvpData->World = worldTransform_.matWorld_;
-		wvpData->WorldInverseTranspose = Inverse(Transpose(wvpData->World));
-		animationModel_->Draw(texture, { { 1.0f,1.0f,1.0f,1.0f },true
+
+		animationModel_->Draw(skinTex_, { { 1.0f,1.0f,1.0f,1.0f },true
 			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.5f });
 	}
 	else if (model_) {
 		
-		wvpData->WVP =  worldViewProjectionMatrix;
-		wvpData->World = worldTransform_.matWorld_;
-		wvpData->WorldInverseTranspose = Inverse(Transpose(wvpData->World));
-		model_->Draw(texture);
+		model_->Draw(skinTex_,objectNum_);
+
 	}
 	else if (skybox_) {
-		wvpData->WVP = worldViewProjectionMatrix;
-		wvpData->World = worldTransform_.matWorld_;
-		wvpData->WorldInverseTranspose = Inverse(Transpose(wvpData->World));
-		skybox_->Draw(texture, { { 1.0f,1.0f,1.0f,1.0f },false
+
+		skybox_->Draw(skinTex_, { { 1.0f,1.0f,1.0f,1.0f },false
 			}, { { 1.0f,1.0,1.0,1.0f } ,{ 0.0f,-1.0f,0.0f },0.2f });
 	}
 }

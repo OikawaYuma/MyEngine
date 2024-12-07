@@ -17,10 +17,16 @@ public:
 	void Init(WorldTransform* casterWorldTransform, const std::string& filePath);
 	void Update();
 	void Draw(Camera* camera);
+public:
+	WorldTransform* GetWorldTransform() { return &worldTransform_; }
+	Vector4* GetColor() { return &color_; }
 
 private:
 	// 影自体のワールド変換データ
 	WorldTransform worldTransform_;
+	// 影の色
+	Vector4 color_;
+
 	// オブジェクト
 	std::unique_ptr<Object3d> obj_;
 

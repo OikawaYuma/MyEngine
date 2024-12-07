@@ -18,6 +18,6 @@ void BaseCharacter::Update()
 void BaseCharacter::Draw(Camera* camera)
 {
 	for (Object3d* object : objects_) {
-		object->Draw(skinTex_,camera);
+		object->Draw(camera);
 	}
 }

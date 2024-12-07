@@ -372,7 +372,7 @@ void Model::Update() {
 
 };
 
-void Model::Draw(uint32_t texture) {
+void Model::Draw(uint32_t texture, uint32_t instance) {
 
 	pso_ = PSO::GatInstance();
 	vbvs[0] = vertexBufferView_;
@@ -385,6 +385,10 @@ void Model::Draw(uint32_t texture) {
 
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	directXCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, SRVManager::GetGPUDescriptorHandle(texture));;
-
-	directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), 1, 0, 0, 0);
+	if (instance) {
+		directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), instance, 0, 0, 0);
+	}
+	else {
+		directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), 1, 0, 0, 0);
+	}
 }

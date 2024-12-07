@@ -28,6 +28,8 @@ private:
 	WorldTransform worldTransform_;
 	Camera* camera_ = nullptr;
 
+	Vector4 color_;
+
 	Material material_{};
 	DirectionalLight direLight_{};
 	SpotLight spotLight_{};

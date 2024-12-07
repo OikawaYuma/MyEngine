@@ -17,7 +17,7 @@ void PlayerRazer::Init(const Vector3& pos, const Vector3& velocity)
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("box.obj");
-
+	object_->SetSkinTex(texHandle_);
 	// テクスチャ読み込み
 	//textureHandle_ = TextureManager::StoreTexture("Resources/uvChecker.png");
 	SetCollisionMode(OBBc);
@@ -77,7 +77,7 @@ void PlayerRazer::Update()
 
 void PlayerRazer::Draw(Camera* camera)
 {
-	object_->Draw(texHandle_, camera);
+	object_->Draw(camera);
 }
 
 void PlayerRazer::SetParent(const WorldTransform* parent)

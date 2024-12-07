@@ -16,6 +16,7 @@ void PlayerBullet::Init(const Vector3& pos, const Vector3& velocity, const float
 	object_ = std::make_unique<Object3d>();
 	object_->Init();
 	object_->SetModel("ball.obj");
+	object_->SetSkinTex(texHandle_);
 
 	// テクスチャ読み込み
 	//textureHandle_ = TextureManager::StoreTexture("Resources/uvChecker.png");
@@ -61,7 +62,7 @@ void PlayerBullet::Update()
 void PlayerBullet::Draw(Camera* camera)
 {
 	shadowObject_->Draw(camera);
-	object_->Draw(texHandle_,camera);
+	object_->Draw(camera);
 
 }
 

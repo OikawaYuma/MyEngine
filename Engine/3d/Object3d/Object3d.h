@@ -31,12 +31,29 @@
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxcompiler.lib")
+
+// object1個分のデータ
+struct Object3dData {
+	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
+	uint32_t instancingNum;
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
+	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
+
+};
+
+struct Object3dForGPU {
+	Matrix4x4 WVP;
+	Matrix4x4 World;
+	Matrix4x4 WorldInverseTranspose;
+	Vector4 color;
+};
+
 class Object3d
 {
 public:
 	void Init();
 	void Update();
-	void Draw(uint32_t texture, Camera* camera);
+	void Draw(Camera* camera);
 	void Release();
 
 public: // Setter
@@ -45,15 +62,18 @@ public: // Setter
 	void SetAnimationModel(const std::string& filePath);
 	void SetSkybox(Skybox* skybox) { skybox_ = skybox; }
 	void SetWorldTransform(const WorldTransform& worldtransform) { worldTransform_ = worldtransform; };
+	void SetWorldTransformInstancing(WorldTransform* worldtransform) { instancingWorld_[objectNum_] = worldtransform; };
 	void SetTransform(Transform transform);
 	void SetMapTexture(uint32_t maptexture) { mapTexture_ = maptexture; };
-
+	void SetObjectNum(uint32_t objectNum) { objectNum_= objectNum; }
 	void SetMaterial(const Material& material) { *materialData_ = material; }
-
+	void SetMaterialInstancing(Vector4* color) { instancingColor_[objectNum_] = color; }
+	void SetSkinTex(uint32_t skinTex) { skinTex_ = skinTex; }
 	void SetDirectionLight(const DirectionalLight& direction) { *directionalLightData = direction; }
 	void SetSpotLight(const SpotLight& spotLight) { *spotLightData_ = spotLight; }
 	void SetSpotlightPos(const Vector3& pos) { spotLightData_->position = pos; }
 public: // Getter
+	uint32_t GetObjectNum() { return objectNum_; }
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	Material GetMaterial() { return *materialData_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
@@ -61,17 +81,24 @@ public: // Getter
 private:
 	Object3dCommon* objectCommon_ = nullptr;
 
+	Object3dData object3dData_;
+	const static uint32_t kNumMaxInstance_ = 10000; // インスタンス数
+
+
+	uint32_t objectNum_ = 0;
+	WorldTransform* instancingWorld_[kNumMaxInstance_]{nullptr};
+	Vector4* instancingColor_[kNumMaxInstance_]{};
+	Object3dForGPU* instancingData_ = nullptr;
+
+	uint32_t SRVIndex_ = 0;
+
+	uint32_t skinTex_ = 0;
+
 	// RootSignature作成
 	Model* model_ = nullptr;
 	AnimationModel* animationModel_ = nullptr;
 	Skybox* skybox_ = nullptr;
 
-	/*移動用*/
-	// WVP用のリソースを作る。Matrix4x4 1つ分のサイズを用意する
-	TransformationMatrix* wvpData{nullptr};
-	Microsoft::WRL::ComPtr < ID3D12Resource> wvpResource;
-	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW wvpBufferView{};
 	Transform transformUv{};
 
 	/*カメラ用*/

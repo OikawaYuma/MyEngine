@@ -12,9 +12,11 @@ void Skydome::Init()
 	object_->SetMaterial({ {1.0f,1.0f,1.0f,1.0f} , false });
 	object_->SetModel("skydome.obj");
 	object_->SetWorldTransform(worldTransform_);
+	
 	object_->Update();
 	worldTransform_.UpdateMatrix();
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/skydome.png");
+	object_->SetSkinTex(skinTex_);
 }
 
 void Skydome::Update()
@@ -25,5 +27,5 @@ void Skydome::Update()
 
 void Skydome::Draw(Camera* camera)
 {
-	object_->Draw(skinTex_, camera);
+	object_->Draw(camera);
 }
