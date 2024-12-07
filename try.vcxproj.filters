@@ -242,9 +242,6 @@
     <ClCompile Include="Engine\2d\PostEffect\Effect\Vignette.cpp">
       <Filter>Engine\2d\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Character\Player\Player.cpp">
-      <Filter>Application\character\player</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp">
       <Filter>Application\character\player\bullet</Filter>
     </ClCompile>
@@ -331,7 +328,8 @@
     <ClCompile Include="Game\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Game\Fade\Fade.cpp" />
     <ClCompile Include="Game\Character\Enemy\EnemyApear.cpp" />
-    <ClCompile Include="Engine\3d\Object3d\ObjectManager.cpp" />
+    <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
+    <ClCompile Include="Game\Character\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -611,7 +609,7 @@
     <ClInclude Include="Game\GameTimer\GameTimer.h" />
     <ClInclude Include="Game\Fade\Fade.h" />
     <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
-    <ClInclude Include="Engine\3d\Object3d\ObjectManager.h" />
+    <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

@@ -18,6 +18,7 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	object_->SetModel(filename + ".obj");
 	object_->SetWorldTransform(worldTransform_);
 	object_->Update();
+	object_->SetSkinTex(floorTex_);
 	worldTransform_.UpdateMatrix();
 	SetRadius(1.0f);
 	SetCollisonAttribute(0b0100);
@@ -39,7 +40,7 @@ void PlayerItem::Update()
 void PlayerItem::Draw(Camera* camera)
 {
 	shadowObject_->Draw(camera);
-	object_->Draw(floorTex_, camera);
+	object_->Draw(camera);
 }
 
 void PlayerItem::OnCollision(uint32_t attri)

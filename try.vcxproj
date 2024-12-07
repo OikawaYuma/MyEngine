@@ -120,6 +120,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\Character\Enemy\EnemyApear.cpp" />
+    <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Game\Fade\Fade.cpp" />
     <ClCompile Include="Game\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Game\GameCamera\ClearCamera\ClearCamera.cpp" />
@@ -133,7 +134,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
     <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
     <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
-    <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Game\Character\Player\PlayerRazer\PlayerRazer.cpp" />
     <ClCompile Include="Game\GameCamera\FollowCamera\FollowCamera.cpp" />
@@ -206,7 +206,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Slime2d\Slime2d.cpp" />
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
     <ClCompile Include="Game\Score\Score.cpp" />
-    <ClCompile Include="Engine\3d\Object3d\ObjectManager.cpp" />
+    <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
@@ -314,7 +314,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\PlaneProjectionShadow.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
     <ClInclude Include="Game\Score\Score.h" />
-    <ClInclude Include="Engine\3d\Object3d\ObjectManager.h" />
+    <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

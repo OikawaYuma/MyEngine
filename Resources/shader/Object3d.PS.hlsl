@@ -63,7 +63,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         discard;
     }
-    output.color = gMaterial.color * textureColor;
+    output.color = gMaterial.color * textureColor* input.color;
     if (gMaterial.enableLighting != 0)
     {
         float NdotL = dot(normalize(input.normal), -gDirectionalLight.direction);
@@ -131,11 +131,11 @@ PixelShaderOutput main(VertexShaderOutput input)
         //// 拡散反射+鏡面反射
         //output.color.rgb = environmentColor.rgb + diffuse + specular;
         //// αは今まで通り
-        output.color.a = gMaterial.color.a * textureColor.a;
+        output.color.a = gMaterial.color.a * textureColor.a * input.color.a;
     }
     else
     {
-        output.color = gMaterial.color * textureColor;
+        output.color = gMaterial.color * textureColor * input.color.a;
     }
     
     return output;

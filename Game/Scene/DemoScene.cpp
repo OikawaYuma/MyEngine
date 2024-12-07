@@ -49,6 +49,7 @@ void DemoScene::Init()
 	obj_->Init({ 1.0f, 0.5f,10.0f }, "ddd");
 	obj_->SetCamera(camera_.get());
 
+
 	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	spotLight_.position = {2.0f ,1.25f,5.0};
 	spotLight_.distance = 7.0f;

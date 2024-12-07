@@ -1,7 +1,7 @@
 #include "SRVManager.h"
 #include "DirectXCommon.h"
 
-const uint32_t SRVManager::kMaXSRVCount = 512;
+const uint32_t SRVManager::kMaXSRVCount = 10000;
 
 uint32_t SRVManager::useIndex_ = 1;
 

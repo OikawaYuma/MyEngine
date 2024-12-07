@@ -59,7 +59,7 @@ public:
 	uint32_t GetIndex() { return  kParIndez; }
 private:
 	// デスクリプタ―の数
-	static const size_t kNumDescriptors = 256;
+	static const size_t kNumDescriptors = 10000;
 	
 	// エラー検知用変数
 	HRESULT hr_;
