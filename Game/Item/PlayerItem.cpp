@@ -1,5 +1,6 @@
 #include "PlayerItem.h"
 #include "Character/Player/Player.h"
+#include <Object3dManager.h>
 void PlayerItem::Init(const Vector3& translate, const std::string filename)
 {
 
@@ -11,28 +12,22 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.translation_.y = translate.y;
 	worldTransform_.translation_.z = translate.z;
 
-
+	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	//ModelManager::GetInstance()->LoadModel("Resources/box/", "box.obj");
-	object_ = std::make_unique<Object3d>();
-	object_->Init();
-	object_->SetModel(filename + ".obj");
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
-	object_->SetSkinTex(floorTex_);
+	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, floorTex_, &color_);
 	worldTransform_.UpdateMatrix();
 	SetRadius(1.0f);
 	SetCollisonAttribute(0b0100);
 	SetCollisionMask(0b0001);
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
-	shadowObject_->Init(&worldTransform_, filename + ".obj");
+	shadowObject_->Init(&worldTransform_, filename);
 	shadowObject_->Update();
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), floorTex_, shadowObject_->GetColor());
 }
 
 void PlayerItem::Update()
 {
-	object_->Update();
-	object_->SetWorldTransform(worldTransform_);
-
+	
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }

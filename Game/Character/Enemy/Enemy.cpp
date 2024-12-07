@@ -3,34 +3,32 @@
 #include "TextureManager.h"
 #include <numbers>
 #include "Character/Player/Player.h"
+#include <Object3dManager.h>
 void Enemy::Init(const Vector3& translate, const std::string filename)
 {
-	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");
-	;
-	object_ = std::make_unique<Object3d>();
-	object_->Init();
-	object_->SetModel("player.obj");
+	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");;
 	hp_ = 0.7f;
 	glavity_ = 0;
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy2.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/Enemy2.png");
 	worldTransform_.translation_ = translate;
+	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
-	object_->SetWorldTransform(worldTransform_);
-	object_->SetSkinTex(skinTex_);
-	object_->Update();
+	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, skinTex_, &color_);
 	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
 	SetCollisionMask(0b001);
 	
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
-	shadowObject_->Init(&worldTransform_, "player.obj");
+	shadowObject_->Init(&worldTransform_, filename);
 	shadowObject_->Update();
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor());
 }
 
 void Enemy::Update()
 {
+	Respown();
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	// 着地
@@ -38,8 +36,6 @@ void Enemy::Update()
 		worldTransform_.translation_.y = worldTransform_.scale_.y;
 	}
 	Move();
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }
@@ -47,7 +43,7 @@ void Enemy::Update()
 void Enemy::Draw(Camera* camera)
 {
 	shadowObject_->Draw(camera);
-	object_->Draw(camera);
+	//object_->Draw(camera);
 }
 
 void Enemy::ClearInit()
@@ -62,7 +58,7 @@ void Enemy::ClearInit()
 	worldTransform_.scale_ = { 3.0f,1.0f,3.0f };
 	worldTransform_.UpdateMatrix();
 	deadSlimeObj_->SetWorldTransform(worldTransform_);
-	object_->Update();
+	//object_->Update();
 }
 
 void Enemy::ClearUpdate()
@@ -95,8 +91,6 @@ void Enemy::GameOverUpdate()
 	}
 	// 移動
 	worldTransform_.translation_ = Add(worldTransform_.translation_, {0.0f,move.y,0.0f});
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }
@@ -145,19 +139,38 @@ void Enemy::Move()
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 }
 
+void Enemy::Respown()
+{
+	if (isDead_) {
+		respownTimer_++;
+		if (respownTimer_ >= 200) {
+			hp_ = 0.7f;
+			respownTimer_ = 0;
+			isDead_ = false;
+			std::random_device seedGenerator;
+			std::mt19937 randomEngine(seedGenerator());
+			std::uniform_real_distribution<float> distriposX(-50, 50);// distriposX(-0.7f, -0.3
+			std::uniform_real_distribution<float> distriposZ(-50, 50);// distriposY(0.2f, 0.5f)
+			worldTransform_.translation_ = { distriposX(randomEngine),1.0f ,distriposZ(randomEngine) };
+		}
+	}
+}
+
 void Enemy::OnCollision(uint32_t attri)
 {
-	
-	if (attri == 0b0001) {
-		player_->HitEnemySlime();
-	}
-	else if (attri == 0b1000) {
-		hp_ -= 0.2f;
-		worldTransform_.translation_.y -= 0.2f;
-		if (hp_ <= 0.4f) {
-			isDead_ = true;
+	if (isDead_ == false) {
+		if (attri == 0b0001) {
+			player_->HitEnemySlime();
 		}
-		
+		else if (attri == 0b1000) {
+			hp_ -= 0.2f;
+			worldTransform_.translation_.y -= 0.2f;
+			if (hp_ <= 0.4f) {
+				isDead_ = true;
+				
+			}
+
+		}
 	}
 }
 

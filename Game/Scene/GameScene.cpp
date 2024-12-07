@@ -313,14 +313,7 @@ void GameScene::Update()
 		startSpritePos2_.y += 12.0f;
 		startEffectSp2_->SetPosition(startSpritePos2_);
 		startEffectSp2_->Update();
-		enemys_.remove_if([=](std::unique_ptr<Enemy>& bullet) {
-			if (bullet->IsDead()) {
-				destroyCount_++;
-				killCount_++;;
-				return true;
-			}
-			return false;
-			});
+		
 		score_->Update(gameTimer_->GetGameTime(), killCount_);
 		items_.remove_if([](std::unique_ptr<PlayerItem>& bullet) {
 			if (bullet->IsDead()) {
@@ -445,17 +438,7 @@ void GameScene::Draw()
 {
 	skydome_->Draw(followCamera_->GetCamera());
 	ground_->Draw();
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-		(*itr)->Draw(followCamera_->GetCamera());
-	}
 
-	/*for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
-		(*itr)->Draw(followCamera_->GetCamera());
-	}*/
-	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
-		(*itr)->Draw(followCamera_->GetCamera());
-	}
-	
 	Object3dManager::GetInstance()->Draw(followCamera_->GetCamera());
 	player_->Draw(followCamera_->GetCamera());
 	
