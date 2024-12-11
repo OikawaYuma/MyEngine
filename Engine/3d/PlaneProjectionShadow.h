@@ -18,6 +18,9 @@ public:
 	void Update();
 	void Draw(Camera* camera);
 public:
+
+	void SetColor(Vector4 color) { color_ = color; }
+
 	WorldTransform* GetWorldTransform() { return &worldTransform_; }
 	Vector4* GetColor() { return &color_; }
 

@@ -101,7 +101,7 @@ public:
 	void HitEnemySlime();
 
 
-
+	void CreateReticle();
 
 	/*---Behavior用関数---*/
 	// 攻撃行動
@@ -153,9 +153,7 @@ private: // 貸出
 
 private:
 
-	std::unique_ptr<Object3d> object_;
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
-	std::unique_ptr<Object3d> nearReticleObj_;
 	std::unique_ptr<PlaneProjectionShadow> reticleShadowObject_;
 	std::unique_ptr<Object3d> farReticleObj_;
 
@@ -167,7 +165,7 @@ public: // もともとのゲームで使用変数
 
 	std::list<PlayerBullet*> bullets_;
 	std::list<PlayerRazer*> razers_;
-
+	Vector4 color_;
 	//bulletMode
 	uint32_t bulletMode_ = NormalBullet;
 
@@ -197,6 +195,7 @@ private: // Reticle
 	// floatY 
 	float reticleY_ = 0;
 
+	Vector4 reticleColor_;
 
 
 private://Bullet

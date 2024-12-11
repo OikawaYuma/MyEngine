@@ -44,5 +44,6 @@ void PlaneProjectionShadow::Update()
 
 void PlaneProjectionShadow::Draw(Camera* camera)
 {
+	camera;
 	//obj_->Draw(camera);
 }

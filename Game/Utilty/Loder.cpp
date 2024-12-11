@@ -140,6 +140,13 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			enemy->SetPlayer(player);
 			enemys.push_back(std::move(enemy));
 		}
+		else if (objectData.filename.compare("slimeDead") == 0) {
+			std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+			//enemy->SetPlayer(player);
+			enemy->Init(objectData.transform.translate, objectData.filename);
+			enemy->SetPlayer(player);
+			enemys.push_back(std::move(enemy));
+		}
 
 		else if (objectData.filename.compare("item") == 0) {
 			std::unique_ptr <PlayerItem> item = std::make_unique<PlayerItem>();

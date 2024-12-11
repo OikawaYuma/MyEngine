@@ -10,7 +10,7 @@ void WorldDesign::Init(const Vector3& scale, const Vector3& translate, const std
 	worldTransform_.scale_ = scale;
 	worldTransform_.translation_ = translate;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
-	int i = Object3dManager::GetInstance()->StoreObject(filename,&worldTransform_,floorTex_,&color_);
+	Object3dManager::GetInstance()->StoreObject(filename,&worldTransform_,floorTex_,&color_);
 	
 	material_.color = { 1.0f,1.0f,1.0f,1.0f };
 	material_.enableLighting = true;

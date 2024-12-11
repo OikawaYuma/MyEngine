@@ -17,6 +17,8 @@ public:
 	void Init(const Vector3& translate, const std::string filename);
 	void Update();
 	void Draw(Camera* camera);
+	void Respown();
+public:
 
 	bool IsDead() { return isDead_; }
 
@@ -40,5 +42,9 @@ private:
 	uint32_t floorTex_ = 0;
 	WorldTransform worldTransform_;
 
+	// 復活用のタイマー
+	int respownTimer_ = 0;
+
+	float baseHighPos_ = 0;
 
 };

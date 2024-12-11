@@ -4,8 +4,11 @@
 #include "Input.h"
 #include "Loder.h"
 #include "Audio.h"
+#include "Object3dManager.h"
 void TitleScene::Init()
 {
+	Object3dManager::GetInstance()->Init();
+	DeleteObject();
 	titleSpritePos_ = { 640.0f, 120.0f };
 	titleSpriteVelo_ = 0.75f;
 	sprite = new Sprite();
@@ -55,7 +58,7 @@ void TitleScene::Init()
 	
 	player_ = std::make_unique<Player>();
 	player_->SetCamera(camera_->GetCamera());
-
+	
 	ground_ = std::make_unique<Ground>();
 	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), enemys_, items_, worldDesigns_,ground_.get());
 
@@ -89,21 +92,21 @@ player_->TitleInit();
 void TitleScene::Update()
 {
 
-	ImGui::Begin("OBB,BALL");
+	//ImGui::Begin("OBB,BALL");
 
 
-	ImGui::DragFloat("sColor", &depthOutlineInfo_.farClip, 0.0001f);
-	ImGui::DragFloat2("sde", &depthOutlineInfo_.diffSize.x, 0.01f);
-	//ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
-	//ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
-	//ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
-	//ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
-	//ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
-	//ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
-	//ImGui::Text("playerPosX %f", spotLight_.position.x);
-	//ImGui::Text("playerPosZ %f", spotLight_.position.z);
+	//ImGui::DragFloat("sColor", &depthOutlineInfo_.farClip, 0.0001f);
+	//ImGui::DragFloat2("sde", &depthOutlineInfo_.diffSize.x, 0.01f);
+	////ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	////ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	////ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
+	////ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	////ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+	////ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
+	////ImGui::Text("playerPosX %f", spotLight_.position.x);
+	////ImGui::Text("playerPosZ %f", spotLight_.position.z);
 
-	ImGui::End();
+	//ImGui::End();
 	postProcess_->SerDepthOutlineInfo({ .farClip = depthOutlineInfo_.farClip,.diffSize = depthOutlineInfo_.diffSize });
 	if (camera_->GetTimer() >= 200) {
 		threFlag_ = true;
@@ -264,7 +267,7 @@ void TitleScene::Update()
 
 
 					IScene::SetSceneNo(STAGE);
-					DeleteObject();
+					//DeleteObject();
 					Audio::SoundStopWave(titleBGM_);
 
 				}
@@ -275,25 +278,26 @@ void TitleScene::Update()
 
 		}
 	}
-	
+	Object3dManager::GetInstance()->Update();
 	postProcess_->Update();
 	
 }
 void TitleScene::Draw()
 {
 	skydome_->Draw(camera_->GetCamera());
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-		(*itr)->Draw(camera_->GetCamera());
-	}
+	//for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+	//	(*itr)->Draw(camera_->GetCamera());
+	//}
 
-	for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
-		(*itr)->Draw(camera_->GetCamera());
-	}
-	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
-		(*itr)->Draw(camera_->GetCamera());
-	}
+	//for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
+	//	(*itr)->Draw(camera_->GetCamera());
+	//}
+	//for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
+	//	(*itr)->Draw(camera_->GetCamera());
+	//}
+	Object3dManager::GetInstance()->Draw(camera_->GetCamera());
 	ground_->Draw();
-	player_->Draw(camera_->GetCamera());
+	//player_->Draw(camera_->GetCamera());
 	sprite->Draw(titleTex_, { 1.0f,1.0f,1.0f,1.0f });
 
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });

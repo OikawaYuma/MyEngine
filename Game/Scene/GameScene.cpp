@@ -5,18 +5,20 @@
 #include <Audio.h>
 void GameScene::Init()
 {
-	Object3dManager::GetInstance()->Init();
 	
+	Object3dManager::GetInstance()->Init();
+	DeleteObject();
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Init();
 
 	player_ = std::make_unique<Player>();
+	player_->Init({0.0f,1.0f,0.0f,},"player");
 	player_->SetCamera(followCamera_->GetCamera());
 	// 自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(player_->GetWorldTransform());
 
 	ground_ = std::make_unique<Ground>();
-	Loder::LoadJsonFile("Resources/json", "stage3", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
+	Loder::LoadJsonFile("Resources/json", "stage6", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
 	ground_->SetCamera(followCamera_->GetCamera());
 
 	followCamera_->PosAdustment();
@@ -106,6 +108,7 @@ void GameScene::Init()
 	slime2DSp3_ = std::make_unique<Slime2d>();
 	slime2DSp3_->Init(
 		{ 1220,650 }, 0.25f, 4, false);
+
 	jumpRoopNum = 0;
 	loadpos = 660.0f;
 	endTimer = 0;
@@ -116,7 +119,6 @@ void GameScene::Init()
 	GameOverFlag = false;
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	gameClearSE_ = Audio::GetInstance()->SoundLoadWave("Resources/clearSE.wav");
-	
 
 
 	// スコア
@@ -133,6 +135,8 @@ void GameScene::Init()
 
 	enemyApear_.Init();
 	enemyApear_.SetPlayer(player_.get());
+
+	Enemy::SetEnemydestory(0);
 }
 
 void GameScene::Update()
@@ -294,6 +298,7 @@ void GameScene::Update()
 					threFlag_ = false;
 					threPorM_ *= -1.0f;
 					gameStateMode_ = PLAYGAME;
+					player_->CreateReticle();		
 				}
 
 			}
@@ -314,16 +319,16 @@ void GameScene::Update()
 		startEffectSp2_->SetPosition(startSpritePos2_);
 		startEffectSp2_->Update();
 		
-		score_->Update(gameTimer_->GetGameTime(), killCount_);
-		items_.remove_if([](std::unique_ptr<PlayerItem>& bullet) {
+		score_->Update(gameTimer_->GetGameTime(), Enemy::GetEnemyDestory());
+		/*items_.remove_if([](std::unique_ptr<PlayerItem>& bullet) {
 			if (bullet->IsDead()) {
 				return true;
 			}
 			return false;
-			});
+			});*/
 
 		// 現状のクリア条件
-		/*if ((int)destroyCount_ >= clearFlagCount_) {
+		if (gameTimer_->GetGameTime() <= 0) {
 
 			Audio::SoundStopWave(gameBGM_);
 			postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
@@ -331,7 +336,7 @@ void GameScene::Update()
 			gameStateMode_ = CLEARGAME;
 			threPorM_ = -0.025f;
 
-		}*/
+		}
 		// 現状のゲームオーバー条件
 		// PlayerのHpが０になったら
 		if (player_->GetHP() <= 0.3f) {
@@ -408,7 +413,7 @@ void GameScene::Update()
 	{
 		thre_ -= threPorM_;;
 		if (thre_ >= 1.2f) {
-			DeleteObject();
+			//DeleteObject();
 			//Audio::GetInstance()->SoundStopWave(slimeDeadSE_);
 			IScene::SetSceneNo(CLEAR);
 		}
@@ -420,7 +425,7 @@ void GameScene::Update()
 	{
 		thre_ -= threPorM_;;
 		if (thre_ >= 1.2f) {
-			DeleteObject();
+			//DeleteObject();
 			Audio::GetInstance()->SoundStopWave(slimeDeadSE_);
 			IScene::SetSceneNo(GAMEOVER);
 		}
@@ -438,20 +443,21 @@ void GameScene::Draw()
 {
 	skydome_->Draw(followCamera_->GetCamera());
 	ground_->Draw();
-
-	Object3dManager::GetInstance()->Draw(followCamera_->GetCamera());
 	player_->Draw(followCamera_->GetCamera());
+	Object3dManager::GetInstance()->Draw(followCamera_->GetCamera());
+	
 	
 	lockOn_->Draw();
-	
+	gameTimer_->Draw();
 }
 
 void GameScene::Draw2d()
 {
 	
-	gameTimer_->Draw();
+	
 	switch (gameStateMode_) {
 	case PLAYGAME:
+		
 		score_->Draw();
 		player_->DrawUI();
 		break;

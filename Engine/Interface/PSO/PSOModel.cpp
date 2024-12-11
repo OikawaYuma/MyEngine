@@ -161,6 +161,7 @@ void PSO::SetInputLayout() {
 void PSO::SetBlendState() {
 	// blendStateの設定
 	//すべての色要素を書き込む
+	//blendDesc.AlphaToCoverageEnable = true;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;

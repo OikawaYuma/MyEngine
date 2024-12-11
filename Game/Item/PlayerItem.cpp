@@ -11,7 +11,7 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.translation_.x = translate.x;
 	worldTransform_.translation_.y = translate.y;
 	worldTransform_.translation_.z = translate.z;
-
+	baseHighPos_ = translate.y;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	//ModelManager::GetInstance()->LoadModel("Resources/box/", "box.obj");
 	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, floorTex_, &color_);
@@ -27,7 +27,7 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 
 void PlayerItem::Update()
 {
-	
+	Respown();
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }
@@ -38,15 +38,39 @@ void PlayerItem::Draw(Camera* camera)
 	object_->Draw(camera);
 }
 
+void PlayerItem::Respown()
+{
+	if (isDead_) {
+		respownTimer_++;
+		if (respownTimer_ >= 500) {
+			respownTimer_ = 0;
+			color_.w = 1.0f;
+			shadowObject_->SetColor({ .w = 1.0f });
+
+			isDead_ = false;
+			std::random_device seedGenerator;
+			std::mt19937 randomEngine(seedGenerator());
+			std::uniform_real_distribution<float> distriposX(-50, 50);// distriposX(-0.7f, -0.3
+			std::uniform_real_distribution<float> distriposZ(-50, 50);// distriposY(0.2f, 0.5f)
+			worldTransform_.translation_ = { distriposX(randomEngine),baseHighPos_ ,distriposZ(randomEngine) };
+		}
+	}
+}
+
 void PlayerItem::OnCollision(uint32_t attri)
 {
 	if (attri) {
 
 	}
-	isDead_ = true;
-	float preScale = player_->GetHP();
-	preScale += 0.2f;
-	player_->SetHP(preScale);
+	if (isDead_ == false) {
+		isDead_ = true;
+		shadowObject_->SetColor({.w = 0.0f});
+		color_.w = 0.0f;
+		float preScale = player_->GetHP();
+		//worldTransform_.translation_.y = 100.0f;
+		preScale += 0.2f;
+		player_->SetHP(preScale);
+	}
 
 }
 

@@ -5,8 +5,11 @@
 #include "Input.h"
 #include <Loder.h>
 #include <Audio.h>
+#include "Object3dManager.h"
 void GameOverScene::Init()
 {
+	Object3dManager::GetInstance()->Init();
+	DeleteObject();
 	titleTex_ = TextureManager::StoreTexture("Resources/GameOverSkydome2.png");
 
 	camera_ = std::make_unique<GameOverCamera>();
@@ -14,6 +17,7 @@ void GameOverScene::Init()
 	ground_ = std::make_unique<Ground>();
 	player_ = std::make_unique<Player>();
 	Loder::LoadJsonFile("Resources/json", "gameOverStage", player_.get(), enemys_, items_, worldDesigns_,ground_.get());
+	player_->GameOverInit();
 	ground_->SetCamera(camera_->GetCamera());
 
 
@@ -130,6 +134,7 @@ void GameOverScene::Update()
 	pushSpriteAlpha_ += pushSpriteAlphaPorM_;
 	pushASp_->Update();
 	titleBer_->Update();
+	Object3dManager::GetInstance()->Update();
 	postProcess_->Update();
 
 }
@@ -137,17 +142,8 @@ void GameOverScene::Draw()
 {
 	skydome_->Draw(camera_->GetCamera());
 	ground_->Draw();
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-		(*itr)->Draw(camera_->GetCamera());
-	}
-
-	for (std::list<std::unique_ptr<WorldDesign>>::iterator itr = worldDesigns_.begin(); itr != worldDesigns_.end(); itr++) {
-		(*itr)->Draw(camera_->GetCamera());
-	}
-	for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
-		(*itr)->Draw(camera_->GetCamera());
-	}
 	
+	Object3dManager::GetInstance()->Draw(camera_->GetCamera());
 	player_->GameOverDraw(camera_->GetCamera());
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 	titleBer_->Draw(gameOverTex_,{1.0f,1.0f,1.0f,1.0f});

@@ -4,12 +4,17 @@
 #include <numbers>
 #include "Character/Player/Player.h"
 #include <Object3dManager.h>
+
+int Enemy::enemyDestory_ = 0;
+
 void Enemy::Init(const Vector3& translate, const std::string filename)
 {
+	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");;
 	hp_ = 0.7f;
 	glavity_ = 0;
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/Enemy2.png");
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/" +filename + ".png");
+
 	worldTransform_.translation_ = translate;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	// HPを元に基準となる大きさを決定する
@@ -143,8 +148,10 @@ void Enemy::Respown()
 {
 	if (isDead_) {
 		respownTimer_++;
-		if (respownTimer_ >= 200) {
+		if (respownTimer_ >= 500) {
 			hp_ = 0.7f;
+			color_.w = 1.0f;
+			shadowObject_->SetColor({ .w = 1.0f });
 			respownTimer_ = 0;
 			isDead_ = false;
 			std::random_device seedGenerator;
@@ -166,8 +173,10 @@ void Enemy::OnCollision(uint32_t attri)
 			hp_ -= 0.2f;
 			worldTransform_.translation_.y -= 0.2f;
 			if (hp_ <= 0.4f) {
+				color_.w = 0.0f;
+				shadowObject_->SetColor({ .w = 0.0f });
 				isDead_ = true;
-				
+				enemyDestory_++;
 			}
 
 		}

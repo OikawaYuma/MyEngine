@@ -3,7 +3,7 @@
 #include "ModelManager.h"
 #include "Input.h"
 #include "Audio.h"
-
+#include "Object3dManager.h"
 #include "ImGuiCommon.h"
 #include "LockOn/LockOn.h"
 
@@ -66,15 +66,9 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
 	
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
-	object_ = std::make_unique<Object3d>();
-	object_->Init();
-	object_->SetModel("player.obj");
-	object_->SetSkinTex(skinTex_);
-	object_->SetObjectNum(1);
-	nearReticleObj_ = std::make_unique<Object3d>();
-	nearReticleObj_->Init();
-	nearReticleObj_->SetModel("Reticle3.obj");
-	nearReticleObj_->SetSkinTex(skinTex_);
+
+	reticleColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	//Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_);
 	farReticleObj_ = std::make_unique<Object3d>();
 	farReticleObj_->Init();
 	farReticleObj_->SetModel("Reticle2.obj");
@@ -92,8 +86,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	material_.enableLighting = true;
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
-	object_->SetMaterial(material_);
-
+	Object3dManager::GetInstance()->StoreObject(filename,&worldTransform_,skinTex_,&material_.color);
 	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	spotLight_.position = worldTransform_.translation_;
 	spotLight_.distance = 7.0f;
@@ -103,28 +96,25 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	spotLight_.dacya = 2.0f;
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / 3.0f);
-	object_->SetSpotLight(spotLight_);
+
 
 	direLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	direLight_.direction = { 0.0f,-1.0f,0.0f };
 	direLight_.intensity = 0.6f;
-	object_->SetDirectionLight(direLight_);
+	//object_->SetDirectionLight(direLight_);
 
-	nearReticleObj_->SetMaterial(material_);
-	object_->SetWorldTransformInstancing(&worldTransform_);
-	object_->SetWorldTransform(worldTransform_);
-	object_->SetSkinTex(skinTex_);
-	object_->Update();
+
+
 	worldTransform_.UpdateMatrix();
 
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, "player.obj");
 	shadowObject_->Update();
-
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor());
 	reticleShadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	reticleShadowObject_->Init(&worldTransform3DReticleNear_, "Reticle4.obj");
 	reticleShadowObject_->Update();
-
+	Object3dManager::GetInstance()->StoreObject(filename, reticleShadowObject_->GetWorldTransform(), skinTex_, reticleShadowObject_->GetColor());
 	reticleY_ = 0;
 
 	////////////////////////////////////////////
@@ -164,9 +154,9 @@ void Player::Update()
 	direLight_.direction = Normalize(direLight_.direction);
 	spotLight_.direction = Normalize(spotLight_.direction);
 
-	object_->SetMaterial(material_);
-	object_->SetSpotLight(spotLight_);
-	object_->SetDirectionLight(direLight_);
+	//object_->SetMaterial(material_);
+	//object_->SetSpotLight(spotLight_);
+	//object_->SetDirectionLight(direLight_);
 
 
 	hpUIBlue_->SetPosition({ hp_ * 200 + 50.0f,25.0f });
@@ -308,8 +298,7 @@ void Player::Update()
 	}
 
 	worldTransform_.UpdateMatrix();
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
+
 	
 	shadowObject_->Update();
 	reticleShadowObject_->Update();
@@ -317,8 +306,8 @@ void Player::Update()
 
 void Player::Draw(Camera* camera)
 {
-	shadowObject_->Draw(camera);
-	reticleShadowObject_->Draw(camera);
+	//shadowObject_->Draw(camera);
+	//reticleShadowObject_->Draw(camera);
 	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
 		(*itr)->Draw(camera);
 	}
@@ -328,14 +317,12 @@ void Player::Draw(Camera* camera)
 	
 	switch (bulletMode_) {
 	case BulletMode::NormalBullet:
-		nearReticleObj_->Draw(camera);
 		break;
 	case BulletMode::HommingBullet:
 		break;
 	case BulletMode::LaserBeam:
 		break;
 	}
-	object_->Draw(camera);
 
 
 
@@ -380,12 +367,11 @@ void Player::TitleInit()
 	worldTransform_.translation_.y = 0.5f;
 
 
-	object_ = std::make_unique<Object3d>();
-	object_->Init();
-	object_->SetModel("player.obj");
-	object_->SetSkinTex(skinTex_);
-	//BehaviorRootJumpInit();
+	color_ = {1.0f,1.0f,1.0f,1.0f,};
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
+	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &color_);
+	//BehaviorRootJumpInit();
+	
 	InitFloatingGimmmick();
 	SetCollisonAttribute(0b0001);
 	SetCollisionMask(0b0110);
@@ -405,15 +391,11 @@ void Player::ClearInit()
 	material_.enableLighting = true;
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
-	object_->SetMaterial(material_);
-
-	object_ = std::make_unique<Object3d>();
-	object_->Init();
-	object_->SetModel("player.obj");
-	object_->SetSkinTex(skinTex_);
+	color_ = { 1.0f,1.0f,1.0f,1.0f, };
+	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
+	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &material_.color);
 
 	//BehaviorRootJumpInit();
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
 	InitFloatingGimmmick();
 	SetCollisonAttribute(0b0001);
 	SetCollisionMask(0b0110);
@@ -443,8 +425,7 @@ void Player::ClearUpdate()
 
 	// 移動
 	worldTransform_.translation_ = Add(worldTransform_.translation_, { 0.0f,velo_.y,0.0f });
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
+
 	worldTransform_.UpdateMatrix();
 	shadowObject_->Update();
 }
@@ -576,8 +557,6 @@ void Player::TitleUpdate()
 		(*itr)->Update();
 	}
 	worldTransform_.UpdateMatrix();
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
 	shadowObject_->Update();
 }
 
@@ -595,7 +574,6 @@ void Player::GameOverInit()
 	worldTransform_.scale_ = { 5.0f,1.0f,5.0f };
 	worldTransform_.UpdateMatrix();
 	deadSlimeObj_->SetWorldTransform(worldTransform_);
-	object_->Update();
 
 }
 
@@ -640,11 +618,6 @@ void Player::DemoUpdate()
 
 	direLight_.direction = Normalize(direLight_.direction);
 	spotLight_.direction = Normalize(spotLight_.direction);
-
-	object_->SetMaterial(material_);
-	object_->SetSpotLight(spotLight_);
-	object_->SetDirectionLight(direLight_);
-
 
 	hpUIBlue_->SetPosition({ hp_ * 200 + 50.0f,25.0f });
 	hpUIBlue_->SetSize({ hp_ * 200,50.0f });
@@ -717,8 +690,7 @@ void Player::DemoUpdate()
 	}
 
 	worldTransform_.UpdateMatrix();
-	object_->SetWorldTransform(worldTransform_);
-	object_->Update();
+
 
 	shadowObject_->Update();
 }
@@ -808,9 +780,9 @@ void Player::Aim()
 	worldTransform3DReticleFar_.rotation_.x = std::atan2(-velocity.y, velocityXZ);
 	worldTransform3DReticleNear_.rotation_.x = std::atan2(-velocity.y, velocityXZ);
 
-	nearReticleObj_->SetWorldTransform(worldTransform3DReticleNear_);
+
 	farReticleObj_->SetWorldTransform(worldTransform3DReticleFar_);
-	nearReticleObj_->Update();
+
 	farReticleObj_->Update();
 }
 
@@ -1086,6 +1058,11 @@ void Player::HitEnemySlime()
 	}
 }
 
+void Player::CreateReticle()
+{
+	Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_);
+}
+
 void Player::BehaviorRootUpdate()
 {
 	Move();
@@ -1199,7 +1176,7 @@ void Player::ColorAdust()
 	/*ImGui::Begin("calor");
 	ImGui::DragFloat4("color : ", &material_.color.x,0.01f);
 	ImGui::End();*/
-	object_->SetMaterial({ .color = material_.color });
+	//object_->SetMaterial({ .color = material_.color });
 }
 
 Vector3 Player::GetReticleWorldPosition()

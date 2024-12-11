@@ -34,7 +34,7 @@ void GameTimer::Init()
 		{ 0.5f , 0.5f },
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		"Resources/Reticle.png");
-	gameTime_.sumTime = 600;
+	gameTime_.sumTime = 60;
 	frame_ = 0;
 	apearFlag_ = false;
 }
@@ -79,11 +79,13 @@ void GameTimer::MeasureTime()
 {
 	
 	frame_ += 1;
-	if(frame_ >= 40){
-		gameTime_.sumTime -= 1;
-		frame_ = 0;
+	if (gameTime_.sumTime > 0) {
+		if (frame_ >= 40) {
+			gameTime_.sumTime -= 1;
+			frame_ = 0;
+		}
 	}
-	
+
 	//// 時間の終了
 	//auto end = std::chrono::steady_clock::now();
 

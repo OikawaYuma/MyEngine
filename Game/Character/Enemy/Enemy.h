@@ -56,5 +56,13 @@ private:
 	int respownTimer_ = 0;
 private: // GameOver
 	std::unique_ptr<Object3d> deadSlimeObj_;
+
+
+private: // 共通項目の管理
+	static int enemyDestory_;
+public:
+	static int GetEnemyDestory() { return enemyDestory_; }
+	static void SetEnemydestory(int32_t resttNum) { enemyDestory_ = resttNum; }
+
 };
 

@@ -23,6 +23,7 @@ void Object3dManager::Draw(Camera* camera)
 
 void Object3dManager::CreateObject(const std::string& objectName)
 {
+    std::string a = objectName;
 }
 
 uint32_t Object3dManager::StoreObject(const std::string& objectName, WorldTransform* worldTransform, uint32_t skinTex, Vector4* color)
