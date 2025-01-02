@@ -67,9 +67,18 @@ PixelShaderOutput main(VertexShaderOutput input)
     uint32_t width, height; // 1. uvStepSizeの算出
     gTexture.GetDimensions(width, height);
     float32_t2 uvStepSize = float32_t2(rcp(width), rcp(height));
-    
-   
+     // 3. 現在のtexcoordを算出
+    float32_t2 texcoordp = input.texcoord;
+            
+    float32_t ndcDepthp = gDepthTexture.Sample(gSamplerPoint, texcoordp);
+            // NDC -> View。P^{-1}においてxとyはzwに影響を与えないので何でもよい。なので、わざわざ行列を渡さなくてもよい
+            // gMaterial.projectionInverseはCBufferを使って渡しておくこと
+    float32_t4 viewSpacep = mul(float32_t4(0.0f, 0.0f, ndcDepthp, 1.0f), gMaterial.projectionInverse);
+ 
+    float32_t viewZPre = viewSpacep.z * rcp(viewSpacep.w);
     float32_t2 difference = float32_t2(0.0f, 0.0f); // 縦横それぞれの畳み込みの結果を格納する
+    
+    float32_t3 fetchColorp = gTexture.Sample(gSampler, texcoordp).rgb;
     // 色を輝度に変換して、畳み込みを行っていく。微分Filter用のkernelになっているので、やること自体は今までの畳み込みと同じ
     for (int32_t x = 0; x < KenelSize; ++x)
     {
@@ -83,7 +92,15 @@ PixelShaderOutput main(VertexShaderOutput input)
             // gMaterial.projectionInverseはCBufferを使って渡しておくこと
             float32_t4 viewSpace = mul( float32_t4(0.0f, 0.0f, ndcDepth, 1.0f), gMaterial.projectionInverse);
             float32_t viewZ = viewSpace.z * rcp(viewSpace.w); // 同時座標系からデカルト座標系へ変換
- 
+            float32_t3 fetchColor = gTexture.Sample(gSampler, texcoord).rgb;
+            if (abs(viewZPre - viewZ) > gMaterial.diffSize.y )
+            {
+                if ((fetchColor.x == fetchColorp.x && fetchColor.y == fetchColorp.y && fetchColor.z == fetchColorp.z))
+                {
+                    continue;
+                }
+                    
+            }
             difference.x += viewZ * kPrewittHorizontalKernel[x][y];
             difference.y += viewZ * kPrewittVerticalKernel[x][y];
         }
@@ -92,29 +109,25 @@ PixelShaderOutput main(VertexShaderOutput input)
     // 変化の長さをウェイトとして合成。ウェイトの決定方法も色々と考えられる。例えばdifference.xだけ使えば横方向のエッジが検出される
     float32_t weight = length(difference);
     
-   
-    // 差が小さい過ぎてわかりずらいので適当に6倍している。CBufferで調整パラメータとして送ったりすると良い
+    float32_t ndcDepth = gDepthTexture.Sample(gSamplerPoint, input.texcoord);
     
-    //if (weight >= 30.0f || (weight >= 0.5f && weight <= 1.0f))
-    //{
-    //    weight = saturate(weight);
-    //}
-    //else
+    //if (ndcDepth >= gMaterial.diffSize.y)
     //{
     //    weight = 0.0f;
-
     //}
-    float32_t ndcDepth = gDepthTexture.Sample(gSamplerPoint, input.texcoord);
-    float32_t4 viewSpace = mul(float32_t4(0.0f, 0.0f, ndcDepth, 1.0f), gMaterial.projectionInverse);
-    float32_t viewZ = viewSpace.z * rcp(viewSpace.w); // 同時座標系からデカルト座標系へ変換
-    float32_t ndcDepth1 = gDepthTexture.Sample(gSamplerPoint, input.texcoord);
-   
-    weight = saturate(weight * gMaterial.farClip);
     
-    if (length(difference) >= gMaterial.diffSize.x)
+    if (weight >= 0 && weight < gMaterial.diffSize.x)
     {
-        weight = 1.0f;
+        weight = 0.0f;
     }
+   
+    // 差が小さい過ぎてわかりずらいので適当に6倍している。CBufferで調整パラメータとして送ったりすると良い
+    weight = saturate(weight);
+  
+    //if (length(difference) >= gMaterial.diffSize.x && length(difference) >= gMaterial.diffSize.y)
+    //{
+    //    weight = 0.0f;
+    //}
    
     
     PixelShaderOutput output;

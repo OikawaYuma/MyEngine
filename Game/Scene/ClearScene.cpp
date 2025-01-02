@@ -33,9 +33,10 @@ void ClearScene::Init()
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_->GetCamera());
 	postProcess_->Init();
+	postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(camera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 1.0f, 0.984313f, 0.643f } , .weightSize = 100 });
 
 	postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
-	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolveOutline);
 
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;

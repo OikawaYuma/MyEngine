@@ -27,5 +27,6 @@ void Skydome::Update()
 
 void Skydome::Draw(Camera* camera)
 {
+	object_->SetSkinTex(skinTex_);
 	object_->Draw(camera);
 }

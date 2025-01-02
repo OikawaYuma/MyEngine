@@ -34,9 +34,10 @@ void GameOverScene::Init()
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_->GetCamera());
 	postProcess_->Init();
-	
+	postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(camera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 0.35f, 0.025f, 0.025f } , .weightSize = 100 });
+
 	postProcess_->SetDissolveInfo({ 0.35f, 0.025f, 0.025f });
-	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolveOutline);
 
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
@@ -117,7 +118,7 @@ void GameOverScene::Update()
 		thre_ -= threPorM_;
 		Audio::GetInstance()->SoundStopWave(gameOverBGM_);
 		if (thre_ >= 1.2f) {
-			DeleteObject();
+			//DeleteObject();
 			IScene::SetSceneNo(TITLE);
 		}
 
@@ -130,6 +131,7 @@ void GameOverScene::Update()
 	{
 		pushSpriteAlphaPorM_ *= -1.0f;
 	}
+	postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(camera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 0.35f, 0.025f, 0.025f } , .weightSize = 100 });
 	postProcess_->SetThreshold(thre_);
 	pushSpriteAlpha_ += pushSpriteAlphaPorM_;
 	pushASp_->Update();

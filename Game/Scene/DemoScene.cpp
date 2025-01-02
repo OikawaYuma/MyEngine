@@ -61,7 +61,7 @@ void DemoScene::Init()
 		std::cos(std::numbers::pi_v<float> / 3.0f);
 
 	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
-	tex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
+	tex_ = TextureManager::GetInstance()->StoreTexture("Resources/enemy/EnemyBullet.dds");
 	obj2_ = std::make_unique<Object3d>();
 	obj2_->Init();
 	obj2_->SetModel("ball.obj");
