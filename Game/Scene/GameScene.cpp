@@ -49,7 +49,9 @@ void GameScene::Init()
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
 	postProcess_->SetDissolveInfo({1.0f,1.0f,1.0f});
-	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolveOutline);
+	postProcess_->SerDissolveOutline({ .weightSize = 100.0f });
+
 
 	postProcess2_ = new PostProcess();
 	postProcess2_->Init();
@@ -135,7 +137,7 @@ void GameScene::Init()
 
 	enemyApear_.Init();
 	enemyApear_.SetPlayer(player_.get());
-
+	
 	Enemy::SetEnemydestory(0);
 }
 
@@ -145,23 +147,23 @@ void GameScene::Update()
 #ifdef DEBUG
 	GlobalVariables::GetInstance()->Update();
 #endif // DEBUG
-	DepthOutlineInfo farclipSize = postProcess_->GetDepthOutlineInfo();
-	//ImGui::Begin("OBB,BALL");
+	DissolveOutlineInfo dissolveOutlineInfo = postProcess_->GetDissolveOutline();
+	/*ImGui::Begin("OBB,BALL");
 
 
-	//ImGui::DragFloat("sColor", &farclipSize.farClip, 0.0001f);
-	//ImGui::DragFloat2("sde", &farclipSize.diffSize.x, 0.01f);
-	////ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
-	////ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
-	////ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
-	////ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
-	////ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
-	////ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
-	////ImGui::Text("playerPosX %f", spotLight_.position.x);
-	////ImGui::Text("playerPosZ %f", spotLight_.position.z);
+	ImGui::DragFloat("weightSize", &dissolveOutlineInfo.weightSize, 0.0001f);
+
+	ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
+	ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
+	ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
+	ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
+	ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
+	ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
+	ImGui::Text("playerPosX %f", spotLight_.position.x);
+	ImGui::Text("playerPosZ %f", spotLight_.position.z);
 	
-	//ImGui::End();
-	postProcess_->SerDepthOutlineInfo({.farClip = farclipSize.farClip,.diffSize = farclipSize.diffSize});
+	ImGui::End();*/
+	postProcess_->SerDissolveOutline({.projectionInverse = Inverse(followCamera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = {1.0f,1.0f,1.0f} , .weightSize  = dissolveOutlineInfo.weightSize});
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
 	spotLight_.direction = Normalize(spotLight_.direction);
@@ -448,7 +450,7 @@ void GameScene::Draw()
 	
 	
 	lockOn_->Draw();
-	gameTimer_->Draw();
+	
 }
 
 void GameScene::Draw2d()
@@ -457,7 +459,7 @@ void GameScene::Draw2d()
 	
 	switch (gameStateMode_) {
 	case PLAYGAME:
-		
+		gameTimer_->Draw();
 		score_->Draw();
 		player_->DrawUI();
 		break;

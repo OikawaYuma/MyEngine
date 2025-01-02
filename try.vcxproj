@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\2d\PostEffect\Effect\DissolveOutline.cpp" />
     <ClCompile Include="Game\Character\Enemy\EnemyApear.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Game\Fade\Fade.cpp" />
@@ -209,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
     <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
     <ClInclude Include="Game\Fade\Fade.h" />
     <ClInclude Include="Game\GameTimer\GameTimer.h" />

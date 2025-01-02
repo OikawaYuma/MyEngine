@@ -20,6 +20,7 @@ enum PostEffectMode {
 	kDissolve,
 	kRandom,
 	kBloom,
+	kDissolveOutline,
 	kNumPostEffect
 
 };

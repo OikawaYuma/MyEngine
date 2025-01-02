@@ -1,14 +1,14 @@
-#include "LuminanceOutline.h"
+#include "DissolveOutline.h"
 #include <function.h>
 #include <DirectXCommon.h>
 #include "PostProcess.h"
 #include "SRVManager.h"
 #include "Mesh.h"
 
-void LuminanceOutline::Init()
+void DissolveOutline::Init()
 {
 	// 実際に頂点リソースを作る
-	depthOutlineResource_ = Mesh::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DepthOutlineInfo));
+	depthOutlineResource_ = Mesh::CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveOutlineInfo));
 
 	/*materialBufferView = CreateBufferView();;*/
 	// 頂点リソースにデータを書き込む
@@ -19,7 +19,7 @@ void LuminanceOutline::Init()
 	SetPropery(CreatePipelineStateObject());
 }
 
-PSOProperty LuminanceOutline::CreatePipelineStateObject()
+PSOProperty DissolveOutline::CreatePipelineStateObject()
 {
 	PSOProperty property;
 	HRESULT hr;
@@ -52,7 +52,7 @@ PSOProperty LuminanceOutline::CreatePipelineStateObject()
 		L"vs_6_0", sDirectXCommon->GetDxcUtils(), sDirectXCommon->GetDxcCompiler(), sDirectXCommon->GetIncludeHandler());
 	assert(property.vertexShaderBlob != nullptr);
 
-	property.pixelShaderBlob = CompileShader(L"Resources/shader/LuminanceBasedOutline.PS.hlsl",
+	property.pixelShaderBlob = CompileShader(L"Resources/shader/DissolveOutline.PS.hlsl",
 		L"ps_6_0", sDirectXCommon->GetDxcUtils(), sDirectXCommon->GetDxcCompiler(), sDirectXCommon->GetIncludeHandler());
 	assert(property.pixelShaderBlob != nullptr);
 
@@ -88,12 +88,12 @@ PSOProperty LuminanceOutline::CreatePipelineStateObject()
 }
 
 
-void LuminanceOutline::CommandRootParameter(PostProcess* postProcess)
+void DissolveOutline::CommandRootParameter(PostProcess* postProcess)
 {
 	DirectXCommon* sDirectXCommon = DirectXCommon::GetInstance();
 	Camera* camera = postProcess->GetCamera();
-	depthOutlinelData_->projectionInverse = Inverse(camera->GetProjectionMatrix());
-	depthOutlinelData_->farClip = postProcess->GetLuminanceOutlineInfo().farClip;
+	camera;
+	*depthOutlinelData_ = postProcess->GetDissolveOutline();
 	//depthOutlinelData_->farClip = postProcess->GetFarClip();
 	// マテリアルCBufferの場所を設定
 	// SRV のDescriptorTableの先頭を設定。2はrootParameter[2]である。
@@ -106,7 +106,7 @@ void LuminanceOutline::CommandRootParameter(PostProcess* postProcess)
 	sDirectXCommon->GetCommandList()->SetGraphicsRootConstantBufferView(3, depthOutlineResource_->GetGPUVirtualAddress());
 }
 
-std::vector<D3D12_DESCRIPTOR_RANGE> LuminanceOutline::CreateDescriptorRange()
+std::vector<D3D12_DESCRIPTOR_RANGE> DissolveOutline::CreateDescriptorRange()
 {
 	std::vector<D3D12_DESCRIPTOR_RANGE> descriptorRange(3);
 	descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
@@ -126,7 +126,7 @@ std::vector<D3D12_DESCRIPTOR_RANGE> LuminanceOutline::CreateDescriptorRange()
 	return descriptorRange;
 }
 
-std::vector<D3D12_ROOT_PARAMETER> LuminanceOutline::CreateRootParamerter(std::vector<D3D12_DESCRIPTOR_RANGE>& descriptorRange)
+std::vector<D3D12_ROOT_PARAMETER> DissolveOutline::CreateRootParamerter(std::vector<D3D12_DESCRIPTOR_RANGE>& descriptorRange)
 {
 
 
@@ -153,7 +153,7 @@ std::vector<D3D12_ROOT_PARAMETER> LuminanceOutline::CreateRootParamerter(std::ve
 	return rootParamerters;
 }
 
-std::vector<D3D12_STATIC_SAMPLER_DESC> LuminanceOutline::CreateSampler()
+std::vector<D3D12_STATIC_SAMPLER_DESC> DissolveOutline::CreateSampler()
 {
 	std::vector<D3D12_STATIC_SAMPLER_DESC> staticSamplers(2);
 	staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイナリフィルタ
@@ -177,7 +177,7 @@ std::vector<D3D12_STATIC_SAMPLER_DESC> LuminanceOutline::CreateSampler()
 	return staticSamplers;
 }
 
-D3D12_ROOT_SIGNATURE_DESC LuminanceOutline::CreateRootSignature(PSOProperty& pso, std::vector<D3D12_ROOT_PARAMETER>& rootParameters, std::vector<D3D12_STATIC_SAMPLER_DESC>& samplers)
+D3D12_ROOT_SIGNATURE_DESC DissolveOutline::CreateRootSignature(PSOProperty& pso, std::vector<D3D12_ROOT_PARAMETER>& rootParameters, std::vector<D3D12_STATIC_SAMPLER_DESC>& samplers)
 {
 	HRESULT hr;
 	// RootSignature作成
@@ -204,7 +204,7 @@ D3D12_ROOT_SIGNATURE_DESC LuminanceOutline::CreateRootSignature(PSOProperty& pso
 	return descriptionRootSignature;
 }
 
-D3D12_INPUT_LAYOUT_DESC LuminanceOutline::SetInputLayout()
+D3D12_INPUT_LAYOUT_DESC DissolveOutline::SetInputLayout()
 {
 	// 頂点には何もデータを入力しないので、InputLayoutは利用しない。ドライバやGPUのやることが
 	// 少なくなりそうな気配を感じる
@@ -214,7 +214,7 @@ D3D12_INPUT_LAYOUT_DESC LuminanceOutline::SetInputLayout()
 	return inputLayoutDesc;
 }
 
-D3D12_BLEND_DESC LuminanceOutline::SetBlendState()
+D3D12_BLEND_DESC DissolveOutline::SetBlendState()
 {
 	// blendStateの設定
 	//すべての色要素を書き込む
@@ -233,7 +233,7 @@ D3D12_BLEND_DESC LuminanceOutline::SetBlendState()
 	return blendDesc;
 }
 
-D3D12_RASTERIZER_DESC LuminanceOutline::SetRasterrizerState()
+D3D12_RASTERIZER_DESC DissolveOutline::SetRasterrizerState()
 {
 	// RasiterzerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
@@ -244,7 +244,7 @@ D3D12_RASTERIZER_DESC LuminanceOutline::SetRasterrizerState()
 	return rasterizerDesc;
 }
 
-D3D12_DEPTH_STENCIL_DESC LuminanceOutline::CreateDepth()
+D3D12_DEPTH_STENCIL_DESC DissolveOutline::CreateDepth()
 {
 	// DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};

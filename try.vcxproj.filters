@@ -330,6 +330,7 @@
     <ClCompile Include="Game\Character\Enemy\EnemyApear.cpp" />
     <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
+    <ClCompile Include="Engine\2d\PostEffect\Effect\DissolveOutline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -610,6 +611,7 @@
     <ClInclude Include="Game\Fade\Fade.h" />
     <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
     <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
+    <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

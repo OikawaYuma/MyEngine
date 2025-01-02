@@ -107,7 +107,10 @@ PixelShaderOutput main(VertexShaderOutput input)
         // 拡散反射+鏡面反射
         
        // output.color.rgb *= gMaterial.color.rgb;
-        float32_t nl = max(0, dot(input.normal, -gDirectionalLight.direction)) * gMaterial.shininess;
+        
+        //Objectの法線と光の方向と強さから輝度をとる
+        float32_t nl = 
+        max(0, dot(input.normal, -gDirectionalLight.direction)) * gMaterial.shininess;
         if (nl <= 0.01f)
         {
             nl = 0.3f;

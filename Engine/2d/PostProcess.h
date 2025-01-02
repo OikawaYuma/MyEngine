@@ -32,6 +32,8 @@
 #include "Effect/DepthOutline.h"
 #include "Effect/FullScreen.h"
 #include "Effect/Dissolve.h"
+#include "Effect/LuminanceOutline.h"
+#include "Effect/DissolveOutline.h"
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxcompiler.lib")
@@ -82,6 +84,12 @@ public:
 
 	DepthOutlineInfo GetDepthOutlineInfo() { return depthOutlineInfo_; }
 	void SerDepthOutlineInfo(const DepthOutlineInfo& DepthOutlineInfo) { depthOutlineInfo_ = DepthOutlineInfo; }
+
+	LuminanceOutlineInfo GetLuminanceOutlineInfo() { return luminanceOutlineInfo_; }
+	void SerLuminanceOutlineInfo(const LuminanceOutlineInfo& luminanceOutlineInfo) { luminanceOutlineInfo_ = luminanceOutlineInfo; }
+
+	DissolveOutlineInfo GetDissolveOutline() { return dissolveOutlineInfo_; }
+	void SerDissolveOutline(const DissolveOutlineInfo& dissolveOutlineInfo) { dissolveOutlineInfo_ = dissolveOutlineInfo; }
 
 	// シーン番号のゲッター
 	int GetEffectNo() { return effectNo_; };
@@ -153,7 +161,9 @@ private:
 	Vector3 valueColor = { 0.2125f, 0.7154f, 0.0721f };
 
 	BloomInfo bloomInfo_ = { 10.0f,0.3f,1.0f, 1 };
-	DepthOutlineInfo depthOutlineInfo_ = { .diffSize = {0.0f,0.0f} };
+	DepthOutlineInfo depthOutlineInfo_ = { .diffSize = {0.0f,0.9995f} };
+	LuminanceOutlineInfo luminanceOutlineInfo_ = {};
+	DissolveOutlineInfo dissolveOutlineInfo_ = {};
 	FullScreenInfo hsvInfo_;
 	DissolveInfo dissolveInfo_;
 	

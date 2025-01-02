@@ -78,7 +78,7 @@ player_->TitleInit();
 	thre_ = 0.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
-	postProcess_->SetEffectNo(PostEffectMode::kDissolve);
+	postProcess_->SetEffectNo(PostEffectMode::kDissolveOutline);
 
 	loadingSpriteMoveFlag_ = false;
 
@@ -108,6 +108,7 @@ void TitleScene::Update()
 
 	//ImGui::End();
 	postProcess_->SerDepthOutlineInfo({ .farClip = depthOutlineInfo_.farClip,.diffSize = depthOutlineInfo_.diffSize });
+	postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(camera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = {1.0f,1.0f,1.0f} , .weightSize = 100 });
 	if (camera_->GetTimer() >= 200) {
 		threFlag_ = true;
 	}
@@ -297,10 +298,10 @@ void TitleScene::Draw()
 	//}
 	Object3dManager::GetInstance()->Draw(camera_->GetCamera());
 	ground_->Draw();
-	//player_->Draw(camera_->GetCamera());
 	sprite->Draw(titleTex_, { 1.0f,1.0f,1.0f,1.0f });
-
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
+	//player_->Draw(camera_->GetCamera());
+	
 }
 
 void TitleScene::PostDraw()
@@ -311,6 +312,9 @@ void TitleScene::PostDraw()
 
 void TitleScene::Draw2d()
 {
+	
+
+	
 	if (GamePlayFlag_ && thre_ >= 1.0f) {
 		LoadStringSp_->Draw(LoadStringSpTex_, { 1.0f,1.0f,1.0f,1.0f });
 		slime2DSp1_->Draw();

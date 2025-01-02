@@ -9,6 +9,7 @@
 #include "Effect/RadialBlur.h"
 #include "Effect/Random.h"
 #include "Effect/Bloom.h"
+#include "Effect/DissolveOutline.h"
 #include <d3dx12.h>
 
 
@@ -25,6 +26,7 @@ void PSOPostEffect::Init()
 	effectArr_[PostEffectMode::kRadialBlur] = std::make_unique<RadialBlur>();
 	effectArr_[PostEffectMode::kRandom] = std::make_unique<Random>();
 	effectArr_[PostEffectMode::kBloom] = std::make_unique<Bloom>();
+	effectArr_[PostEffectMode::kDissolveOutline] = std::make_unique<DissolveOutline>();
 	for (int i = 0; i < PostEffectMode::kNumPostEffect; i++) {
 		effectArr_[i]->Init();
 	}
