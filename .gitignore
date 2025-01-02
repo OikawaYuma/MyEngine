@@ -76,7 +76,7 @@ StyleCopReport.xml
 *.ilk
 *.meta
 #*.obj
-#*Engine/Exterbals/assimp
+*.lib
 *.iobj
 *.pch
 *.pdb
