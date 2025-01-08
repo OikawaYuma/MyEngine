@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Particle.h
+* @ brief Particleを生成するクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

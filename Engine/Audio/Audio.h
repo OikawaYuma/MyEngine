@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Audio.h
+* @ brief Audioの読み込みや使用に使うクラス　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

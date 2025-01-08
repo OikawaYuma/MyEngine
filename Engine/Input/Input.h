@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Input.h
+* @ brief キーボードやPadの入力をまとめるクラス　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

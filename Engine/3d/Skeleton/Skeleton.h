@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Skelton.h
+* @ brief Skeltonの生成に関するクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

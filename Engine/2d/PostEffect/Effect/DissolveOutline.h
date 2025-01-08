@@ -1,6 +1,6 @@
 /**
 * @ file DissolveOutline.h
-* @ brief ポストエフェクトのDepthを用いたOutlineに関する設定
+* @ brief ポストエフェクトのDepthとDissolveを用いたOutlineに関する設定
 * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 

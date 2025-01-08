@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file ModelData.h
+* @ brief Modelの情報をまとめるヘッダーファイル
+* @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
