@@ -155,7 +155,7 @@ private:
 
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	std::unique_ptr<PlaneProjectionShadow> reticleShadowObject_;
-	std::unique_ptr<Object3d> farReticleObj_;
+	std::unique_ptr<Object3d> slimeObj_;
 
 public: // もともとのゲームで使用変数
 	std::unique_ptr<Sprite> hpUI_ = nullptr;

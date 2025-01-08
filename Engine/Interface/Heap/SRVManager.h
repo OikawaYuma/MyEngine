@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file SRVManager.h
+* @ brief SRVに関しての設定　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

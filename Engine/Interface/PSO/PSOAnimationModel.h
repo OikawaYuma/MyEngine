@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file PSOAnimationModel.h
+* @ brief AnimationModelに関するPSOの設定　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 #pragma once
 #include <d3d12.h>

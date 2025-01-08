@@ -168,7 +168,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Interface\DirectXCommon.cpp" />
     <ClCompile Include="Engine\3d\Triangle\Triangle.cpp" />
     <ClCompile Include="Game\Scene\TitleScene.cpp" />
-    <ClCompile Include="Engine\Input\InputManager.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GaussianBlur.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\GrayScale.cpp" />
     <ClCompile Include="Game\Skydome\Skydome.cpp" />
@@ -259,7 +258,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Scene\GameManager.h" />
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Game\Scene\IScene.h" />
-    <ClInclude Include="Engine\Input\InputManager.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\GaussianBlur.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\GrayScale.h" />
     <ClInclude Include="Game\IBullet.h" />

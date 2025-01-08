@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file ResourceObject.h
+* @ brief ComPtrでリソースを作ったのを自動解放するための関数をまとめたヘッダー
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

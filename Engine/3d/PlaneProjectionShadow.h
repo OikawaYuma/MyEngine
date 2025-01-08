@@ -1,9 +1,8 @@
 /**
-* @ file　PlaneProjectionShadow.h
-* @ brief 平面でのオブジェクトの影を描画するクラス
-* @ author 及川　優麿　（オイカワ　ユウマ）
+* @ file PlaneProjectionShadow.h
+* @ brief 表示するObjectの平行面用の影を生成するクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
-
 #pragma once
 #include <memory>
 #include <string>

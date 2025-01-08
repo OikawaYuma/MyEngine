@@ -1,7 +1,9 @@
 /**
-* @ file
-* @ brief
+* @ file Triangle.h
+* @ brief Triangleを生成するクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
+
 
 #pragma once
 #include <Windows.h>

@@ -1,6 +1,7 @@
 /**
-* @ file ObjectCommon.h
-* @ brief Objectの共通部分をまとめたクラス Singleton Patternで制作
+* @ file ObjectManager.h
+* @ brief Objectを管理するクラス Singleton Patternで制作
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

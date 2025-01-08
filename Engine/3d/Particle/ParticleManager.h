@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file ParticleManager.h
+* @ brief Particleを管理するクラス Singleton Patternで制作
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

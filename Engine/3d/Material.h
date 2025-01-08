@@ -1,7 +1,9 @@
 /**
-* @ file
-* @ brief
+* @ file Material.h
+* @ brief Modelに送るMaterialの構造体のヘッダー
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
+
 
 #pragma once
 #include "Vector4.h"

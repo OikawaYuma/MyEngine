@@ -69,9 +69,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	reticleColor_ = { 1.0f,1.0f,1.0f,1.0f };
 	//Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_);
-	farReticleObj_ = std::make_unique<Object3d>();
-	farReticleObj_->Init();
-	farReticleObj_->SetModel("Reticle2.obj");
+
 
 
 	
@@ -367,7 +365,7 @@ void Player::TitleInit()
 	worldTransform_.translation_.y = 0.5f;
 
 
-	color_ = {1.0f,1.0f,1.0f,1.0f,};
+	color_ = {1.0f,1.0f,1.0f,0.8f,};
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
 	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &color_);
 	//BehaviorRootJumpInit();
@@ -781,9 +779,6 @@ void Player::Aim()
 	worldTransform3DReticleNear_.rotation_.x = std::atan2(-velocity.y, velocityXZ);
 
 
-	farReticleObj_->SetWorldTransform(worldTransform3DReticleFar_);
-
-	farReticleObj_->Update();
 }
 
 void Player::Attack()

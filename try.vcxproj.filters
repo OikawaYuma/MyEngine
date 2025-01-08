@@ -125,9 +125,6 @@
     <ClCompile Include="Engine\Input\Input.cpp">
       <Filter>Engine\Interface\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Input\InputManager.cpp">
-      <Filter>Engine\Interface\Input</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Interface\PSO\PSOParticle.cpp">
       <Filter>Engine\Interface\PSO</Filter>
     </ClCompile>
@@ -356,9 +353,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Audio\Adapter\Engine.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Input\InputManager.h">
-      <Filter>Engine\Interface\Input</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Input\Input.h">
       <Filter>Engine\Interface\Input</Filter>
