@@ -31,52 +31,16 @@ void FollowCamera::Upadate()
 
 	Vector3 cameraRotate = camera_->GetRotate();
 	destinationAngleY_ = cameraRotate.y;
-	
-	//if (lockOn_->GetTarget()) {
-	//	Vector3 lockOnPos = lockOn_->GetTargetPosition();
-	//	// 追従対象からロックオン対象へのベクトル
-	//	Vector3 sub = Subtract(lockOnPos , target_->translation_);
 
-	//	// Y軸回り角度
-	//	cameraRotate.y = std::atan2(sub.x, sub.z);
-	//}
-	//else 
-		if (Input::GetInstance()->GetJoystickState()) {
+
+	if (Input::GetInstance()->GetJoystickState()) {
 		cameraRotate.y += Input::GetInstance()->JoyStickParmRX(0.03f);
-		
-		/*if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
-			resetAngleFlag = true;
-			resetAngleTime_ = 0;
-			
-		}*/
+
+
 	}
-	
-	/*if (resetAngleFlag) {
-		resetAngleTime_ += 0.1f;
-		if (target_) {
-			Vector3 offset = { 0,2,-30 };
-			offset = TransformNormal(offset, target_->matWorld_);
-			float resetAngle = std::atan2(offset.x, offset.z);
-			cameraRotate.y =
-				LerpShortAngle(cameraRotate.y, resetAngle + (float)std::numbers::pi, resetAngleTime_);
-			
-		}
-		if (resetAngleTime_ > 1.0f) {
-			resetAngleFlag = false;
-		}
-	}*/
-	/*
-	if (cameraRotate.y != destinationAngleY_) {
-		angletime += 0.1f;
-		cameraRotate.y =
-			LerpShortAngle(cameraRotate.y, destinationAngleY_, angletime);
-	}
-	
-	
-	if (1.0f <= angletime) {
-		angletime = 0.0f;
-	}*/
-	
+
+
+
 	camera_->SetRotate(cameraRotate);
 
 	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_Y)) {
@@ -95,19 +59,9 @@ void FollowCamera::Upadate()
 		interarget_ = Lerp(interarget_, target_->translation_, cameraTime_);
 	}
 
-	//// 追従対象が居れば
-	//if (target_) {
-	//	// 追従対象からカメラまでのオフセット
-	//	Vector3 offset = { 0.0f,2.0f,-30.0f };
 
 
-	//	offset = Transform1(offset, MakeRotateMatrix(camera_->GetRotate()));
-	//	// 座標をコピーしてオフセット分ずらす
 
-	//	camera_->SetTranslate(Add(target_->translation_, offset));
-	//	camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
-
-	//}
 	// 追従対象からのオフセット
 	if (target_) {
 		Vector3 offset = { 0,2,-30 };
@@ -115,6 +69,22 @@ void FollowCamera::Upadate()
 		camera_->SetTranslate(Add(interarget_, offset));
 		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
 	}
+
+	if (camera_->GetTranslate().x >= 160.0f) {
+		camera_->SetTranslate({ 160.0f,5,camera_->GetTranslate().z });
+	}
+	else if (camera_->GetTranslate().x <= -160.0f) {
+		camera_->SetTranslate({ -160.0f,5,camera_->GetTranslate().z });
+	}
+
+	if (camera_->GetTranslate().z >= 160.0f) {
+		camera_->SetTranslate({ camera_->GetTranslate().x,5,160.0f });
+	}
+	else if (camera_->GetTranslate().z <= -160.0f) {
+		camera_->SetTranslate({ camera_->GetTranslate().x,5,-160.0f });
+	}
+
+
 	camera_->Update();
 }
 
@@ -153,7 +123,7 @@ void FollowCamera::PosAdustment()
 
 void FollowCamera::SetTarget(const WorldTransform* target)
 {
-	target_ = target; 
+	target_ = target;
 	Reset();
 }
 

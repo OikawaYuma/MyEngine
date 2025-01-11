@@ -334,6 +334,7 @@ void GameScene::Update()
 
 			Audio::SoundStopWave(gameBGM_);
 			postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
+			postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(followCamera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 1.0f, 0.984313f, 0.643f } , .weightSize = dissolveOutlineInfo.weightSize });
 			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameClearSE_, false);
 			gameStateMode_ = CLEARGAME;
 			threPorM_ = -0.025f;
@@ -344,6 +345,7 @@ void GameScene::Update()
 		if (player_->GetHP() <= 0.3f) {
 			Audio::SoundStopWave(gameBGM_);
 			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), slimeDeadSE_, false);
+			postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(followCamera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 0.35f, 0.025f, 0.025f }  , .weightSize = dissolveOutlineInfo.weightSize });
 			postProcess_->SetDissolveInfo({ 0.35f, 0.025f, 0.025f });
 			gameStateMode_ = DEADGAME;
 			threPorM_ = -0.025f;	

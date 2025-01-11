@@ -328,6 +328,8 @@
     <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\DissolveOutline.cpp" />
+    <ClCompile Include="Game\Character\Player\GuideUI.cpp" />
+    <ClCompile Include="Game\LockOn\MultiLockOn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -606,6 +608,8 @@
     <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
     <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
+    <ClInclude Include="Game\Character\Player\GuideUI.h" />
+    <ClInclude Include="Game\LockOn\MultiLockOn.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

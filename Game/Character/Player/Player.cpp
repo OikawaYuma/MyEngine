@@ -28,8 +28,8 @@ void Player::Init(const Vector3& translate, const std::string filename)
 
 	hpUIBlue_ = std::make_unique<Sprite>();
 	hpUIBlue_->Init(
-		{ hp_ * 200.0f  + 50.0f ,25.0f },
-		{ hp_ * 200.0f, 50.0f },
+		{ (hp_ - 0.3f) * 200.0f  + 50.0f ,25.0f },
+		{ (hp_ - 0.3f) * 200.0f, 50.0f },
 		{ 1.0f , 0.5f },
 		{ 1.0f, 1.0f, 1.0f, 1.0f },
 		"Resources/player.png");
@@ -120,6 +120,12 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	/////////////////////////////////////////////
 	//jumpSE_ = Audio::GetInstance()->SoundLoadWave("Resources/jump3.wav");
 	bulletShotSE_ = Audio::GetInstance()->SoundLoadWave("Resources/bullet.wav");
+
+	guideUI_ = std::make_unique<GuideUI>();
+	guideUI_->Init();
+	UIColor_ = { 1.0f,1.0f,1.0f,1.0f };
+
+
 }
 
 void Player::Update()
@@ -157,8 +163,8 @@ void Player::Update()
 	//object_->SetDirectionLight(direLight_);
 
 
-	hpUIBlue_->SetPosition({ hp_ * 200 + 50.0f,25.0f });
-	hpUIBlue_->SetSize({ hp_ * 200,50.0f });
+	hpUIBlue_->SetPosition({ (hp_ - 0.3f) * 200 + 50.0f,25.0f });
+	hpUIBlue_->SetSize({ (hp_ - 0.3f) * 200,50.0f });
 	hpUIBlue_->Update();
 
 	HitEnemyCoolTime();
@@ -242,8 +248,9 @@ void Player::Update()
 	}
 	
 	
-
-	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_RIGHT_THUMB)) {
+	UIColor_ = { 1.0f,1.0f,1.0f,1.0f };
+	if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X)) {
+		UIColor_ = { 0.5f,0.5f,0.5f,1.0f };
 		switch (bulletMode_) {
 		case BulletMode::NormalBullet:
 			bulletMode_ = HommingBullet;
@@ -256,9 +263,8 @@ void Player::Update()
 			break;
 		}
 	}
-
 	else if (Input::GetInstance()->TriggerKey(DIK_K)) {
-
+		
 		switch (bulletMode_) {
 		case BulletMode::NormalBullet:
 			bulletMode_ = HommingBullet;
@@ -271,6 +277,9 @@ void Player::Update()
 			break;
 		}
 	}
+
+
+
 	Aim();
 	Attack();
 	// 弾更新
@@ -297,7 +306,7 @@ void Player::Update()
 
 	worldTransform_.UpdateMatrix();
 
-	
+	guideUI_->Update();
 	shadowObject_->Update();
 	reticleShadowObject_->Update();
 }
@@ -331,16 +340,16 @@ void Player::DrawUI()
 	
 	hpUI_->Draw(playerHpUITex_, { 1.0f,1.0f,1.0f,1.0f });
 	hpUIBlue_->Draw(skinTex_, { 1.0f,1.0f,1.0f,1.0f });
-
+	guideUI_->Draw();
 	switch (bulletMode_) {
 	case BulletMode::NormalBullet:
-		bulletModeUI->Draw(normalBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
+		bulletModeUI->Draw(normalBulletUITex_, UIColor_);
 		break;
 	case BulletMode::HommingBullet:
-		bulletModeUI->Draw(hommingBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
+		bulletModeUI->Draw(hommingBulletUITex_, UIColor_);
 		break;
 	case BulletMode::LaserBeam:
-		bulletModeUI->Draw(razerBulletUITex_, { 1.0f,1.0f,1.0f,1.0f });
+		bulletModeUI->Draw(razerBulletUITex_, UIColor_);
 		break;
 	}
 }
@@ -703,17 +712,24 @@ void Player::Move()
 		velo_.z += Input::GetInstance()->JoyStickParmLY(0.2f);
 	}
 	if (!(velo_.x == 0 && velo_.y == 0 && velo_.z == 0)) {
+		accel_ += 0.05f;
+		if (accel_ >=1.4f ) {
+			accel_ = 1.4f;
+		}
 		velo_ = Normalize(velo_);
-		velo_.x *= 1.4f;
-		velo_.y *= 1.4f;
-		velo_.z *= 1.4f;
+		velo_.x *= accel_;
+		velo_.y *= accel_;
+		velo_.z *= accel_;
 		velo_ = TransformNormal(velo_, camera_->GetCameraMatrix());
 		// Y軸周り角度（Θy）
 		preAngle_ = std::atan2(velo_.x, velo_.z);
 		
 	}
-
+	else if ((velo_.x == 0 && velo_.y == 0 && velo_.z == 0)) {
+		accel_ = 0.0f;
+	}
 	
+
 
 	angletime += 0.05f;
 	if (1.0f <= angletime ) {
@@ -737,8 +753,8 @@ void Player::Aim()
 		if (reticleY_ <= bulletSize_) {
 			reticleY_ = bulletSize_;
 		}
-		else if (reticleY_ >= 30.0f) {
-			reticleY_ = 30.0f;
+		else if (reticleY_ >= 15.0f) {
+			reticleY_ = 15.0f;
 		}
 	}
 

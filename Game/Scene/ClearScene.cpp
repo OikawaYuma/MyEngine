@@ -128,7 +128,7 @@ void ClearScene::Update()
 	{
 		pushSpriteAlphaPorM_ *= -1.0f;
 	}
-	postProcess_->SetThreshold(thre_);
+	postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(camera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 1.0f, 0.984313f, 0.643f } , .weightSize = 100 });
 	pushSpriteAlpha_ += pushSpriteAlphaPorM_;
 	//sprite->SetColor({ 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 	pushASp_->Update();

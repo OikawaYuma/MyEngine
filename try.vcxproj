@@ -173,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Skydome\Skydome.cpp" />
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\IPostEffectState.cpp" />
+    <ClCompile Include="Game\Character\Player\GuideUI.cpp" />
     <ClCompile Include="Lib\utility\function.cpp" />
     <ClCompile Include="Engine\2d\ImGuiCommon.cpp" />
     <ClCompile Include="Game\Utilty\Loder.cpp" />
@@ -207,6 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\3d\PlaneProjectionShadow.cpp" />
     <ClCompile Include="Game\Score\Score.cpp" />
     <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
+    <ClCompile Include="Game\LockOn\MultiLockOn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
@@ -265,6 +267,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Model\MaterialData.h" />
     <ClInclude Include="Engine\3d\Material.h" />
     <ClInclude Include="Engine\2d\PostEffect\IPostEffectState.h" />
+    <ClInclude Include="Game\Character\Player\GuideUI.h" />
     <ClInclude Include="Lib\math\Matrix3x3.h" />
     <ClInclude Include="Engine\3d\ResourceObject.h" />
     <ClInclude Include="Engine\3d\Model\Model.h" />
@@ -315,6 +318,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\2d\PostEffect\Effect\LuminanceOutline.h" />
     <ClInclude Include="Game\Score\Score.h" />
     <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
+    <ClInclude Include="Game\LockOn\MultiLockOn.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">

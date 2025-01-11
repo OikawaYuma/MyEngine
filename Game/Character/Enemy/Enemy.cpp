@@ -174,6 +174,7 @@ void Enemy::OnCollision(uint32_t attri)
 			worldTransform_.translation_.y -= 0.2f;
 			if (hp_ <= 0.4f) {
 				color_.w = 0.0f;
+				worldTransform_.translation_.x = 100000.0f;
 				shadowObject_->SetColor({ .w = 0.0f });
 				isDead_ = true;
 				enemyDestory_++;

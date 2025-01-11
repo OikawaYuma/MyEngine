@@ -26,7 +26,7 @@
 #include "Material.h"
 #include "DirectionLight.h"
 #include "Particle/Particle.h"
-
+#include "GuideUI.h"
 
 class LockOn;
 // ふるまい
@@ -155,7 +155,9 @@ private:
 
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	std::unique_ptr<PlaneProjectionShadow> reticleShadowObject_;
-	std::unique_ptr<Object3d> slimeObj_;
+	std::unique_ptr<GuideUI> guideUI_;
+
+
 
 public: // もともとのゲームで使用変数
 	std::unique_ptr<Sprite> hpUI_ = nullptr;
@@ -166,6 +168,7 @@ public: // もともとのゲームで使用変数
 	std::list<PlayerBullet*> bullets_;
 	std::list<PlayerRazer*> razers_;
 	Vector4 color_;
+	Vector4 UIColor_;
 	//bulletMode
 	uint32_t bulletMode_ = NormalBullet;
 
@@ -198,6 +201,7 @@ private: // Reticle
 	Vector4 reticleColor_;
 
 
+
 private://Bullet
 	float bulletSize_ = 0;
 
@@ -225,9 +229,10 @@ private:
 
 	// 速度
 	Vector3 velo_{};
+	float accel_;
 	// ワールド変換データ
 	WorldTransform worldTransform_{};
-	const float movingRange_ = 195.0f;
+	const float movingRange_ = 160.0f;
 
 	// model skin num
 	uint32_t skinTex_ = 0;
