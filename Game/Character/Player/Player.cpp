@@ -84,7 +84,7 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	material_.enableLighting = true;
 	material_.uvTransform = MakeIdentity4x4();
 	material_.shininess = 60.0f;
-	Object3dManager::GetInstance()->StoreObject(filename,&worldTransform_,skinTex_,&material_.color);
+	Object3dManager::GetInstance()->StoreObject(filename,&worldTransform_,skinTex_,&material_.color, Transparency::Transparent);
 	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	spotLight_.position = worldTransform_.translation_;
 	spotLight_.distance = 7.0f;
@@ -108,11 +108,11 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, "player.obj");
 	shadowObject_->Update();
-	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor());
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor(), Transparency::Transparent);
 	reticleShadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	reticleShadowObject_->Init(&worldTransform3DReticleNear_, "Reticle4.obj");
 	reticleShadowObject_->Update();
-	Object3dManager::GetInstance()->StoreObject(filename, reticleShadowObject_->GetWorldTransform(), skinTex_, reticleShadowObject_->GetColor());
+	Object3dManager::GetInstance()->StoreObject(filename, reticleShadowObject_->GetWorldTransform(), skinTex_, reticleShadowObject_->GetColor(),Transparency::Transparent);
 	reticleY_ = 0;
 
 	////////////////////////////////////////////
@@ -376,7 +376,7 @@ void Player::TitleInit()
 
 	color_ = {1.0f,1.0f,1.0f,0.8f,};
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
-	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &color_);
+	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &color_, Transparency::Transparent);
 	//BehaviorRootJumpInit();
 	
 	InitFloatingGimmmick();
@@ -400,7 +400,7 @@ void Player::ClearInit()
 	material_.shininess = 60.0f;
 	color_ = { 1.0f,1.0f,1.0f,1.0f, };
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
-	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &material_.color);
+	Object3dManager::GetInstance()->StoreObject("player", &worldTransform_, skinTex_, &material_.color, Transparency::Transparent);
 
 	//BehaviorRootJumpInit();
 	InitFloatingGimmmick();
@@ -1071,7 +1071,7 @@ void Player::HitEnemySlime()
 
 void Player::CreateReticle()
 {
-	Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_);
+	Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_, Transparency::Transparent);
 }
 
 void Player::BehaviorRootUpdate()

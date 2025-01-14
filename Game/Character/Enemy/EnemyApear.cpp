@@ -1,10 +1,11 @@
 #include "EnemyApear.h"
 #include "Enemy.h"
 #include <random>
-
+#include "Object3dManager.h"
 void EnemyApear::Init()
 {
 	appearranceTimer_ = 0;
+	sortFlag_ = false;
 }
 
 void EnemyApear::Update(std::list<std::unique_ptr<Enemy>>& enemys)
@@ -24,6 +25,10 @@ void EnemyApear::Update(std::list<std::unique_ptr<Enemy>>& enemys)
 				enemy->Init({ distriposX(randomEngine),1,distriposZ(randomEngine) }, "enemy");
 				enemy->SetPlayer(player_);
 				enemys.push_back(std::move(enemy));
+			}
+			if (!sortFlag_) {
+				Object3dManager::ObjectSort();
+				sortFlag_ = true;
 			}
 			appearranceTimer_ = 0;
 

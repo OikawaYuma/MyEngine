@@ -138,6 +138,7 @@ void GameScene::Init()
 	enemyApear_.Init();
 	enemyApear_.SetPlayer(player_.get());
 	
+	Object3dManager::ObjectSort();
 	Enemy::SetEnemydestory(0);
 }
 

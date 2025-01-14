@@ -19,5 +19,7 @@ private:
 
 	const int appearranceTime = 120;
 
+	bool sortFlag_ = false;
+
 };
 
