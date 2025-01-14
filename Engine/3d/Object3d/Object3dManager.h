@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include <map>
 #include <string>
+
 class Object3dManager
 {
 
@@ -20,15 +21,23 @@ public:
 	static void Update();
 	static void Draw(Camera* camera);
 
+public: //ソート用関数
+	static void ObjectSort();
+
+	static bool CompareAscending(const std::unique_ptr<Object3d>& objectA, const std::unique_ptr<Object3d>& objectB);
+	static bool CompareDescending(const std::unique_ptr<Object3d>& objectA, const std::unique_ptr<Object3d>& objectB);
+
+public:
 	static void CreateObject(const std::string& objectName);
-	static uint32_t StoreObject(const std::string& objectName,WorldTransform* worldTransform,uint32_t skinTex, Vector4* color);
+	static uint32_t StoreObject(const std::string& objectName,WorldTransform* worldTransform,uint32_t skinTex, Vector4* color,uint32_t transparency);
 
 public: // Getter
 
 	static Object3dManager* GetInstance();
 
 private:
-	std::map<std::string, Object3dData> objectDatas_;
-	static std::map<std::string, std::unique_ptr<Object3d>> objects_;
+	//std::map<std::string, Object3dData> objectDatas_;
+	static std::list<std::unique_ptr<Object3d>> objects_;
+	static std::string objectName_;
 	//ModelData modelData_;
 };

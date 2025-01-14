@@ -20,7 +20,7 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	// HPを元に基準となる大きさを決定する
 	worldTransform_.scale_ = { hp_,hp_,hp_ };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
-	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, skinTex_, &color_);
+	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, skinTex_, &color_, Transparency::Opaque);
 	worldTransform_.UpdateMatrix();
 	SetCollisonAttribute(0b010);
 	SetCollisionMask(0b001);
@@ -28,7 +28,7 @@ void Enemy::Init(const Vector3& translate, const std::string filename)
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, filename);
 	shadowObject_->Update();
-	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor());
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), skinTex_, shadowObject_->GetColor(), Transparency::Opaque);
 }
 
 void Enemy::Update()

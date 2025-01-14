@@ -14,7 +14,7 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	baseHighPos_ = translate.y;
 	color_ = { 1.0f,1.0f,1.0f,1.0f };
 	//ModelManager::GetInstance()->LoadModel("Resources/box/", "box.obj");
-	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, floorTex_, &color_);
+	Object3dManager::GetInstance()->StoreObject(filename, &worldTransform_, floorTex_, &color_,Transparency::Opaque);
 	worldTransform_.UpdateMatrix();
 	SetRadius(1.0f);
 	SetCollisonAttribute(0b0100);
@@ -22,7 +22,7 @@ void PlayerItem::Init(const Vector3& translate, const std::string filename)
 	shadowObject_ = std::make_unique<PlaneProjectionShadow>();
 	shadowObject_->Init(&worldTransform_, filename);
 	shadowObject_->Update();
-	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), floorTex_, shadowObject_->GetColor());
+	Object3dManager::GetInstance()->StoreObject(filename, shadowObject_->GetWorldTransform(), floorTex_, shadowObject_->GetColor(), Transparency::Opaque);
 }
 
 void PlayerItem::Update()

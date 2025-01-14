@@ -34,6 +34,7 @@
 
 // object1個分のデータ
 struct Object3dData {
+	std::string objectName;
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
 	uint32_t instancingNum;
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
@@ -47,7 +48,13 @@ struct Object3dForGPU {
 	Matrix4x4 WorldInverseTranspose;
 	Vector4 color;
 };
+enum Transparency {
+	Opaque, // 不透明
+	Transparent, //透明
 
+
+
+};
 class Object3d
 {
 public:
@@ -57,6 +64,8 @@ public:
 	void Release();
 
 public: // Setter
+	void SetTransparency(uint32_t transparency) { transparency_ = transparency; }
+	void SetObjectName(const std::string objectName) { object3dData_.objectName = objectName; }
 	void SetModel(Model* model) { model_ = model; }
 	void SetModel(const std::string& filePath);
 	void SetAnimationModel(const std::string& filePath);
@@ -73,6 +82,8 @@ public: // Setter
 	void SetSpotLight(const SpotLight& spotLight) { *spotLightData_ = spotLight; }
 	void SetSpotlightPos(const Vector3& pos) { spotLightData_->position = pos; }
 public: // Getter
+	uint32_t GetTransparency() { return transparency_; }
+	std::string GetObjectName() { return object3dData_.objectName; }
 	uint32_t GetObjectNum() { return objectNum_; }
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	Material GetMaterial() { return *materialData_; }
@@ -126,5 +137,8 @@ private:
 	Microsoft::WRL::ComPtr < ID3D12Resource> spotLightResource_;
 	SpotLight* spotLightData_ = nullptr;
 	SpotLight spotlight;
+
+
+	uint32_t transparency_ = 0;
 };
 
