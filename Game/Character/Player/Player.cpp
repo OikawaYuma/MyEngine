@@ -63,6 +63,8 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = translate;
 	worldTransform_.scale_ = { hp_ ,hp_ ,hp_ };
+	actionSize_ = {0.0f,0.0f,0.0f};
+	actionSizeParm_ = { 0.02f,0.02f,0.02f };
 	worldTransform_.translation_.y = worldTransform_.scale_.y;
 	
 	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/player/player.png");
@@ -194,7 +196,7 @@ void Player::Update()
 		behaviorRequest_ = std::nullopt;
 	}
 	// HPを元に基準となる大きさを決定する
-	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	worldTransform_.scale_ = { hp_+ actionSize_.x,hp_ + actionSize_.y,hp_ + actionSize_.z };
 	bulletSize_ = hp_ / 2;
 	worldTransform3DReticleNear_.scale_ = { bulletSize_,bulletSize_,bulletSize_ };
 	// 着地
@@ -713,8 +715,8 @@ void Player::Move()
 	}
 	if (!(velo_.x == 0 && velo_.y == 0 && velo_.z == 0)) {
 		accel_ += 0.05f;
-		if (accel_ >=1.4f ) {
-			accel_ = 1.4f;
+		if (accel_ >=1.0f ) {
+			accel_ = 1.0f;
 		}
 		velo_ = Normalize(velo_);
 		velo_.x *= accel_;
@@ -1071,7 +1073,7 @@ void Player::HitEnemySlime()
 
 void Player::CreateReticle()
 {
-	Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_, Transparency::Transparent);
+	Object3dManager::GetInstance()->StoreObject("Reticle3", &worldTransform3DReticleNear_, skinTex_, &reticleColor_, Transparency::Opaque);
 }
 
 void Player::BehaviorRootUpdate()
@@ -1086,6 +1088,7 @@ void Player::BehaviorRootAttackUpdate()
 
 void Player::BehaviorRootInit()
 {
+	actionSize_ = { 0.0f,0.0f,0.0f };
 }
 
 void Player::BehaviorRootAttackInit()
@@ -1125,7 +1128,7 @@ void Player::BehaviorRootDashUpdate()
 void Player::BehaviorRootJumpInit()
 {
 	worldTransform_.translation_.y = 2.0;
-
+	actionSizeParm_ = { 0.02f,0.02f,0.02f };
 	// ジャンプ初速
 	const float kJumpFirstSpeed = 1.0f;
 	// ジャンプ初速を与える
@@ -1142,6 +1145,15 @@ void Player::BehaviorRootJumpUpdate()
 	Vector3 accelerationVector = {0, -kGravityAcceleration, 0};
 	// 加速する
 	velo_ = Add(velo_,accelerationVector);
+
+	if (velo_.y <= 0.0f) {
+		actionSizeParm_.x= -0.03f;
+		actionSizeParm_.y= -0.03f;
+		actionSizeParm_.z= -0.03f;
+	}
+	actionSize_.y += actionSizeParm_.x;
+	actionSize_.x -= actionSizeParm_.y;
+	actionSize_.z -= actionSizeParm_.z;
 
 	// 着地
 	if (worldTransform_.translation_.y <= (hp_)) {

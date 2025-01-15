@@ -51,9 +51,6 @@ struct Object3dForGPU {
 enum Transparency {
 	Opaque, // 不透明
 	Transparent, //透明
-
-
-
 };
 class Object3d
 {

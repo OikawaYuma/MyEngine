@@ -227,6 +227,11 @@ private:
 
 	using json = nlohmann::json;
 
+	// 行動によるサイズ変更
+	Vector3 actionSize_{};
+	// サイズ変更の大きさ
+	Vector3 actionSizeParm_{  };
+
 	// 速度
 	Vector3 velo_{};
 	float accel_;

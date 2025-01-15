@@ -35,7 +35,7 @@ void Enemy::Update()
 {
 	Respown();
 	// HPを元に基準となる大きさを決定する
-	worldTransform_.scale_ = { hp_,hp_,hp_ };
+	worldTransform_.scale_ = { hp_+actionSize_.x,hp_+actionSize_.y,hp_+actionSize_.z };
 	// 着地
 	if (worldTransform_.translation_.y <= worldTransform_.scale_.y) {
 		worldTransform_.translation_.y = worldTransform_.scale_.y;
@@ -129,7 +129,14 @@ void Enemy::Move()
 	Vector3 accelerationVector = { 0, -glavity_, 0 };
 	// 加速する
 	move = Add(move, accelerationVector);
-
+	if (move.y <= 0.0f) {
+		actionSizeParm_.x = -0.02f* hp_;
+		actionSizeParm_.y = -0.02f* hp_;
+		actionSizeParm_.z = -0.02f* hp_;
+	}
+	actionSize_.y += actionSizeParm_.y;
+	actionSize_.x -= actionSizeParm_.x;
+	actionSize_.z -= actionSizeParm_.z;
 	// 着地
 	if (worldTransform_.translation_.y <= worldTransform_.scale_.y) {
 		worldTransform_.translation_.y = worldTransform_.scale_.y;
@@ -138,6 +145,8 @@ void Enemy::Move()
 		glavity_ = 0.0f;
 		// ジャンプ初速を与える
 		move.y = kJumpFirstSpeed;
+		actionSizeParm_ = { 0.02f * hp_,0.02f * hp_,0.02f * hp_ };
+		actionSize_ = { 0.0f,0.0f,0.0f };
 	}
 	move = TransformNormal(move, worldTransform_.matWorld_);
 	// 移動
