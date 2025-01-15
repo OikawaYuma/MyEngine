@@ -52,7 +52,10 @@ private:
 
 	DirectionalLight direLight_{};
 
-
+	// 行動によるサイズ変更
+	Vector3 actionSize_{};
+	// サイズ変更の大きさ
+	Vector3 actionSizeParm_{  };
 	int respownTimer_ = 0;
 private: // GameOver
 	std::unique_ptr<Object3d> deadSlimeObj_;
