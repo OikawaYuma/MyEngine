@@ -70,7 +70,7 @@ StyleCopReport.xml
 #*.obj
 *.iobj
 *.pch
-*.pdb
+#*.pdb
 *.ipdb
 *.pgc
 *.pgd
@@ -90,8 +90,6 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
-git add -f MyEngine/Engine/Externals/assimp/lib/Debug/assimp-vc143-mtd.pdb
-git commit -m "Add ignored file"
 # Chutzpah Test files
 _Chutzpah*
 
