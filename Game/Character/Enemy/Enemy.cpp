@@ -177,6 +177,7 @@ void Enemy::OnCollision(uint32_t attri)
 	if (isDead_ == false) {
 		if (attri == 0b0001) {
 			player_->HitEnemySlime();
+		
 		}
 		else if (attri == 0b1000) {
 			hp_ -= 0.2f;
