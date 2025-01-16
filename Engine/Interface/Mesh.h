@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Mesh.h
+* @ brief Meshに関する関数
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

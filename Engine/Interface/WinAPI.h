@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file WinAPI.h
+* @ brief Windowsに関する設定　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

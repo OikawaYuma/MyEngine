@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file PSOSkybox.h
+* @ brief Skyboxに関する描画設定をするクラス　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 #pragma once
 #include <d3d12.h>

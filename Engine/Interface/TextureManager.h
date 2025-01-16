@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file textureManager.h
+* @ brief Textureのloadに関するクラス　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

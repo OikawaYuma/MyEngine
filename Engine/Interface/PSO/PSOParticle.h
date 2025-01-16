@@ -1,6 +1,6 @@
 /**
 * @ file PSOParticle.h
-* @ brief Particleに関するPSOの設定　Singleton Patternで作成
+* @ brief Particleに関する描画の設定　Singleton Patternで作成
 * * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 

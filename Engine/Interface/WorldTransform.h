@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file WorldTransform.h
+* @ brief Objectの座標に関する基本設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
