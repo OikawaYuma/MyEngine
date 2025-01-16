@@ -127,6 +127,9 @@ public: // AjustParm
 	void AdustParm();
 	void ColorAdust();
 
+public: // Particle
+	void ParticleEmitter();
+
 public:
 	const std::list<PlayerBullet*>& Getbullet() const { return bullets_; }
 	const WorldTransform* GetWorldTransform() const { return &worldTransform_; }
@@ -200,6 +203,10 @@ private: // Reticle
 
 	Vector4 reticleColor_;
 
+public:
+	std::unique_ptr<Particle> particle_;
+	Emitter emitter_{};
+	RandRangePro randRangePro_;
 
 
 private://Bullet
@@ -264,5 +271,10 @@ private:
 
 private: // GameOver
 	std::unique_ptr<Object3d> deadSlimeObj_;
+
+private:
+	float preGravity_;
+	float prePower_;
+	Vector3 preParticleScale_;
 };
 

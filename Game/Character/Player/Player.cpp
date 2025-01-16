@@ -127,11 +127,41 @@ void Player::Init(const Vector3& translate, const std::string filename)
 	guideUI_->Init();
 	UIColor_ = { 1.0f,1.0f,1.0f,1.0f };
 
+	particle_ = std::make_unique<Particle>();
+	particle_->SetModel("ball.obj");
+
+	particle_->Init();
+	emitter_.count = 10;
+	emitter_.frequency = 5000.0f;
+	emitter_.frequencyTime = 0.0f;
+
+	emitter_.transform.rotate = { 0.0f,0.0f,0.0f };
+	emitter_.transform.scale = { 0.25f,0.25f,0.25f };
+	emitter_.transform.translate = { 0.0f,1.0f,25.0f };
+	randRangePro_ = {
+		{0.0f,0.0f},
+		{0.0f,0.0f},
+		{0.0f,0.0f}
+	};
+	emitter_.randRangeXYZ = randRangePro_;
+	emitter_.size = worldTransform_.scale_.x;
+	emitter_.boundPro.power = 1.0f;
+	emitter_.boundPro.gravity = 0.0f;
+	emitter_.boundPro.isBound = true;
+	particle_->SetEmitter(emitter_);
+	// パーティクル
+	particle_->SetWorldTransform({ .translation_ = worldTransform_.translation_});
+	particle_->SetTexture(skinTex_);
+	
+	preGravity_ = 0.0f;
+	prePower_ = 0.36f;
+	preParticleScale_ = { 1.0f,1.0f,1.0f };
 
 }
 
 void Player::Update()
 {
+	particle_->SetCamera(camera_);
 	ColorAdust();
 #ifdef Debug
 	
@@ -307,7 +337,7 @@ void Player::Update()
 	}
 
 	worldTransform_.UpdateMatrix();
-
+	particle_->Update(false);
 	guideUI_->Update();
 	shadowObject_->Update();
 	reticleShadowObject_->Update();
@@ -317,6 +347,7 @@ void Player::Draw(Camera* camera)
 {
 	//shadowObject_->Draw(camera);
 	//reticleShadowObject_->Draw(camera);
+	particle_->Draw();
 	for (std::list<PlayerBullet*>::iterator itr = bullets_.begin(); itr != bullets_.end(); itr++) {
 		(*itr)->Draw(camera);
 	}
@@ -1068,6 +1099,7 @@ void Player::HitEnemySlime()
 		hp_ -= 0.1f;
 		worldTransform_.translation_.y -= 0.1f;
 		isEnemyHit_ = true;
+		ParticleEmitter();
 	}
 }
 
@@ -1200,6 +1232,17 @@ void Player::ColorAdust()
 	ImGui::DragFloat4("color : ", &material_.color.x,0.01f);
 	ImGui::End();*/
 	//object_->SetMaterial({ .color = material_.color });
+}
+
+void Player::ParticleEmitter()
+{
+	emitter_.boundPro.power = prePower_;
+	emitter_.boundPro.gravity = preGravity_;
+	emitter_.boundPro.isBound = true;
+	emitter_.size =worldTransform_.scale_.x;
+	particle_->SetEmitter(emitter_);
+	particle_->SetWorldTransform(worldTransform_);
+	particle_->CreateParticle();
 }
 
 Vector3 Player::GetReticleWorldPosition()
