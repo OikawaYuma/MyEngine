@@ -1,7 +1,9 @@
 /**
-* @ file
-* @ brief
+* @ file Player.h
+* @ brief 実際に操作するObjectの設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
+
 
 #pragma once
 #include <memory>

@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file TitleScene.h
+* @ brief Titleの部分に関するScene
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

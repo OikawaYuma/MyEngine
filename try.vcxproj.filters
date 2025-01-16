@@ -272,9 +272,6 @@
     <ClCompile Include="Game\LockOn\LockOn.cpp">
       <Filter>Application\character\player</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Scene\ResultScene.cpp">
-      <Filter>Application\scene</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Scene\GameOverScene.cpp">
       <Filter>Application\scene</Filter>
     </ClCompile>
@@ -541,9 +538,6 @@
     </ClInclude>
     <ClInclude Include="Game\LockOn\LockOn.h">
       <Filter>Application\character\player</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Scene\ResultScene.h">
-      <Filter>Application\scene</Filter>
     </ClInclude>
     <ClInclude Include="Game\Scene\GameOverScene.h">
       <Filter>Application\scene</Filter>

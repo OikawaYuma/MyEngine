@@ -8,8 +8,8 @@
 #include "IScene.h"
 #include "Triangle.h"
 /**
-* @ file GameScene.h
-* @ brief 実際のゲーム部分の関するScene
+* @ file DemoScene.h
+* @ brief 試用の部分に関するScene
 * * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
