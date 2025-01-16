@@ -1,7 +1,9 @@
 /**
-* @ file
-* @ brief
+* @ file ClearScene.h
+* @ brief ゲームのクリア部分に関するScene
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
+
 
 #pragma once
 #include "IScene.h"

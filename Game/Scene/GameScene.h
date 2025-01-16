@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file GameScene.h
+* @ brief 実際のゲーム部分の関するScene
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

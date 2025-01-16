@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file GameManager.h
+* @ brief ゲームに関する全ての設定を行う　Singleton Patternで作成
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

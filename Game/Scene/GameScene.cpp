@@ -169,6 +169,7 @@ void GameScene::Update()
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
 	spotLight_.direction = Normalize(spotLight_.direction);
 	switch (gameStateMode_) {
+		// ロード画面
 	case WAITGAME:
 	{
 		switch (jumpNum_) {
@@ -231,6 +232,7 @@ void GameScene::Update()
 					if (thre_ <= 0.5f) {
 						followCamera_->StartCameraEffect();
 					}
+					// ゲーム画面に移る
 					if (thre_ <= 0.0f) {
 						gameStateMode_ = STARTGAME;
 						threPorM_ = 0.025f;
@@ -254,6 +256,7 @@ void GameScene::Update()
 		
 		break;
 	}
+	// ゲーム
 	case STARTGAME: {
 		if (!cameraFlag_) {
 			followCamera_->StartCameraEffect();

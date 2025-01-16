@@ -1,7 +1,9 @@
 /**
-* @ file
-* @ brief
+* @ file GameOverScene.h
+* @ brief ゲームオーバー部分の関するScene
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
+
 
 #pragma once
 #include "IScene.h"

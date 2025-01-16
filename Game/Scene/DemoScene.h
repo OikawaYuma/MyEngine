@@ -7,6 +7,13 @@
 #include <memory>
 #include "IScene.h"
 #include "Triangle.h"
+/**
+* @ file GameScene.h
+* @ brief 実際のゲーム部分の関するScene
+* * @ author 及川　優麿　（オイカワ　ユウマ）
+*/
+
+
 #include "WorldTransform.h"
 #include "Input.h"
 #include "Particle.h"
