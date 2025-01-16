@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file LockOn.h
+* @ brief ロックオンの設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

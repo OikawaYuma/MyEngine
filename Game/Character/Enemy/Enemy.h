@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Enemy.h
+* @ brief 出現する敵Objectの設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
@@ -17,26 +18,36 @@ public:
 	void Update();
 	void Draw(Camera* camera) ;
 
-
 	/// <summary>
-	/// 
+	/// クリア
 	/// </summary>
 	void ClearInit();
 	void ClearUpdate();
 	void ClearDraw(Camera* camera);
-
-public:
+	
+	/// <summary>
+	/// ゲームオーバー
+	/// </summary>
 	void GameOverUpdate();
-public:
-	void Move();
 
+public: //基本関数
+	// 移動
+	void Move();
+	// 復活
 	void Respown();
+
 public: // Collider
 	void OnCollision(uint32_t attri) override;
+
+public: // Getter
 	 Vector3 GetWorldPosition() const override ;
 	 bool IsDead() { return isDead_; }
+
+public: // Setter
 	 void SetPlayer(Player* player) { player_ = player; }
+
 private:
+	// 平行影
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -49,21 +60,21 @@ private:
 	Vector3 move{ 0,0,-0.1f };
 	float glavity_= 0.0f;
 	float hp_ = 1.0f;
-
 	DirectionalLight direLight_{};
-
 	// 行動によるサイズ変更
 	Vector3 actionSize_{};
 	// サイズ変更の大きさ
 	Vector3 actionSizeParm_{  };
 	int respownTimer_ = 0;
+
 private: // GameOver
 	std::unique_ptr<Object3d> deadSlimeObj_;
 
-
-private: // 共通項目の管理
+private: // 共通項目の変数
+	// Enemyで共有する撃破数
 	static int enemyDestory_;
-public:
+
+public: // 共通項目の関数
 	static int GetEnemyDestory() { return enemyDestory_; }
 	static void SetEnemydestory(int32_t resttNum) { enemyDestory_ = resttNum; }
 

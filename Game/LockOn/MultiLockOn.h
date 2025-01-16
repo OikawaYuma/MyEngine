@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file MultiLockOn.h
+* @ brief 必殺技の為の攻撃
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

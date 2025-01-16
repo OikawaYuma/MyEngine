@@ -1,3 +1,8 @@
+/**
+* @ file GameTimer.h
+* @ brief ゲームのプレイ時間に関するクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
+*/
 #pragma once
 #include <memory>
 #include <list>

@@ -1,8 +1,8 @@
 /**
-* @ file
-* @ brief
+* @ file CollisionConfig.h
+* @ brief Collisionの状態を記録したもの
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
-
 #pragma once
 #include <cstdint>
 

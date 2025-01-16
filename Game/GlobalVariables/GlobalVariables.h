@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file GlovalVariacles.h
+* @ brief jsonとImGuiを使って調整する項目設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
@@ -9,7 +10,7 @@
 #include <map>
 #include <string>
 #pragma warning(push)
-// C26819のエラーを見なかったことにする
+// 外部ライブラリの警告を無視する
 #pragma warning(disable:26819)
 #include  <json.hpp>
 #pragma warning(pop)

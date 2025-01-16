@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file CollisionManager.h
+* @ brief Collisionを管理するクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

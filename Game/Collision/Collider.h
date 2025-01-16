@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Collider.h
+* @ brief Collisionに関する情報をまとめたクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

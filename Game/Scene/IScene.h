@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file IScene.h
+* @ brief Sceneに関する基底クラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

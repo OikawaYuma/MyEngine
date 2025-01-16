@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Skydome.h
+* @ brief 天球に関する設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Quaternion.h
+* @ brief Quaternionの構造体
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

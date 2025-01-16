@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file EnemyBase.h
+* @ brief Enemyに共通の項目をまとめた基底クラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

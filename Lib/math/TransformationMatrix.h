@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file TransformationMatrix.h
+* @ brief Shaderに送るTransformationMatrixの構造体
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

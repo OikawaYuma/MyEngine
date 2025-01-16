@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file GameOverCamera.h
+* @ brief GameOverSceneのカメラ設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

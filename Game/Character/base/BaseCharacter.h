@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file BaseCharacter.h
+* @ brief Objectの共通項目の基底クラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

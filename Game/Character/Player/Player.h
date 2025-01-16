@@ -4,7 +4,6 @@
 * * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
-
 #pragma once
 #include <memory>
 #include <optional>
@@ -18,13 +17,11 @@
 #include  <json.hpp>
 #pragma warning(pop)
 #include "GlobalVariables/GlobalVariables.h"
-
 #include "IBullet.h"
 #include "Character/Player/PlayerBullet/PlayerBullet.h"
 #include "Character/Player/PlayerRazer/PlayerRazer.h"
 #include "Sprite.h"
 #include "PlaneProjectionShadow.h"
-
 #include "Material.h"
 #include "DirectionLight.h"
 #include "Particle/Particle.h"
@@ -82,23 +79,20 @@ public:
 	};
 
 public:
+	// 照準
 	void Move();
-
+	// 照準
 	void Aim();
-
 	// 攻撃
 	void Attack();
 	// 浮遊ギミック初期化
 	void InitFloatingGimmmick();
 	void UpdateFloatingGimmmick();
-
 	/*---敵と衝突した際の処置用関数---*/
 	//　衝突した後の衝突クールタイム
 	void HitEnemyCoolTime();
-
 	//　敵スライムと衝突した時の処理
 	void HitEnemySlime();
-
 	void CreateReticle();
 
 	/*---Behavior用関数---*/

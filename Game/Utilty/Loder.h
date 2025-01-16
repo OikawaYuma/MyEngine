@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Loder.h
+* @ brief Blenderで出力したObject情報を読み込むクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

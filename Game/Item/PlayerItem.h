@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file PlayerItem.h
+* @ brief Playerの回復アイテムの設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

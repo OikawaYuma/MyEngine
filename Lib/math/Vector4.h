@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file Vector4.h
+* @ brief Vector4の構造体
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

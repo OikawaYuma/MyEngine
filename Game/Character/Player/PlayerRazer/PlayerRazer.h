@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file PlayerRazer.h
+* @ brief Playerのレーザー攻撃の設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once

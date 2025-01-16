@@ -1,3 +1,9 @@
+/**
+* @ file GuideUI.h
+* @ brief Playerの行動に関するButton操作のUI設定
+* * @ author 及川　優麿　（オイカワ　ユウマ）
+*/
+
 #pragma once
 #include <memory>
 #include "Sprite.h"

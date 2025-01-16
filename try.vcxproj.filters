@@ -327,7 +327,6 @@
     <ClCompile Include="Engine\2d\PostEffect\Effect\DissolveOutline.cpp" />
     <ClCompile Include="Game\Character\Player\GuideUI.cpp" />
     <ClCompile Include="Game\LockOn\MultiLockOn.cpp" />
-    <ClCompile Include="Game\Character\Player\TitlePlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -605,7 +604,6 @@
     <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
     <ClInclude Include="Game\Character\Player\GuideUI.h" />
     <ClInclude Include="Game\LockOn\MultiLockOn.h" />
-    <ClInclude Include="Game\Character\Player\TitlePlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

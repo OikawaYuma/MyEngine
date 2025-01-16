@@ -1,6 +1,7 @@
 /**
-* @ file
-* @ brief
+* @ file function.h
+* @ brief エンジン機能用の関数をまとめたクラス
+* * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
 #pragma once
