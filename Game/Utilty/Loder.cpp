@@ -1,6 +1,6 @@
 #include "Loder.h"
 #pragma warning(push)
-// C26819のエラーを見なかったことにする
+// 外部ライブラリの警告を無視する
 #pragma warning(disable:26819)
 #include  <json.hpp>
 #pragma warning(pop)
