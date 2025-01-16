@@ -90,6 +90,10 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# Ignore all .lib files
+*.lib
+# But not assimp-vc143-mdd.lib
+!assimp-vc143-mdd.lib
 # Chutzpah Test files
 _Chutzpah*
 
