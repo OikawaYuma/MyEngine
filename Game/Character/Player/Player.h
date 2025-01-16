@@ -50,7 +50,6 @@ public:
 	/// </summary>	
 	void DrawUI();
 
-
 	/// <summary>
 	/// Title
 	/// </summary>
@@ -74,6 +73,7 @@ public:
 	/// Demo
 	/// </summary>
 	void DemoUpdate();
+
 public:
 	// ダッシュ用ワーク
 	struct WorkDash {
@@ -86,14 +86,11 @@ public:
 
 	void Aim();
 
-	/// <summary>
-	/// 攻撃
-	/// </summary>
+	// 攻撃
 	void Attack();
 	// 浮遊ギミック初期化
 	void InitFloatingGimmmick();
 	void UpdateFloatingGimmmick();
-
 
 	/*---敵と衝突した際の処置用関数---*/
 	//　衝突した後の衝突クールタイム
@@ -101,7 +98,6 @@ public:
 
 	//　敵スライムと衝突した時の処理
 	void HitEnemySlime();
-
 
 	void CreateReticle();
 
@@ -121,10 +117,9 @@ public:
 	// title jump
 	void BehaviorRootTitleJumpUpdate();
 
-
-
 	// 調整項目の適用
 	void ApplyGlobalVariables();
+
 public: // AjustParm
 	void AdustParm();
 	void ColorAdust();
@@ -132,22 +127,22 @@ public: // AjustParm
 public: // Particle
 	void ParticleEmitter();
 
-public:
+public: // Getter
+	float GetHP() { return hp_; }
 	const std::list<PlayerBullet*>& Getbullet() const { return bullets_; }
 	const WorldTransform* GetWorldTransform() const { return &worldTransform_; }
 	Behavior GetBehaviorMode() { return behavior_; }
 	Vector3 GetReticleWorldPosition();
-	// Hpを取得
-	float GetHP() { return hp_; }
 	uint32_t GetBulletMode() { return bulletMode_; }
 	bool IsEnemyHit() { return isEnemyHit_; }
+
 public: // Setter
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	void SetHP(float hp) { hp_ = hp; }
 	void SetLockOn(LockOn* lockOn) { lockOn_ = lockOn; }
 	void SetTranslate(Vector3 translate) { worldTransform_.translation_ = translate; }
-
 	void SetSpotLight(const SpotLight& spotLight) { spotLight_ = spotLight; }
+
 public: // Collider
 	void OnCollision(uint32_t attri) override;
 	Vector3 GetWorldPosition() const override;
@@ -169,9 +164,11 @@ public: // もともとのゲームで使用変数
 	std::unique_ptr<Sprite> hpUIBlue_ = nullptr;
 	std::unique_ptr<Sprite> bulletModeUI = nullptr;
 
-
+	// 通常弾
 	std::list<PlayerBullet*> bullets_;
+	// レーザー
 	std::list<PlayerRazer*> razers_;
+
 	Vector4 color_;
 	Vector4 UIColor_;
 	//bulletMode
@@ -183,9 +180,6 @@ public: // もともとのゲームで使用変数
 	uint32_t normalBulletUITex_ = 0;
 	uint32_t hommingBulletUITex_ = 0;
 	uint32_t razerBulletUITex_ = 0;
-	/// <summary>
-	/// //////////////////////////////////////////////////////////////////////
-	/// </summary>
 	float hp_ = 1;
 
 private: // Camera
@@ -194,18 +188,15 @@ private: // Camera
 	Vector3 cameraDirection_{ 0.0f,0.0f,1.0f };
 
 private: // Reticle
-
 	// 3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3DReticleNear_{};
 	// 3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3DReticleFar_{};
-
 	// floatY 
 	float reticleY_ = 0;
-
 	Vector4 reticleColor_;
 
-public:
+public: // Particle
 	std::unique_ptr<Particle> particle_;
 	Emitter emitter_{};
 	RandRangePro randRangePro_;
@@ -216,46 +207,35 @@ private://Bullet
 
 private: 
 	float slimeBasedAlpha_ = 0.8f;
-
 	float angletime = 0.0f;
 	float preAngle_ = 0.0f;
 	// 富裕ギミックの媒介変数
 	float floatingparam_ = 0.0f;
-
 	// 周期
 	const uint16_t period = 120;
 	// 1フレームでのパラメータ加算値
 	const float step = 2.0f * (float)std::numbers::pi * 2.0f / period;
-
 	// 振る舞い
 	Behavior behavior_ = Behavior::kRoot;
 	// 次の振る舞いリクエスト
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
-
 	WorkDash workDash_{};
-
 	using json = nlohmann::json;
-
 	// 行動によるサイズ変更
 	Vector3 actionSize_{};
 	// サイズ変更の大きさ
 	Vector3 actionSizeParm_{  };
-
 	// 速度
 	Vector3 velo_{};
 	float accel_;
 	// ワールド変換データ
 	WorldTransform worldTransform_{};
 	const float movingRange_ = 160.0f;
-
 	// model skin num
 	uint32_t skinTex_ = 0;
-
-
 	Material material_{};
 	DirectionalLight direLight_{};
 	SpotLight spotLight_{};
-
 	//　敵と衝突した後の再衝突用タイマー
 	bool isEnemyHit_ = false;
 	uint32_t coolTimer_ = 0;

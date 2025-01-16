@@ -208,6 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Score\Score.cpp" />
     <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
     <ClCompile Include="Game\LockOn\MultiLockOn.cpp" />
+    <ClCompile Include="Game\Character\Player\TitlePlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
@@ -317,6 +318,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Score\Score.h" />
     <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
     <ClInclude Include="Game\LockOn\MultiLockOn.h" />
+    <ClInclude Include="Game\Character\Player\TitlePlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Bloom.PS.hlsl">
