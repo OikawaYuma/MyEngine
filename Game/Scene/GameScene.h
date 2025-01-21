@@ -116,7 +116,6 @@ private:
 
 	uint32_t slimeDeadSE_;
 	uint32_t gameClearSE_;
-	bool GameOverFlag;
 
 	// クリア条件
 	int clearFlagCount_ = 0;

@@ -82,7 +82,7 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			objectData.transform.scale.x = (float)transform["scaling"][0];
 			objectData.transform.scale.y = (float)transform["scaling"][2];
 			objectData.transform.scale.z = (float)transform["scaling"][1];
-			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
+ 			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
 
 		}
 

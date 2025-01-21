@@ -93,6 +93,9 @@ void MultiLockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, Camer
 				target_ = targets.front().second;
 			}
 
+
+
+
 		}
 		if (targets.size() == 0) {
 			target_ = nullptr;

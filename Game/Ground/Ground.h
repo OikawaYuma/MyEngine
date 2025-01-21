@@ -24,10 +24,14 @@ public: // Setter
 private:
 	Camera* camera_ = nullptr;
 	WorldTransform worldTransform_;
+	WorldTransform worldTransform_background;
 	std::unique_ptr<Object3d> object_;
+	std::unique_ptr<Object3d> backgroundObject_;
 	Material material_{};
 	DirectionalLight direLight_{};
 	SpotLight spotLight_{};
 	uint32_t skinTex_ = 0;
+
+	uint32_t skinTex_background = 0;
 };
 
