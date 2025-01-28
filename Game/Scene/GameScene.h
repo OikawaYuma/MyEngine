@@ -54,15 +54,21 @@ public:
 	const std::list<std::unique_ptr<PlayerItem>>& GetItems() const { return items_; }
 	//const std::list<EnemyBullet*>& GetEnemyBullets() const { return enemyBullets_; }
 
-private:
-	// オブジェクト
+private: // 各宣言
+	// プレイヤー
 	std::unique_ptr<Player> player_;
+	// エネミーリスト
 	std::list<std::unique_ptr<Enemy>> enemys_;
+	// 床
 	std::unique_ptr<Ground> ground_;
 	std::list<std::unique_ptr<PlayerItem>> items_;
+	// 背景オブジェクト（木）
 	std::list<std::unique_ptr<WorldDesign>> worldDesigns_;
+	// スカイドーム
 	std::unique_ptr<Skydome> skydome_;
+	// 追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_;
+	// シングルロックオン
 	std::unique_ptr<LockOn> lockOn_;
 	// スコア
 	std::unique_ptr<Score> score_;
@@ -70,11 +76,11 @@ private:
 	// ゲーム用タイマー
 	std::unique_ptr<GameTimer> gameTimer_;
 
-	
-	
+	// ポストエフェクト
 	PostProcess* postProcess_ = nullptr;
 
-	PostProcess* postProcess2_ = nullptr;
+
+
 	uint32_t gameStateMode_ = PLAYGAME;
 	float thre_ = 0.0f;
 	float threPorM_ = 0.025f;
