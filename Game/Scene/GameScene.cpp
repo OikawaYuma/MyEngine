@@ -52,13 +52,6 @@ void GameScene::Init()
 	postProcess_->SetEffectNo(PostEffectMode::kDissolveOutline);
 	postProcess_->SerDissolveOutline({ .weightSize = 100.0f });
 
-
-	postProcess2_ = new PostProcess();
-	postProcess2_->Init();
-	postProcess2_->SetCamera(followCamera_->GetCamera());
-	postProcess2_->SetDissolveInfo({ 1.0f,1.0f,1.0f });
-	postProcess2_->SetEffectNo(PostEffectMode::kDissolve);
-
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
@@ -121,7 +114,6 @@ void GameScene::Init()
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	gameClearSE_ = Audio::GetInstance()->SoundLoadWave("Resources/clearSE.wav");
 
-
 	// スコア
 	score_ = std::make_unique<Score>();
 	score_->Init();
@@ -148,21 +140,7 @@ void GameScene::Update()
 	GlobalVariables::GetInstance()->Update();
 #endif // DEBUG
 	DissolveOutlineInfo dissolveOutlineInfo = postProcess_->GetDissolveOutline();
-	/*ImGui::Begin("OBB,BALL");
-
-
-	ImGui::DragFloat("weightSize", &dissolveOutlineInfo.weightSize, 0.0001f);
-
-	ImGui::DragFloat3("sDire", &spotLight_.direction.x, 0.1f);
-	ImGui::DragFloat3("sPos", &spotLight_.position.x, 0.1f);
-	ImGui::DragFloat("sDis", &spotLight_.distance, 0.1f);
-	ImGui::DragFloat("sInten", &spotLight_.intensity, 0.1f);
-	ImGui::DragFloat("sDacya", &spotLight_.dacya, 0.1f);
-	ImGui::DragFloat("scosAngle", &cosAngle_, 0.1f);
-	ImGui::Text("playerPosX %f", spotLight_.position.x);
-	ImGui::Text("playerPosZ %f", spotLight_.position.z);
 	
-	ImGui::End();*/
 	postProcess_->SerDissolveOutline({.projectionInverse = Inverse(followCamera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = {1.0f,1.0f,1.0f} , .weightSize  = dissolveOutlineInfo.weightSize});
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
@@ -239,7 +217,6 @@ void GameScene::Update()
 						Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameBGM_, true);
 					}
 					postProcess_->SetThreshold(thre_);
-					//Audio::SoundStopWave(0);
 					
 
 				}
@@ -308,7 +285,6 @@ void GameScene::Update()
 
 			}
 		}
-		postProcess2_->SetThreshold(thre_);
 		startSpritePos_.y += startSpriteVelo_;
 		startEffectSp_->SetPosition(startSpritePos_);
 		startEffectSp_->Update();
@@ -325,12 +301,6 @@ void GameScene::Update()
 		startEffectSp2_->Update();
 		
 		score_->Update(gameTimer_->GetGameTime(), Enemy::GetEnemyDestory());
-		/*items_.remove_if([](std::unique_ptr<PlayerItem>& bullet) {
-			if (bullet->IsDead()) {
-				return true;
-			}
-			return false;
-			});*/
 
 		// 現状のクリア条件
 		if (gameTimer_->GetGameTime() <= 0) {
@@ -366,40 +336,7 @@ void GameScene::Update()
 		for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 			(*itr)->Update();
 
-			/*
-			//// enemy->Fire();
-			//if ((*itr)->GetFireTimer() >= (*itr)->kFireInterval) {
-			//	assert(player_);
-			//	// 弾の速度
-			//	const float kBulletSpeed = 1.0f;
-
-			//	Vector3 start = (*itr)->GetWorldPosition();
-			//	Vector3 end = player_->GetWorldPosition();
-
-			//	Vector3 diffVector;
-			//	diffVector.x = end.x - start.x;
-			//	diffVector.y = end.y - start.y;
-			//	diffVector.z = end.z - start.z;
-
-			//	diffVector = Normalize(diffVector);
-			//	diffVector.x *= kBulletSpeed;
-			//	diffVector.y *= kBulletSpeed;
-			//	diffVector.z *= kBulletSpeed;
-
-			//	Vector3 velocity(diffVector.x, diffVector.y, diffVector.z);
-
-			//	// 速度ベクトルを自機の向きに合わせて回転させる
-			//	velocity = TransformNormal(velocity, (*itr)->GetWorldTransform().matWorld_);
-
-			//	// 弾を生成し、初期化
-			//	EnemyBullet* newBullet = new EnemyBullet();
-			//	newBullet->Init((*itr)->GetWorldTransform().translation_, velocity);
-			//	newBullet->SetPlayer(player_.get());
-			//	// 弾を登録する
-			//	enemyBullets_.push_back(newBullet);
-			//	(*itr)->SetFireTimer(0);
-			//}
-			*/
+			
 		}
 		for (std::list< std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 			(*itr)->Update();
@@ -421,8 +358,6 @@ void GameScene::Update()
 	{
 		thre_ -= threPorM_;;
 		if (thre_ >= 1.2f) {
-			//DeleteObject();
-			//Audio::GetInstance()->SoundStopWave(slimeDeadSE_);
 			IScene::SetSceneNo(CLEAR);
 		}
 
@@ -433,7 +368,6 @@ void GameScene::Update()
 	{
 		thre_ -= threPorM_;;
 		if (thre_ >= 1.2f) {
-			//DeleteObject();
 			Audio::GetInstance()->SoundStopWave(slimeDeadSE_);
 			IScene::SetSceneNo(GAMEOVER);
 		}
@@ -483,12 +417,12 @@ void GameScene::PostDraw()
 {
 	
 	postProcess_->Draw();
-	//postProcess2_->Draw();
 	
 }
 
 void GameScene::Release() {
 	postProcess_->Release();
+	delete postProcess_;
 }
 // ゲームを終了
 int GameScene::GameClose()
