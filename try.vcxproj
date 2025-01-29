@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.cpp" />
     <ClCompile Include="Game\Character\Player\GameOver\GameOverPlayer.cpp" />
     <ClCompile Include="Game\Character\Player\Clear\ClearPlayer.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\DissolveOutline.cpp" />
@@ -214,6 +215,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Character\Player\Title\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.h" />
     <ClInclude Include="Game\Character\Player\GameOver\GameOverPlayer.h" />
     <ClInclude Include="Game\Character\Player\Clear\ClearPlayer.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
