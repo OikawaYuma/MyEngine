@@ -56,11 +56,11 @@ void TitleScene::Init()
 	camera_ = std::make_unique<TitleCamera>();
 	camera_->Init();
 	
-	player_ = std::make_unique<Player>();
-	player_->SetCamera(camera_->GetCamera());
-	
+	player_ = std::make_unique<TitlePlayer>();
+	player_->Init();
+	player2_ = std::make_unique<Player>();
 	ground_ = std::make_unique<Ground>();
-	Loder::LoadJsonFile("Resources/json", "titleStage", player_.get(), enemys_, items_, worldDesigns_,ground_.get());
+	Loder::LoadJsonFile("Resources/json", "titleStage2", player2_.get(), enemys_, items_, worldDesigns_,ground_.get());
 
 	ground_->SetCamera(camera_->GetCamera());
 
@@ -69,7 +69,7 @@ void TitleScene::Init()
 
 	
 	
-player_->TitleInit();
+	
 	/////////////////////////////////////////////////
 	postProcess_ = new PostProcess();
 	postProcess_->SetCamera(camera_->GetCamera());
@@ -87,6 +87,7 @@ player_->TitleInit();
 
 	// シーン遷移Flag
 	GamePlayFlag_ = false;
+	Object3dManager::ObjectSort();
 }
 
 void TitleScene::Update()
@@ -170,7 +171,7 @@ void TitleScene::Update()
 	pushASp_->Update();
 	skydome_->Update();
 	camera_->Update();
-	player_->TitleUpdate();
+	player_->Update();
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->Update();
 		/*

@@ -18,16 +18,17 @@ void ClearScene::Init()
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
 	skydome_->SetSkydomeTexture(titleTex_);
-	player_ = std::make_unique<Player>();
-	player_->SetCamera(camera_->GetCamera());
+	player_ = std::make_unique<ClearPlayer>();
+	player_->Init();
+	player2_ = std::make_unique<Player>();
 
 	ground_ = std::make_unique<Ground>();
-	Loder::LoadJsonFile("Resources/json", "gameClear", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
+	Loder::LoadJsonFile("Resources/json", "gameClear2", player2_.get(), enemys_, items_, worldDesigns_, ground_.get());
 	ground_->SetCamera(camera_->GetCamera());
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->ClearInit();
 	}
-	player_->ClearInit();
+	
 	/////////////////////////////////////////////////
 
 	postProcess_ = new PostProcess();
@@ -67,14 +68,14 @@ void ClearScene::Init()
 	gameOverBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/kasumisou.wav");
 	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameOverBGM_, true);
 	pushSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimePush.wav");
-
+	Object3dManager::ObjectSort();
 }
 void ClearScene::Update()
 {
 	
 	skydome_->Update();
 	camera_->Update();
-	player_->ClearUpdate();
+	player_->Update();
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->ClearUpdate();
 	}
@@ -144,7 +145,6 @@ void ClearScene::Draw()
 	
 	Object3dManager::GetInstance()->Draw(camera_->GetCamera());
 
-	player_->Draw(camera_->GetCamera());
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 	titleBer_->Draw(gameOverTex_, { 1.0f,1.0f,1.0f,1.0f });
 }

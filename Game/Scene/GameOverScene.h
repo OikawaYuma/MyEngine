@@ -14,6 +14,7 @@
 #include "Ground/Ground.h"
 #include "Skydome/Skydome.h"
 #include "Character/Player/Player.h"
+#include "Character/Player/GameOver/GameOverPlayer.h"
 #include "Character/Enemy/Enemy.h"
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
@@ -41,7 +42,8 @@ private:
 	PostProcess* postProcess_ = nullptr;
 	std::unique_ptr<GameOverCamera> camera_ = nullptr;
 
-	std::unique_ptr<Player> player_;
+	std::unique_ptr<GameOverPlayer> player_;
+	std::unique_ptr<Player> player2_;
 	std::list<std::unique_ptr<Enemy>> enemys_;
 	std::unique_ptr<Ground> ground_;
 	std::list<std::unique_ptr<PlayerItem>> items_;
