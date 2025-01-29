@@ -239,10 +239,10 @@
     <ClCompile Include="Engine\2d\PostEffect\Effect\Vignette.cpp">
       <Filter>Engine\2d\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Character\Player\PlayerBullet\PlayerBullet.cpp">
+    <ClCompile Include="Game\Character\Player\Attck\Bullet\PlayerBullet.cpp">
       <Filter>Application\character\player\bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Character\Player\PlayerRazer\PlayerRazer.cpp">
+    <ClCompile Include="Game\Character\Player\Attck\Razer\PlayerRazer.cpp">
       <Filter>Application\character\player\bullet</Filter>
     </ClCompile>
     <ClCompile Include="Engine\3d\Animation\Animation.cpp">
@@ -325,8 +325,12 @@
     <ClCompile Include="Engine\3d\Object3d\Object3dManager.cpp" />
     <ClCompile Include="Game\Character\Player\Player.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\DissolveOutline.cpp" />
-    <ClCompile Include="Game\Character\Player\GuideUI.cpp" />
+    <ClCompile Include="Game\Character\Player\UI\GuideUI.cpp" />
     <ClCompile Include="Game\LockOn\MultiLockOn.cpp" />
+    <ClCompile Include="Engine\3d\Object3d\GameObjectCommon.cpp" />
+    <ClCompile Include="Game\Character\Player\Title\TitlePlayer.cpp" />
+    <ClCompile Include="Game\Character\Player\Clear\ClearPlayer.cpp" />
+    <ClCompile Include="Game\Character\Player\GameOver\GameOverPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\utility\function.h">
@@ -503,10 +507,10 @@
     <ClInclude Include="Game\Character\Player\Player.h">
       <Filter>Application\character\player</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Character\Player\PlayerBullet\PlayerBullet.h">
+    <ClInclude Include="Game\Character\Player\Attck\Bullet\PlayerBullet.h">
       <Filter>Application\character\player\bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Character\Player\PlayerRazer\PlayerRazer.h">
+    <ClInclude Include="Game\Character\Player\Attck\Razer\PlayerRazer.h">
       <Filter>Application\character\player\bullet</Filter>
     </ClInclude>
     <ClInclude Include="Engine\3d\Animation\Animation.h">
@@ -602,8 +606,12 @@
     <ClInclude Include="Game\Character\Enemy\EnemyApear.h" />
     <ClInclude Include="Engine\3d\Object3d\Object3dManager.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\DissolveOutline.h" />
-    <ClInclude Include="Game\Character\Player\GuideUI.h" />
+    <ClInclude Include="Game\Character\Player\UI\GuideUI.h" />
     <ClInclude Include="Game\LockOn\MultiLockOn.h" />
+    <ClInclude Include="Engine\3d\Object3d\GameObjectCommon.h" />
+    <ClInclude Include="Game\Character\Player\Title\TitlePlayer.h" />
+    <ClInclude Include="Game\Character\Player\Clear\ClearPlayer.h" />
+    <ClInclude Include="Game\Character\Player\GameOver\GameOverPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

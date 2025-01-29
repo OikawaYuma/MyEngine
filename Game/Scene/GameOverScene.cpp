@@ -15,9 +15,10 @@ void GameOverScene::Init()
 	camera_ = std::make_unique<GameOverCamera>();
 	camera_->Init();
 	ground_ = std::make_unique<Ground>();
-	player_ = std::make_unique<Player>();
-	Loder::LoadJsonFile("Resources/json", "gameOverStage", player_.get(), enemys_, items_, worldDesigns_,ground_.get());
-	player_->GameOverInit();
+	player_ = std::make_unique<GameOverPlayer>();
+	player2_ = std::make_unique<Player>();
+	Loder::LoadJsonFile("Resources/json", "gameOverStage", player2_.get(), enemys_, items_, worldDesigns_,ground_.get());
+	player_->Init();
 	ground_->SetCamera(camera_->GetCamera());
 
 
@@ -26,9 +27,6 @@ void GameOverScene::Init()
 	skydome_->Init();
 	skydome_->SetSkydomeTexture(titleTex_);
 	
-	player_->SetCamera(camera_->GetCamera());
-
-	player_->GameOverInit();
 	/////////////////////////////////////////////////
 
 	postProcess_ = new PostProcess();
@@ -75,7 +73,6 @@ void GameOverScene::Update()
 	
 	skydome_->Update();
 	camera_->Update();
-	player_->GameOverUpdate();
 	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 		(*itr)->GameOverUpdate();
 	}
@@ -146,7 +143,6 @@ void GameOverScene::Draw()
 	ground_->Draw();
 	
 	Object3dManager::GetInstance()->Draw(camera_->GetCamera());
-	player_->GameOverDraw(camera_->GetCamera());
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 	titleBer_->Draw(gameOverTex_,{1.0f,1.0f,1.0f,1.0f});
 	//sprite->Draw(titleTex_, { 1.0f,1.0f,1.0,1.0 });

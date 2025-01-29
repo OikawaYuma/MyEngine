@@ -1,6 +1,6 @@
 /**
 * @ file Player.h
-* @ brief 実際に操作するObjectの設定
+* @ brief GameSceneで実際に操作する自機Objectの設定
 * * @ author 及川　優麿　（オイカワ　ユウマ）
 */
 
@@ -18,14 +18,14 @@
 #pragma warning(pop)
 #include "GlobalVariables/GlobalVariables.h"
 #include "IBullet.h"
-#include "Character/Player/PlayerBullet/PlayerBullet.h"
-#include "Character/Player/PlayerRazer/PlayerRazer.h"
+#include "Character/Player/Attck/Bullet/PlayerBullet.h"
+#include "Character/Player/Attck/Razer/PlayerRazer.h"
 #include "Sprite.h"
 #include "PlaneProjectionShadow.h"
 #include "Material.h"
 #include "DirectionLight.h"
 #include "Particle/Particle.h"
-#include "GuideUI.h"
+#include "Character/Player/UI/GuideUI.h"
 
 class LockOn;
 // ふるまい
@@ -34,7 +34,6 @@ enum class Behavior {
 	kAttack, // 攻撃中
 	kDash, // ダッシュ中
 	kJump,
-	kTitlePlayer
 };
 class Player : public Collider
 {
@@ -46,25 +45,6 @@ public:
 	/// UI描画
 	/// </summary>	
 	void DrawUI();
-
-	/// <summary>
-	/// Title
-	/// </summary>
-	void TitleInit();
-	void TitleUpdate();
-
-	/// <summary>
-	/// 
-	/// </summary>
-	void ClearInit();
-	void ClearUpdate();
-
-	/// <summary>
-	/// GameOver
-	/// </summary>
-	void GameOverInit();
-	void GameOverUpdate();
-	void GameOverDraw(Camera* camera);
 
 	/// <summary>
 	/// Demo
@@ -108,8 +88,6 @@ public:
 	// ジャンプ行動
 	void BehaviorRootJumpInit();
 	void BehaviorRootJumpUpdate();
-	// title jump
-	void BehaviorRootTitleJumpUpdate();
 
 	// 調整項目の適用
 	void ApplyGlobalVariables();
@@ -150,8 +128,6 @@ private:
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
 	std::unique_ptr<PlaneProjectionShadow> reticleShadowObject_;
 	std::unique_ptr<GuideUI> guideUI_;
-
-
 
 public: // もともとのゲームで使用変数
 	std::unique_ptr<Sprite> hpUI_ = nullptr;
@@ -194,7 +170,6 @@ public: // Particle
 	std::unique_ptr<Particle> particle_;
 	Emitter emitter_{};
 	RandRangePro randRangePro_;
-
 
 private://Bullet
 	float bulletSize_ = 0;
@@ -244,9 +219,6 @@ private:
 	const  uint32_t shotInterval_ = 5;
 	uint32_t bulletShotSE_ = 0;
 	uint32_t jumpSE_ = 0;
-
-private: // GameOver
-	std::unique_ptr<Object3d> deadSlimeObj_;
 
 private:
 	float preGravity_;
