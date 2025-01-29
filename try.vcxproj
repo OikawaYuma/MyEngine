@@ -65,7 +65,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Lib\math;$(ProjectDir)Lib\utility;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Game\Player;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Resources\shaders;$(ProjectDir)Engine\Externals\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Engine/Utility;$(ProjectDir)Engine/Utility/math;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Game\Player;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Resources\shaders;$(ProjectDir)Engine\Externals\assimp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -96,7 +96,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Engine/Externals\assimp;$(ProjectDir)Lib\math;$(ProjectDir)Lib\utility;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Resources\shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Externals;$(ProjectDir)Engine\Audio;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\2d;$(ProjectDir)Engine\3d;$(ProjectDir)Engine\3d\Animation;$(ProjectDir)Engine\3d\Skeleton;$(ProjectDir)Engine\3d\Triangle;$(ProjectDir)Engine\3d\Sphere;$(ProjectDir)Engine\3d\Model;$(ProjectDir)Engine\3d\Object3d;$(ProjectDir)Engine\3d\Light;$(ProjectDir)Engine\3d\Particle;$(ProjectDir)Engine\Input;$(ProjectDir)Engine\2d\PostEffect;$(ProjectDir)Engine\Interface;$(ProjectDir)Engine\Interface\PSO;$(ProjectDir)Engine\Interface\Heap;$(ProjectDir)Engine\Adapter;$(ProjectDir)Engine\Include;$(ProjectDir)Engine\Externals\assimp\include;$(ProjectDir)Engine/Externals\assimp;$(ProjectDir)Engine/Utility;$(ProjectDir)Engine/Utility/math;$(ProjectDir)Game;$(ProjectDir)Game\Scene;$(ProjectDir)Game\Collision;$(ProjectDir)Game\Utilty;$(ProjectDir)Resources\shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -177,14 +177,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\WorldDesign\WorldDesign.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\IPostEffectState.cpp" />
     <ClCompile Include="Game\Character\Player\UI\GuideUI.cpp" />
-    <ClCompile Include="Lib\utility\function.cpp" />
+    <ClCompile Include="Engine\Utility\function.cpp" />
     <ClCompile Include="Engine\2d\ImGuiCommon.cpp" />
     <ClCompile Include="Game\Utilty\Loder.cpp" />
     <ClCompile Include="Engine\2d\PostEffect\Effect\LuminanceOutline.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Interface\Mesh.cpp" />
     <ClCompile Include="Engine\Interface\WinAPI.cpp" />
-    <ClCompile Include="Lib\math\mathFunction.cpp" />
+    <ClCompile Include="Engine\Utility\math\mathFunction.cpp" />
     <ClCompile Include="Engine\Interface\TextureManager.cpp" />
     <ClCompile Include="Engine\Interface\WorldTransform.cpp" />
     <ClCompile Include="Engine\Interface\PSO\PSOSprite.cpp" />
@@ -274,7 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Material.h" />
     <ClInclude Include="Engine\2d\PostEffect\IPostEffectState.h" />
     <ClInclude Include="Game\Character\Player\UI\GuideUI.h" />
-    <ClInclude Include="Lib\math\Matrix3x3.h" />
+    <ClInclude Include="Engine\Utility\math\Matrix3x3.h" />
     <ClInclude Include="Engine\3d\ResourceObject.h" />
     <ClInclude Include="Engine\3d\Model\Model.h" />
     <ClInclude Include="Engine\Interface\PSO\PSOModel.h" />
@@ -283,20 +283,20 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Interface\DirectXCommon.h" />
     <ClInclude Include="Engine\3d\Triangle\Triangle.h" />
     <ClInclude Include="Game\Scene\TitleScene.h" />
-    <ClInclude Include="Lib\utility\function.h" />
+    <ClInclude Include="Engine\Utility\function.h" />
     <ClInclude Include="Engine\2d\ImGuiCommon.h" />
-    <ClInclude Include="Lib\math\mathFunction.h" />
-    <ClInclude Include="Lib\math\Matrix4x4.h" />
+    <ClInclude Include="Engine\Utility\math\mathFunction.h" />
+    <ClInclude Include="Engine\Utility\math\Matrix4x4.h" />
     <ClInclude Include="Engine\Interface\Mesh.h" />
-    <ClInclude Include="Lib\math\Transform.h" />
-    <ClInclude Include="Lib\math\Vector3.h" />
-    <ClInclude Include="Lib\math\Vector4.h" />
+    <ClInclude Include="Engine\Utility\math\Transform.h" />
+    <ClInclude Include="Engine\Utility\math\Vector3.h" />
+    <ClInclude Include="Engine\Utility\math\Vector4.h" />
     <ClInclude Include="Engine\Interface\WinAPI.h" />
     <ClInclude Include="Engine\Interface\TextureManager.h" />
-    <ClInclude Include="Lib\math\Vector2.h" />
-    <ClInclude Include="Lib\math\VertexData.h" />
+    <ClInclude Include="Engine\Utility\math\Vector2.h" />
+    <ClInclude Include="Engine\Utility\math\VertexData.h" />
     <ClInclude Include="Engine\3d\Model\ModelData.h" />
-    <ClInclude Include="Lib\math\TransformationMatrix.h" />
+    <ClInclude Include="Engine\Utility\math\TransformationMatrix.h" />
     <ClInclude Include="Engine\Interface\WorldTransform.h" />
     <ClInclude Include="Engine\Interface\PSO\PSOSprite.h" />
     <ClInclude Include="Engine\Interface\PSO\PSOProperty.h" />
@@ -308,7 +308,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\3d\Object3d\Object3dCommon.h" />
     <ClInclude Include="Engine\Interface\Heap\SRVManager.h" />
     <ClInclude Include="Engine\3d\Particle\ParticleManager.h" />
-    <ClInclude Include="Lib\math\Quaternion.h" />
+    <ClInclude Include="Engine\Utility\math\Quaternion.h" />
     <ClInclude Include="Engine\2d\PostEffect\PSOPostEffect.h" />
     <ClInclude Include="Engine\2d\PostProcess.h" />
     <ClInclude Include="Engine\2d\PostEffect\Effect\Vignette.h" />
