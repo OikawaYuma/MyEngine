@@ -8,6 +8,7 @@
 void ClearScene::Init()
 {
 	Object3dManager::GetInstance()->Init();
+	// 全シーンのObjectのリストを空にする
 	DeleteObject();
 	titleTex_ = TextureManager::StoreTexture("Resources/GameClearSkydome.png");
 

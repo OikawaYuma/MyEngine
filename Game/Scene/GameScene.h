@@ -47,12 +47,11 @@ public:
 	void Release()override;
 	int GameClose()override;
 	void DeleteObject();
-public:
+
 public:
 	// 弾リストを取得
 	const std::list<std::unique_ptr<Enemy>>& Getbullet() const { return enemys_; }
 	const std::list<std::unique_ptr<PlayerItem>>& GetItems() const { return items_; }
-	//const std::list<EnemyBullet*>& GetEnemyBullets() const { return enemyBullets_; }
 
 private: // 各宣言
 	// プレイヤー
@@ -72,31 +71,24 @@ private: // 各宣言
 	std::unique_ptr<LockOn> lockOn_;
 	// スコア
 	std::unique_ptr<Score> score_;
+	// 敵を倒した数
 	int killCount_ = 0;
 	// ゲーム用タイマー
 	std::unique_ptr<GameTimer> gameTimer_;
-
 	// ポストエフェクト
 	PostProcess* postProcess_ = nullptr;
-
-
-
+	// ゲームの進行度
 	uint32_t gameStateMode_ = PLAYGAME;
 	float thre_ = 0.0f;
 	float threPorM_ = 0.025f;
 	bool threFlag_ = false;
 	uint32_t destroyCount_ = 0;
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
-
-
 	std::unique_ptr<Sprite> LoadStringSp_;
 	uint32_t LoadStringSpTex_ = 0;
-
 	std::unique_ptr<Slime2d> slime2DSp1_;
 	std::unique_ptr<Slime2d> slime2DSp2_;
 	std::unique_ptr<Slime2d> slime2DSp3_;
-
-
 	Vector2 startSpritePos_;
 	float startSpriteVelo_;
 	std::unique_ptr<Sprite> startEffectSp_;
@@ -105,12 +97,10 @@ private: // 各宣言
 	bool moveFlag2 = false;
 	uint32_t statrTimer_ = 0;
 	bool cameraFlag_ = false;
-
 	Vector2 startSpritePos2_;
 	float startSpriteVelo2_;
 	std::unique_ptr<Sprite> startEffectSp2_;
 	uint32_t startEffectSpTex2_ = 0;
-
 	SpotLight spotLight_{};
 	float cosAngle_ = 0.0f;
 	uint32_t jumpNum_ = JUMPONE;
@@ -119,13 +109,10 @@ private: // 各宣言
 	uint32_t endTimer = 0;
 	uint32_t startTimer = 0;
 	uint32_t gameBGM_;
-
 	uint32_t slimeDeadSE_;
 	uint32_t gameClearSE_;
-
 	// クリア条件
 	int clearFlagCount_ = 0;
-
 	EnemyApear enemyApear_;
 };
 
