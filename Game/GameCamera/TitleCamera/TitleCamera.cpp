@@ -5,6 +5,7 @@ void TitleCamera::Init()
 {
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
+	camera_->SetFarClip(2000.0f);
 	switch (cameraType_) {
 	case CAMERA1:
 		camera_->SetTranslate({ 23,0.4f,117.5f });
