@@ -10,7 +10,6 @@
 #include "WorldTransform.h"
 #include "Object3d.h"
 #include "Camera.h"
-#include "Character/base/BaseCharacter.h"
 #pragma warning(push)
 // 外部ライブラリの警告を無視する
 #pragma warning(disable:26819)

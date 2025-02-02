@@ -139,7 +139,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="Engine\Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Game\GameCamera\GameOverCamera\GameOverCamera.cpp" />
-    <ClCompile Include="Game\Character\base\BaseCharacter.cpp" />
     <ClCompile Include="Game\Character\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\Character\Player\Attck\Bullet\PlayerBullet.cpp" />
     <ClCompile Include="Game\Character\Player\Attck\Razer\PlayerRazer.cpp" />
@@ -236,7 +235,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
-    <ClInclude Include="Game\Character\base\BaseCharacter.h" />
     <ClInclude Include="Game\Character\Enemy\Enemy.h" />
     <ClInclude Include="Game\Character\Enemy\BaseEnemy.h" />
     <ClInclude Include="Game\Character\Player\Player.h" />

@@ -7,7 +7,6 @@
 #pragma once
 #include <memory>
 #include "Camera.h"
-#include "Character/base/BaseCharacter.h"
 #include "BaseEnemy.h"
 #include "PlaneProjectionShadow.h"
 class Player;
