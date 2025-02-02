@@ -17,11 +17,6 @@ public:
 	void Update();
 	void Draw(Camera* camera) ;
 	
-	/// <summary>
-	/// ゲームオーバー
-	/// </summary>
-	void GameOverUpdate();
-
 public: //基本関数
 	// 移動
 	void Move();

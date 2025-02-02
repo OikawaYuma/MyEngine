@@ -1,7 +1,7 @@
 #include "IScene.h"
 
 // タイトルシーンで初期化
-int IScene::sceneNo = GAMEOVER;
+int IScene::sceneNo = STAGE;
 
 
 // 仮想デストラクタの定義

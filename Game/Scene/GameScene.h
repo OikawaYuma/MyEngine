@@ -21,7 +21,7 @@
 #include "GameCamera/FollowCamera/FollowCamera.h"
 #include "LockOn/LockOn.h"
 #include "Camera.h"
-#include "Slime2d/Slime2d.h"
+#include "Loading/GameLoading.h"
 #include "Score/Score.h"
 #include "GameTimer/GameTimer.h"
 /*--------------------------------------------
@@ -90,19 +90,13 @@ private:
 	uint32_t destroyCount_ = 0;
 
 private: // threadを使用した際に使うようLoadingUI
-	std::unique_ptr<Sprite> LoadStringSp_;
-	uint32_t LoadStringSpTex_ = 0;
-	std::unique_ptr<Slime2d> slime2DSp1_;
-	std::unique_ptr<Slime2d> slime2DSp2_;
-	std::unique_ptr<Slime2d> slime2DSp3_;
+	// 
+	std::unique_ptr<GameLoading> loading_;
 	Vector2 startSpritePos_;
 	float startSpriteVelo_;
 	std::unique_ptr<Sprite> startEffectSp_;
 	uint32_t startEffectSpTex_ = 0;
-	bool moveflag1 = false;
-	bool moveFlag2 = false;
-	uint32_t jumpNum_ = JUMPONE;
-	uint32_t jumpRoopNum = 0;
+	
 
 private: // ゲーム開始までの演出
 	bool cameraFlag_ = false;
@@ -110,14 +104,14 @@ private: // ゲーム開始までの演出
 	float startSpriteVelo2_;
 	std::unique_ptr<Sprite> startEffectSp2_;
 	uint32_t startEffectSpTex2_ = 0;
-
+	uint32_t startTimer_ = 0;
+	bool moveflag1 = false;
+	bool moveFlag2 = false;
 private:
 	SpotLight spotLight_{};
 	float cosAngle_ = 0.0f;
 	
-	float loadpos = 0;
-	uint32_t endTimer = 0;
-	uint32_t startTimer = 0;
+	
 	// クリア条件
 	int clearFlagCount_ = 0;
 	EnemyApear enemyApear_;

@@ -331,6 +331,7 @@
     <ClCompile Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.cpp" />
     <ClCompile Include="Game\Character\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.cpp" />
+    <ClCompile Include="Game\Loading\GameLoading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\function.h">
@@ -611,6 +612,7 @@
     <ClInclude Include="Game\Character\Player\GameOver\GameOverPlayer.h" />
     <ClInclude Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.h" />
     <ClInclude Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.h" />
+    <ClInclude Include="Game\Loading\GameLoading.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">
