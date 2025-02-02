@@ -8,29 +8,34 @@ void GameScene::Init()
 	
 	Object3dManager::GetInstance()->Init();
 	DeleteObject();
+	// Camera初期化
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Init();
-
+	// Player初期化
 	player_ = std::make_unique<Player>();
 	player_->Init({0.0f,1.0f,0.0f,},"player");
 	player_->SetCamera(followCamera_->GetCamera());
 	// 自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(player_->GetWorldTransform());
-
-	ground_ = std::make_unique<Ground>();
-	Loder::LoadJsonFile("Resources/json", "stage6", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
-	ground_->SetCamera(followCamera_->GetCamera());
-
+	// Playerの位置を取得した後のカメラ調整
 	followCamera_->PosAdustment();
-
-	lockOn_ = std::make_unique<LockOn>();
-	lockOn_->Init();
-	player_->SetLockOn(lockOn_.get());
-	followCamera_->SetLockOn(lockOn_.get());
-	
+	// Skydome初期化
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Init();
+	// Ground初期化
+	ground_ = std::make_unique<Ground>();
+	ground_->SetCamera(followCamera_->GetCamera());
 
+	// Loderによる読み込み
+	Loder::LoadJsonFile("Resources/json", "stage6", player_.get(), enemys_, items_, worldDesigns_, ground_.get());
+	
+	// LockOn初期化
+	lockOn_ = std::make_unique<LockOn>();
+	lockOn_->Init();
+	// PlayerとCameraにLockOnの値を渡す
+	player_->SetLockOn(lockOn_.get());
+	followCamera_->SetLockOn(lockOn_.get());
+	// スポットライト初期化
 	cosAngle_ = 3.0f;
 	spotLight_.color = { 1.0f,1.0f,1.0f,1.0f };
 	spotLight_.position = { 2.0f ,1.25f,5.0 };
@@ -41,36 +46,50 @@ void GameScene::Init()
 	spotLight_.dacya = 2.0f;
 	spotLight_.cosAngle =
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
-	
+	// Gameの演出モード
 	gameStateMode_ = WAITGAME;
 	jumpNum_ = JUMPONE;
 	jumpRoopNum = 0;
+	// PostEffect初期化
 	postProcess_ = new PostProcess();
 	postProcess_->Init();
 	postProcess_->SetCamera(followCamera_->GetCamera());
 	postProcess_->SetDissolveInfo({1.0f,1.0f,1.0f});
 	postProcess_->SetEffectNo(PostEffectMode::kDissolveOutline);
 	postProcess_->SerDissolveOutline({ .weightSize = 100.0f });
-
 	thre_ = 1.0f;
 	threPorM_ = 0.025f;
 	threFlag_ = false;
 	postProcess_->SetThreshold(thre_);
-
+	// CollisionManager初期化
 	collisionManager_ = std::make_unique<CollisionManager>();
 	collisionManager_->SetGameScene(this);
 	collisionManager_->SetPlayer(player_.get());
+	// 敵を倒した数
 	destroyCount_ = 0;
-
+	// LoadingUI
 	LoadStringSp_ = std::make_unique<Sprite>();
 	LoadStringSp_->Init(
 		{ 800,660 }, { 500, 120 },
 		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
 		"Resources/noise1.png");
 	LoadStringSpTex_ = TextureManager::StoreTexture("Resources/LoadString.png");
-
 	moveflag1 = false;
 	moveFlag2 = false;
+	slime2DSp1_ = std::make_unique<Slime2d>();
+	slime2DSp1_->Init(
+		{ 1050,650 }, 0.2f, 2, true);
+	slime2DSp2_ = std::make_unique<Slime2d>();
+	slime2DSp2_->Init(
+		{ 1135,650 }, 0.2f, 3, false);
+	slime2DSp3_ = std::make_unique<Slime2d>();
+	slime2DSp3_->Init(
+		{ 1220,650 }, 0.25f, 4, false);
+	jumpRoopNum = 0;
+	loadpos = 660.0f;
+	startTimer = 0;
+	cameraFlag_ = false;
+	// StartEffectUI
 	startSpritePos_ = { 640.0f , -250.0f };
 	startSpriteVelo_ = 0.75f;
 	startEffectSp_ = std::make_unique<Sprite>();
@@ -79,7 +98,6 @@ void GameScene::Init()
 		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
 		"Resources/noise1.png");
 	startEffectSpTex_ = TextureManager::StoreTexture("Resources/StartSprite.png");
-
 	startSpritePos2_ = { 640.0f , -250.0f };
 	startSpriteVelo2_ = 0.75f;
 	startEffectSp2_ = std::make_unique<Sprite>();
@@ -88,28 +106,9 @@ void GameScene::Init()
 		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
 		"Resources/noise1.png");
 	startEffectSpTex2_ = TextureManager::StoreTexture("Resources/StartSprite2.png");
-
-
-	statrTimer_ = 0;
-
-	slime2DSp1_ = std::make_unique<Slime2d>();
-	slime2DSp1_->Init(
-		{ 1050,650 }, 0.2f, 2, true);
-
-	slime2DSp2_ = std::make_unique<Slime2d>();
-	slime2DSp2_->Init(
-		{ 1135,650 }, 0.2f, 3, false);
-
-	slime2DSp3_ = std::make_unique<Slime2d>();
-	slime2DSp3_->Init(
-		{ 1220,650 }, 0.25f, 4, false);
-
-	jumpRoopNum = 0;
-	loadpos = 660.0f;
 	endTimer = 0;
-	startTimer = 0;
-	cameraFlag_ = false;
 
+	// Audio
 	gameBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/game.wav");
 	slimeDeadSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimeDead.wav");
 	gameClearSE_ = Audio::GetInstance()->SoundLoadWave("Resources/clearSE.wav");
@@ -117,7 +116,6 @@ void GameScene::Init()
 	// スコア
 	score_ = std::make_unique<Score>();
 	score_->Init();
-
 	killCount_ = 0;
 	// ゲームタイマー
 	gameTimer_ = std::make_unique<GameTimer>();
@@ -126,6 +124,7 @@ void GameScene::Init()
 	// クリア条件の敵を倒した数の設定
 	clearFlagCount_ = (int)enemys_.size();
 
+	// Enemyのポップ初期化
 	enemyApear_.Init();
 	enemyApear_.SetPlayer(player_.get());
 	

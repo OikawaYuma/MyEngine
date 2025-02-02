@@ -25,7 +25,7 @@
 #include "Score/Score.h"
 #include "GameTimer/GameTimer.h"
 /*--------------------------------------------
-ゲームのスタート演出のための待ちを管理するための構造体
+ゲームのスタート演出のための待ちを管理するためのenum
 ---------------------------------------------*/
 enum GameState {
 	WAITGAME,
@@ -53,7 +53,7 @@ public:
 	const std::list<std::unique_ptr<BaseEnemy>>& Getbullet() const { return enemys_; }
 	const std::list<std::unique_ptr<PlayerItem>>& GetItems() const { return items_; }
 
-private: // 各宣言
+private: //Object
 	// プレイヤー
 	std::unique_ptr<Player> player_;
 	// エネミーリスト
@@ -75,6 +75,11 @@ private: // 各宣言
 	int killCount_ = 0;
 	// ゲーム用タイマー
 	std::unique_ptr<GameTimer> gameTimer_;
+
+private: //Collision
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+private:
 	// ポストエフェクト
 	PostProcess* postProcess_ = nullptr;
 	// ゲームの進行度
@@ -83,7 +88,8 @@ private: // 各宣言
 	float threPorM_ = 0.025f;
 	bool threFlag_ = false;
 	uint32_t destroyCount_ = 0;
-	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+private: // threadを使用した際に使うようLoadingUI
 	std::unique_ptr<Sprite> LoadStringSp_;
 	uint32_t LoadStringSpTex_ = 0;
 	std::unique_ptr<Slime2d> slime2DSp1_;
@@ -95,24 +101,32 @@ private: // 各宣言
 	uint32_t startEffectSpTex_ = 0;
 	bool moveflag1 = false;
 	bool moveFlag2 = false;
-	uint32_t statrTimer_ = 0;
+	uint32_t jumpNum_ = JUMPONE;
+	uint32_t jumpRoopNum = 0;
+
+private: // ゲーム開始までの演出
 	bool cameraFlag_ = false;
 	Vector2 startSpritePos2_;
 	float startSpriteVelo2_;
 	std::unique_ptr<Sprite> startEffectSp2_;
 	uint32_t startEffectSpTex2_ = 0;
+
+private:
 	SpotLight spotLight_{};
 	float cosAngle_ = 0.0f;
-	uint32_t jumpNum_ = JUMPONE;
-	uint32_t jumpRoopNum = 0;
+	
 	float loadpos = 0;
 	uint32_t endTimer = 0;
 	uint32_t startTimer = 0;
-	uint32_t gameBGM_;
-	uint32_t slimeDeadSE_;
-	uint32_t gameClearSE_;
 	// クリア条件
 	int clearFlagCount_ = 0;
 	EnemyApear enemyApear_;
+
+private: // Audio
+	uint32_t gameBGM_;
+	uint32_t slimeDeadSE_;
+	uint32_t gameClearSE_;
+	
+
 };
 
