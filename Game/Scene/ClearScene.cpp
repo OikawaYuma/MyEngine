@@ -26,9 +26,6 @@ void ClearScene::Init()
 	ground_ = std::make_unique<Ground>();
 	Loder::LoadJsonFile("Resources/json", "gameClear2", player2_.get(), enemys_, items_, worldDesigns_, ground_.get());
 	ground_->SetCamera(camera_->GetCamera());
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-		(*itr)->ClearInit();
-	}
 	
 	/////////////////////////////////////////////////
 
@@ -77,8 +74,8 @@ void ClearScene::Update()
 	skydome_->Update();
 	camera_->Update();
 	player_->Update();
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-		(*itr)->ClearUpdate();
+	for (std::list<std::unique_ptr<BaseEnemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		(*itr)->Update();
 	}
 	for (std::list<std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Update();

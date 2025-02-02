@@ -24,7 +24,7 @@ public:
 	virtual void Release() = 0;
 	virtual int GameClose() = 0;
 
-	// 仮想デストラクタを用意しないと警告される
+	// 仮想デストラクタを用意
 	virtual ~IScene();
 
 	// シーン番号のゲッター

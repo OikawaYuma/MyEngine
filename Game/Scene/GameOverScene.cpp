@@ -17,7 +17,7 @@ void GameOverScene::Init()
 	ground_ = std::make_unique<Ground>();
 	player_ = std::make_unique<GameOverPlayer>();
 	player2_ = std::make_unique<Player>();
-	Loder::LoadJsonFile("Resources/json", "gameOverStage", player2_.get(), enemys_, items_, worldDesigns_,ground_.get());
+	Loder::LoadJsonFile("Resources/json", "gameOverStage2", player2_.get(), enemys_, items_, worldDesigns_,ground_.get());
 	player_->Init();
 	ground_->SetCamera(camera_->GetCamera());
 
@@ -66,15 +66,15 @@ void GameOverScene::Init()
 	gameOverBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/gameOver.wav");
 	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameOverBGM_, true);
 	pushSE_= Audio::GetInstance()->SoundLoadWave("Resources/slimePush.wav");
-
+	Object3dManager::ObjectSort();
 }
 void GameOverScene::Update()
 {
 	
 	skydome_->Update();
 	camera_->Update();
-	for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
-		(*itr)->GameOverUpdate();
+	for (std::list<std::unique_ptr<BaseEnemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		(*itr)->Update();
 	}
 	for (std::list<std::unique_ptr<PlayerItem>>::iterator itr = items_.begin(); itr != items_.end(); itr++) {
 		(*itr)->Update();

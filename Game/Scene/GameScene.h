@@ -12,7 +12,7 @@
 #include <vector>
 #include <memory>
 #include "Character/Player/Player.h"
-#include "Character/Enemy/Enemy.h"
+#include "Character/Enemy/BaseEnemy.h"
 #include "Character/Enemy/EnemyApear.h"
 #include "Ground/Ground.h"
 #include "Item/PlayerItem.h"
@@ -50,14 +50,14 @@ public:
 
 public:
 	// 弾リストを取得
-	const std::list<std::unique_ptr<Enemy>>& Getbullet() const { return enemys_; }
+	const std::list<std::unique_ptr<BaseEnemy>>& Getbullet() const { return enemys_; }
 	const std::list<std::unique_ptr<PlayerItem>>& GetItems() const { return items_; }
 
 private: // 各宣言
 	// プレイヤー
 	std::unique_ptr<Player> player_;
 	// エネミーリスト
-	std::list<std::unique_ptr<Enemy>> enemys_;
+	std::list<std::unique_ptr<BaseEnemy>> enemys_;
 	// 床
 	std::unique_ptr<Ground> ground_;
 	std::list<std::unique_ptr<PlayerItem>> items_;

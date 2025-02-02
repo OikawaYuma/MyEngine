@@ -29,7 +29,7 @@ private:
 
 };
 class Player;
-class Enemy;
+class BaseEnemy;
 class Ground;
 class PlayerItem;
 class WorldDesign;
@@ -37,7 +37,7 @@ class Loder
 {
 public:
 	static void LoadJsonFileBase(const std::string kDefaultBaseDirectory, const std::string fileName,std::vector<Object3d*>& objects,Camera* camera);
-	static void LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName,Player *player,std::list<std::unique_ptr<Enemy>>& enemys,std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns,Ground * ground);
+	static void LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName,Player *player,std::list<std::unique_ptr<BaseEnemy>>& enemys,std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns,Ground * ground);
 };
 
 

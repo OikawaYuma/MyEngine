@@ -12,7 +12,7 @@ class EnemyApear
 {
 public:
 	void Init();
-	void Update(std::list<std::unique_ptr<Enemy>>& enemys);
+	void Update(std::list<std::unique_ptr<BaseEnemy>>& enemys);
 	
 public: // Setter
 	void SetPlayer(Player* player) { player_ = player; };

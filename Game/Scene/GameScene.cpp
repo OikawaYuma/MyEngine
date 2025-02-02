@@ -333,7 +333,7 @@ void GameScene::Update()
 		ground_->Update();
 		skydome_->Update();
 		// エネミーの弾発射処理
-		for (std::list<std::unique_ptr<Enemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
+		for (std::list<std::unique_ptr<BaseEnemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 			(*itr)->Update();
 
 			

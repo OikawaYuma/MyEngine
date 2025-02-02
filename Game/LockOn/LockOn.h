@@ -7,17 +7,17 @@
 #pragma once
 #include <memory>
 #include "Sprite.h"
-#include "Character/Enemy/Enemy.h"
+#include "Character/Enemy/BaseEnemy.h"
 #include "Character/Player/Player.h"
 #include "Camera.h"
 class LockOn
 {
 public:
 	void Init();
-	void Update(const std::list<std::unique_ptr<Enemy>>& enemies,Camera* camera,Player * player);
+	void Update(const std::list<std::unique_ptr<BaseEnemy>>& enemies,Camera* camera,Player * player);
 	void Draw();
 
-	const Enemy* GetTarget() { return target_; }
+	const BaseEnemy* GetTarget() { return target_; }
 
 	Vector3 GetTargetPosition() const;
 
@@ -30,7 +30,7 @@ private:
 	// ロックオンマーク用スプライト
 	std::unique_ptr<Sprite> lockOnMark_;
 	// ロックオン対象
-	const Enemy* target_ = nullptr;
+	const BaseEnemy* target_ = nullptr;
 	// 最小距離
 	float minDistance_ = 30.0f;
 	// 最大距離

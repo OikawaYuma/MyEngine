@@ -332,6 +332,8 @@
     <ClCompile Include="Game\Character\Player\Clear\ClearPlayer.cpp" />
     <ClCompile Include="Game\Character\Player\GameOver\GameOverPlayer.cpp" />
     <ClCompile Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.cpp" />
+    <ClCompile Include="Game\Character\Enemy\BaseEnemy.cpp" />
+    <ClCompile Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\function.h">
@@ -523,7 +525,7 @@
     <ClInclude Include="Game\Character\Enemy\Enemy.h">
       <Filter>Application\character\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Character\Enemy\EnemyBase.h">
+    <ClInclude Include="Game\Character\Enemy\BaseEnemy.h">
       <Filter>Application\character\enemy</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Interface\PSO\PSOAnimationModel.h">
@@ -614,6 +616,7 @@
     <ClInclude Include="Game\Character\Player\Clear\ClearPlayer.h" />
     <ClInclude Include="Game\Character\Player\GameOver\GameOverPlayer.h" />
     <ClInclude Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.h" />
+    <ClInclude Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shader\Particle.PS.hlsl">

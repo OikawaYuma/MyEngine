@@ -8,22 +8,15 @@
 #include <memory>
 #include "Camera.h"
 #include "Character/base/BaseCharacter.h"
-#include "EnemyBase.h"
+#include "BaseEnemy.h"
 #include "PlaneProjectionShadow.h"
 class Player;
-class Enemy: public EnemyBase
+class Enemy: public BaseEnemy
 {
 public:
 	void Init(const Vector3& translate, const std::string filename) ;
 	void Update();
 	void Draw(Camera* camera) ;
-
-	/// <summary>
-	/// クリア
-	/// </summary>
-	void ClearInit();
-	void ClearUpdate();
-	void ClearDraw(Camera* camera);
 	
 	/// <summary>
 	/// ゲームオーバー
@@ -44,7 +37,7 @@ public: // Getter
 	 bool IsDead() { return isDead_; }
 
 public: // Setter
-	 void SetPlayer(Player* player) { player_ = player; }
+	 void SetPlayer(Player* player) override { player_ = player; }
 
 private:
 	// 平行影

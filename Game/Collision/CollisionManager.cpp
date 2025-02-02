@@ -14,7 +14,7 @@ void CollisionManager::CheckAllCollision() {
 	const std::list<PlayerBullet*>& playerBullets = player_->Getbullet();
 
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<Enemy>>& enemy = gameScene_->Getbullet();
+	const std::list<std::unique_ptr<BaseEnemy>>& enemy = gameScene_->Getbullet();
 
 	const std::list< std::unique_ptr<PlayerItem>>& items = gameScene_->GetItems();
 

@@ -51,32 +51,7 @@ void Enemy::Draw(Camera* camera)
 	//object_->Draw(camera);
 }
 
-void Enemy::ClearInit()
-{
-	skinTex_ = TextureManager::GetInstance()->StoreTexture("Resources/slimeDead/enemySlimeDead.png");
 
-	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
-	deadSlimeObj_ = std::make_unique<Object3d>();
-	deadSlimeObj_->Init();
-	deadSlimeObj_->SetModel("slimeDead.obj");
-	worldTransform_.translation_.y = 0.01f;
-	worldTransform_.scale_ = { 3.0f,1.0f,3.0f };
-	worldTransform_.UpdateMatrix();
-	deadSlimeObj_->SetWorldTransform(worldTransform_);
-	//object_->Update();
-}
-
-void Enemy::ClearUpdate()
-{
-	worldTransform_.UpdateMatrix();
-	deadSlimeObj_->SetWorldTransform(worldTransform_);
-	deadSlimeObj_->Update();
-}
-
-void Enemy::ClearDraw(Camera* camera)
-{
-	deadSlimeObj_->Draw(camera);
-}
 
 void Enemy::GameOverUpdate()
 {

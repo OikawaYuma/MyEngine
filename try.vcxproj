@@ -119,6 +119,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.cpp" />
+    <ClCompile Include="Game\Character\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.cpp" />
     <ClCompile Include="Game\Character\Player\GameOver\GameOverPlayer.cpp" />
     <ClCompile Include="Game\Character\Player\Clear\ClearPlayer.cpp" />
@@ -215,6 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Character\Player\Title\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.h" />
     <ClInclude Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.h" />
     <ClInclude Include="Game\Character\Player\GameOver\GameOverPlayer.h" />
     <ClInclude Include="Game\Character\Player\Clear\ClearPlayer.h" />
@@ -235,7 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\GameCamera\GameOverCamera\GameOverCamera.h" />
     <ClInclude Include="Game\Character\base\BaseCharacter.h" />
     <ClInclude Include="Game\Character\Enemy\Enemy.h" />
-    <ClInclude Include="Game\Character\Enemy\EnemyBase.h" />
+    <ClInclude Include="Game\Character\Enemy\BaseEnemy.h" />
     <ClInclude Include="Game\Character\Player\Player.h" />
     <ClInclude Include="Game\Character\Player\Attck\Bullet\PlayerBullet.h" />
     <ClInclude Include="Game\Character\Player\Attck\Razer\PlayerRazer.h" />

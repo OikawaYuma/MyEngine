@@ -10,11 +10,14 @@
 
 #include "Character/Player/Player.h"
 #include "Ground/Ground.h"
+#include "Character/Enemy/BaseEnemy.h"
 #include "Character/Enemy/Enemy.h"
+#include "Character/Enemy/ClearEnemy/ClearEnemy.h"
+#include "Character/Enemy/GameOverEnemy/GameOverEnemy.h"
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
 
-void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, std::list<std::unique_ptr<Enemy>>& enemys, std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns, Ground* ground)
+void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::string fileName, Player* player, std::list<std::unique_ptr<BaseEnemy>>& enemys, std::list<std::unique_ptr<PlayerItem>>& items, std::list<std::unique_ptr<WorldDesign>>& worldDesigns, Ground* ground)
 {
 	// 連結してフルパスを得る
 	const std::string fullpath = kDefaultBaseDirectory + "/" + fileName + ".json";
@@ -82,7 +85,6 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			objectData.transform.scale.x = (float)transform["scaling"][0];
 			objectData.transform.scale.y = (float)transform["scaling"][2];
 			objectData.transform.scale.z = (float)transform["scaling"][1];
- 			ModelManager::GetInstance()->LoadModel("Resources/" + objectData.filename, objectData.filename + ".obj");
 
 		}
 
@@ -134,17 +136,22 @@ void Loder::LoadJsonFile(const std::string kDefaultBaseDirectory, const std::str
 			//floor->Init(objectData.transform.scale, objectData.transform.translate);
 		}
 		else if (objectData.filename.compare("enemy") == 0) {
-			std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+			std::unique_ptr<BaseEnemy> enemy = std::make_unique<Enemy>();
 			//enemy->SetPlayer(player);
 			enemy->Init(objectData.transform.translate, objectData.filename);
 			enemy->SetPlayer(player);
 			enemys.push_back(std::move(enemy));
 		}
-		else if (objectData.filename.compare("slimeDead") == 0) {
-			std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+		else if (objectData.filename.compare("gameOverEnemy") == 0) {
+			std::unique_ptr<BaseEnemy> enemy = std::make_unique<GameOverEnemy>();
 			//enemy->SetPlayer(player);
 			enemy->Init(objectData.transform.translate, objectData.filename);
-			enemy->SetPlayer(player);
+			enemys.push_back(std::move(enemy));
+		}
+		else if (objectData.filename.compare("slimeDead") == 0) {
+			std::unique_ptr<BaseEnemy> enemy = std::make_unique<ClearEnemy>();
+			//enemy->SetPlayer(player);
+			enemy->Init(objectData.transform.translate, objectData.filename);
 			enemys.push_back(std::move(enemy));
 		}
 

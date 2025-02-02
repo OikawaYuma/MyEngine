@@ -16,14 +16,14 @@ void LockOn::Init()
 	lockOnMarkTex_ = TextureManager::StoreTexture("Resources/Reticle.png");
 }
 
-void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, Camera* camera, Player* player)
+void LockOn::Update(const std::list<std::unique_ptr<BaseEnemy>>& enemies, Camera* camera, Player* player)
 {
 	if (!target_) {
 		// ロックオンボタンをトリガーしたら
 		if (player->GetBulletMode() == BulletMode::HommingBullet) {
 			// ロックオン対象の検索
 			// 目標
-			std::list<std::pair<float, const Enemy* >> targets;
+			std::list<std::pair<float, const BaseEnemy* >> targets;
 
 			// 全ての敵に対して順にロックオン判定
 			for (const auto& enemy : enemies) {
@@ -60,7 +60,7 @@ void LockOn::Update(const std::list<std::unique_ptr<Enemy>>& enemies, Camera* ca
 	}
 	// ロックオン継続
 	else if (target_) {
-		std::list < std::pair<float, const Enemy* >> targets;
+		std::list < std::pair<float, const BaseEnemy* >> targets;
 		
 		// 全ての敵に対して順にロックオン判定
 		for (const auto& enemy : enemies) {
