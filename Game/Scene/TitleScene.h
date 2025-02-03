@@ -16,7 +16,7 @@
 #include "Character/Enemy/BaseEnemy.h"
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
-#include "Slime2d/Slime2d.h"
+#include "Loading/GameLoading.h"
 class TitleScene : public IScene
 {
 public:
@@ -36,16 +36,8 @@ private:
 	Vector2 titleSpritePos_;
 	float titleSpriteVelo_;
 
-	std::unique_ptr<Sprite> LoadStringSp_;
-	uint32_t LoadStringSpTex_ = 0;
 
-	std::unique_ptr<Slime2d> slime2DSp1_;
-	std::unique_ptr<Slime2d> slime2DSp2_;
-	std::unique_ptr<Slime2d> slime2DSp3_;
-	uint32_t jumpNum_ = JUMPONE;
-	float loadpos = 0;
-
-	bool loadingSpriteMoveFlag_ = false;
+	std::unique_ptr<GameLoading> loading_ = nullptr;
 
 	Sprite* pushASp_ = nullptr;
 	float pushSpriteAlpha_;

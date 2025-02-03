@@ -48,8 +48,6 @@ void GameScene::Init()
 		std::cos(std::numbers::pi_v<float> / cosAngle_);
 	// Gameの演出モード
 	gameStateMode_ = WAITGAME;
-	jumpNum_ = JUMPONE;
-	jumpRoopNum = 0;
 	// PostEffect初期化
 	postProcess_ = new PostProcess();
 	postProcess_->Init();
@@ -67,27 +65,6 @@ void GameScene::Init()
 	collisionManager_->SetPlayer(player_.get());
 	// 敵を倒した数
 	destroyCount_ = 0;
-	// LoadingUI
-	LoadStringSp_ = std::make_unique<Sprite>();
-	LoadStringSp_->Init(
-		{ 800,660 }, { 500, 120 },
-		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
-		"Resources/noise1.png");
-	LoadStringSpTex_ = TextureManager::StoreTexture("Resources/LoadString.png");
-	moveflag1 = false;
-	moveFlag2 = false;
-	slime2DSp1_ = std::make_unique<Slime2d>();
-	slime2DSp1_->Init(
-		{ 1050,650 }, 0.2f, 2, true);
-	slime2DSp2_ = std::make_unique<Slime2d>();
-	slime2DSp2_->Init(
-		{ 1135,650 }, 0.2f, 3, false);
-	slime2DSp3_ = std::make_unique<Slime2d>();
-	slime2DSp3_->Init(
-		{ 1220,650 }, 0.25f, 4, false);
-	jumpRoopNum = 0;
-	loadpos = 660.0f;
-	startTimer = 0;
 	cameraFlag_ = false;
 	// StartEffectUI
 	startSpritePos_ = { 640.0f , -250.0f };
@@ -106,7 +83,10 @@ void GameScene::Init()
 		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
 		"Resources/noise1.png");
 	startEffectSpTex2_ = TextureManager::StoreTexture("Resources/StartSprite2.png");
-	endTimer = 0;
+
+	// Loading
+	loading_ = std::make_unique<GameLoading>();
+	loading_->Init(JUMPONE);
 
 	// Audio
 	gameBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/game.wav");
@@ -148,85 +128,22 @@ void GameScene::Update()
 		// ロード画面
 	case WAITGAME:
 	{
-		switch (jumpNum_) {
-		case JUMPONE: {
-			startTimer++;
-			if (startTimer >= 10.0f) {
-				slime2DSp1_->Update();
-				if (!slime2DSp1_->GetIsJump()) {
-					jumpNum_ = JUMPTWO;
-					slime2DSp2_->SetIsJump(true);
-				}
+		loading_->Update();
+		// Loading演出が終わった時にSTARTGAMEに移行する
+		if (loading_->GetLoadingEffectEnd()) {
+			thre_ -= threPorM_;;
+			if (thre_ <= 0.5f) {
+				followCamera_->StartCameraEffect();
 			}
-			break;
-		}
-		case JUMPTWO: {
-			slime2DSp2_->Update();
-			if (!slime2DSp2_->GetIsJump()) {
-				jumpNum_ = JUMPTHREE;
-				slime2DSp3_->SetIsJump(true);
+			// ゲーム画面に移る
+			if (thre_ <= 0.0f) {
+				gameStateMode_ = STARTGAME;
+				threPorM_ = 0.025f;
+				threFlag_ = true;
+				Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameBGM_, true);
 			}
-			break;
+			postProcess_->SetThreshold(thre_);
 		}
-		case JUMPTHREE: {
-			slime2DSp3_->Update();
-			if (!slime2DSp3_->GetIsJump()) {
-				jumpNum_ = JUMPONE;
-				slime2DSp1_->SetIsJump(true);
-				jumpRoopNum++;
-				if (jumpRoopNum >= 2) {
-					jumpNum_ = JUMPEND;
-				}
-			}
-			break;
-		}
-		case JUMPEND:
-		{
-			
-			endTimer++;
-			if (endTimer >= 10) {
-				if (slime2DSp1_->IsApear()) {
-					loadpos -= 4.0f;
-				}
-				if (!slime2DSp1_->IsApear() && loadpos <= 800.0f) {
-					loadpos += 4.0f;
-				}
-				slime2DSp1_->EndUpdate();
-				slime2DSp2_->EndUpdate();
-				slime2DSp3_->EndUpdate();
-
-
-
-
-				LoadStringSp_->SetPosition({ 800.0f,loadpos });
-				LoadStringSp_->Update();
-
-				if (slime2DSp1_->IsStart()) {
-
-					
-					thre_ -= threPorM_;;
-					if (thre_ <= 0.5f) {
-						followCamera_->StartCameraEffect();
-					}
-					// ゲーム画面に移る
-					if (thre_ <= 0.0f) {
-						gameStateMode_ = STARTGAME;
-						threPorM_ = 0.025f;
-						threFlag_ = true;
-						Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameBGM_, true);
-					}
-					postProcess_->SetThreshold(thre_);
-					
-
-				}
-			}
-
-			break;
-		}
-		}
-		
-	
-
 	
 		
 		break;
@@ -237,7 +154,7 @@ void GameScene::Update()
 			followCamera_->StartCameraEffect();
 		}
 		
-		startTimer++;
+		startTimer_++;
 		if (!moveFlag2) {
 			
 			if (!moveflag1) {
@@ -258,7 +175,7 @@ void GameScene::Update()
 				}
 			}
 			
-			if (startTimer >= 300) {
+			if (startTimer_ >= 300) {
 				moveFlag2 = true;
 			}
 		}
@@ -266,7 +183,7 @@ void GameScene::Update()
 			startSpriteVelo_ = -5.0f;
 		}
 
-		if (startTimer >=360.0f) {
+		if (startTimer_ >=360.0f) {
 			if (threFlag_) {
 				if (thre_ >= 1.2f) {
 					threPorM_ *= -1.0f;
@@ -403,11 +320,7 @@ void GameScene::Draw2d()
 		player_->DrawUI();
 		break;
 	}
-
-	LoadStringSp_->Draw(LoadStringSpTex_, { 1.0f,1.0f,1.0f,1.0f });
-	slime2DSp1_->Draw();
-	slime2DSp2_->Draw();
-	slime2DSp3_->Draw();
+	loading_->Draw();
 	startEffectSp_->Draw(startEffectSpTex_, { 1.0f,1.0f,1.0f,1.0f });
 	startEffectSp2_->Draw(startEffectSpTex2_, { 1.0f,1.0f,1.0f,1.0f });
 }

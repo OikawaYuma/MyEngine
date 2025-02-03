@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Loading\GameLoading.cpp" />
     <ClCompile Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.cpp" />
     <ClCompile Include="Game\Character\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.cpp" />
@@ -216,6 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Character\Player\Title\TitlePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Loading\GameLoading.h" />
     <ClInclude Include="Game\Character\Enemy\GameOverEnemy\GameOverEnemy.h" />
     <ClInclude Include="Game\Character\Enemy\ClearEnemy\ClearEnemy.h" />
     <ClInclude Include="Game\Character\Player\GameOver\GameOverPlayer.h" />

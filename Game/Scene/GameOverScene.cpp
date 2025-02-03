@@ -154,6 +154,7 @@ void GameOverScene::Draw()
 
 void GameOverScene::Draw2d()
 {
+
 }
 
 void GameOverScene::PostDraw()

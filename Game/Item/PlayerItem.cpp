@@ -1,9 +1,10 @@
 #include "PlayerItem.h"
 #include "Character/Player/Player.h"
-#include <Object3dManager.h>
+#include "Object3dManager.h"
+#include "ModelManager.h"
 void PlayerItem::Init(const Vector3& translate, const std::string filename)
 {
-
+	ModelManager::GetInstance()->LoadModel("Resources/" + filename, filename +  ".obj");;
 	floorTex_ = TextureManager::GetInstance()->StoreTexture("Resources/item.png");
 	worldTransform_.Initialize();
 	worldTransform_.scale_.x = 1.0f;

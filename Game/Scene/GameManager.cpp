@@ -33,17 +33,13 @@
 
 // コンストラクタ
 GameManager::GameManager() {
-	// 各シーンの排列
-	sceneArr_[TITLE] = std::make_unique<TitleScene>();
-	sceneArr_[STAGE] = std::make_unique<GameScene>();
-	sceneArr_[CLEAR] = std::make_unique<ClearScene>();
-	sceneArr_[GAMEOVER] = std::make_unique<GameOverScene>();
-	sceneArr_[DEMO] = std::make_unique<DemoScene>();
+	// 各シーンの登録
+	sceneMap_[TITLE] = [] () { return  std::make_unique<TitleScene>(); };
+	sceneMap_[STAGE] = []() { return std::make_unique<GameScene>(); };
+	sceneMap_[CLEAR] = []() { return std::make_unique<ClearScene>(); };
+	sceneMap_[GAMEOVER] = []() { return  std::make_unique<GameOverScene>(); };
+	sceneMap_[DEMO] = []() { return std::make_unique<DemoScene>(); };
 	
-
-	// 初期シーンの設定
-	//sceneNo_ = TITLE; //GameManagerのクラスにISceneを継承させて触れるようにしているため正しいかは怪しい
-	//input_ = Input::GetInstance();
 }
 
 GameManager::~GameManager() {}
@@ -96,11 +92,12 @@ int GameManager::Run() {
 
 	// シーンのチェック
 	prevSceneNo_ = currentSceneNo_;
-	currentSceneNo_ = sceneArr_[currentSceneNo_]->GetSceneNo();
+	currentSceneNo_ = IScene::GetSceneNo();
 
 	
 	//post->Init();
-	sceneArr_[currentSceneNo_]->Init();
+	sceneArr_ = sceneMap_[currentSceneNo_]();
+	sceneArr_->Init();
 	
 
 	Input* sInput = Input::GetInstance();
@@ -129,18 +126,19 @@ int GameManager::Run() {
 
 		// シーンのチェック
 		prevSceneNo_ = currentSceneNo_;
-		currentSceneNo_ = sceneArr_[currentSceneNo_]->GetSceneNo();
+		currentSceneNo_ = IScene::GetSceneNo();
 
 		// シーン変更チェック
 		if (prevSceneNo_ != currentSceneNo_) {
-			sceneArr_[currentSceneNo_]->Init();
+			sceneArr_ = sceneMap_[currentSceneNo_]();
+			sceneArr_->Init();
 		}
 		
 
 		///
 		/// ↓更新処理ここから
 		///
-		sceneArr_[currentSceneNo_]->Update(); // シーンごとの更新処理
+		sceneArr_->Update(); // シーンごとの更新処理
 
 		///
 		/// ↑更新処理ここまで
@@ -150,25 +148,25 @@ int GameManager::Run() {
 		/// ↓描画処理ここから
 		///
 
-		sceneArr_[currentSceneNo_]->Draw();
+		sceneArr_->Draw();
 	
 		///
 		/// ↑描画処理ここまで
 		///
 		sDirctX->BeginFrame();
 		sDirctX->ChangeDepthStatetoRead();
-		sceneArr_[currentSceneNo_]->PostDraw();
+		sceneArr_->PostDraw();
 		sDirctX->ChangeDepthStatetoRender();
 		// PostEffectかけないスプライトのDraw
-		sceneArr_[currentSceneNo_]->Draw2d();
+		sceneArr_->Draw2d();
 
 		// フレームの終了
 		//スワップチェーン
 		sDirctX->ViewChange();
 		sAudio->GetIXAudio().Reset();
 		// ESCキーが押されたらループを抜ける
-		if (sceneArr_[currentSceneNo_]->GameClose()) {
-			sceneArr_[currentSceneNo_]->Release();
+		if (sceneArr_->GameClose()) {
+			sceneArr_->Release();
 			break;
 		}
 	}

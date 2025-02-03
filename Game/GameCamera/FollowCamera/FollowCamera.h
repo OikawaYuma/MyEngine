@@ -21,6 +21,9 @@ public:
 
 	// プレイヤーの位置調整
 	void PosAdustment();
+
+	// 画面端のカメラ調整
+	void EndPosAdustment();
 	
 
 public: // Getter
@@ -39,6 +42,8 @@ private:
 	float destinationAngleY_ = 0.0f;
 	// 追従対象の残像座標
 	Vector3 interarget_ = {};
+
+	float offsetZ_ = 0.0f;
 
 	float cameraTime_ = 1.0f;
 	bool isDash_ = false;

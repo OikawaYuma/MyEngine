@@ -9,7 +9,6 @@ int Enemy::enemyDestory_ = 0;
 
 void Enemy::Init(const Vector3& translate, const std::string filename)
 {
-	ModelManager::GetInstance()->LoadModel("Resources/slimeDead", "slimeDead.obj");
 	ModelManager::GetInstance()->LoadModel("Resources/enemy","enemy.obj");;
 	hp_ = 0.7f;
 	glavity_ = 0;
@@ -53,27 +52,6 @@ void Enemy::Draw(Camera* camera)
 
 
 
-void Enemy::GameOverUpdate()
-{
-	// 重量加速度
-	const float kGravityAcceleration = 0.075f;
-	// 加速度ベクトル
-	Vector3 accelerationVector = { 0, -kGravityAcceleration, 0 };
-	// 加速する
-	move = Add(move, accelerationVector);
-	// 着地
-	if (worldTransform_.translation_.y <= worldTransform_.scale_.y) {
-		worldTransform_.translation_.y = worldTransform_.scale_.y;
-		// ジャンプ初速
-		const float kJumpFirstSpeed = 1.0f;
-		// ジャンプ初速を与える
-		move.y = kJumpFirstSpeed;
-	}
-	// 移動
-	worldTransform_.translation_ = Add(worldTransform_.translation_, {0.0f,move.y,0.0f});
-	worldTransform_.UpdateMatrix();
-	shadowObject_->Update();
-}
 
 void Enemy::Move()
 {

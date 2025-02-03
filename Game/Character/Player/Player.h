@@ -198,7 +198,7 @@ private:
 	float accel_;
 	// ワールド変換データ
 	WorldTransform worldTransform_{};
-	const float movingRange_ = 160.0f;
+	const float movingRange_ = 152.0f;
 	// model skin num
 	uint32_t skinTex_ = 0;
 	Material material_{};
