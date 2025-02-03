@@ -6,6 +6,8 @@
 
 #pragma once
 #include <memory>
+#include <unordered_map>
+#include <functional>
 #include "IScene.h"
 #include "GameScene.h"
 #include "TitleScene.h"
@@ -18,8 +20,8 @@ class GameManager
 {
 private:
 	// シーンを保持するメンバ変数
-	std::unique_ptr<IScene> sceneArr_[5];
-
+	std::unique_ptr<IScene> sceneArr_;
+	std::unordered_map<int, std::function<std::unique_ptr<IScene>()>> sceneMap_;  // ラムダ式でシーンを登録
 	// どのステージを呼び出すかを管理する変数
 	int currentSceneNo_ = 0;
 	int prevSceneNo_ = 0;

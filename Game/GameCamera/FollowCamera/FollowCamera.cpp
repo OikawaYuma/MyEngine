@@ -1,6 +1,8 @@
 #include "FollowCamera.h"
 #include "Input.h"
 #include "LockOn/LockOn.h"
+#include <iostream>
+#include <cmath>
 void FollowCamera::Init()
 {
 
@@ -9,6 +11,7 @@ void FollowCamera::Init()
 	camera_->SetTranslate({ 0,5,-30 });
 	camera_->SetFarClip(2000.0f);
 	cameraTime_ = 1.0f;
+	offsetZ_ = -30.0f;
 
 }
 
@@ -64,25 +67,13 @@ void FollowCamera::Upadate()
 
 	// 追従対象からのオフセット
 	if (target_) {
-		Vector3 offset = { 0,2,-30 };
+		Vector3 offset = { 0,2,offsetZ_ };
 		offset = TransformNormal(offset, camera_->GetCameraMatrix());
 		camera_->SetTranslate(Add(interarget_, offset));
 		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
 	}
 
-	if (camera_->GetTranslate().x >= 160.0f) {
-		camera_->SetTranslate({ 160.0f,5,camera_->GetTranslate().z });
-	}
-	else if (camera_->GetTranslate().x <= -160.0f) {
-		camera_->SetTranslate({ -160.0f,5,camera_->GetTranslate().z });
-	}
-
-	if (camera_->GetTranslate().z >= 160.0f) {
-		camera_->SetTranslate({ camera_->GetTranslate().x,5,160.0f });
-	}
-	else if (camera_->GetTranslate().z <= -160.0f) {
-		camera_->SetTranslate({ camera_->GetTranslate().x,5,-160.0f });
-	}
+	EndPosAdustment();
 
 
 	camera_->Update();
@@ -104,7 +95,7 @@ void FollowCamera::Reset()
 	}
 	destinationAngleY_ = camera_->GetRotate().y;
 
-	Vector3 offset = { 0,2,-30 };
+	Vector3 offset = { 0,2,offsetZ_ };
 	offset = TransformNormal(offset, camera_->GetCameraMatrix());
 	camera_->SetTranslate(Add(interarget_, offset));
 	camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
@@ -113,12 +104,65 @@ void FollowCamera::Reset()
 void FollowCamera::PosAdustment()
 {
 	if (target_) {
-		Vector3 offset = { 0,2,-30 };
+		Vector3 offset = { 0,2,	offsetZ_ };
 		offset = TransformNormal(offset, camera_->GetCameraMatrix());
 		camera_->SetTranslate(Add(target_->translation_, offset));
 		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
 	}
 	camera_->Update();
+}
+
+void FollowCamera::EndPosAdustment()
+{
+
+	Vector3 cameraTranslate = camera_->GetTranslate();
+	if (cameraTranslate.x >= 140.0f) {
+		
+		if (cameraTranslate.x > 160.0f) {
+			cameraTranslate.x = 160.0f;
+		}
+		float y = Lerp(5, 1.3f, (cameraTranslate.x - 140) / (160 - 140));
+		offsetZ_ = Lerp(-30, -12, (cameraTranslate.x - 140) / (160 - 140));
+		cameraTranslate.y = y;
+		
+	}
+	else if (cameraTranslate.x <= -140.0f) {
+		if (cameraTranslate.x < -160.0f) {
+			cameraTranslate.x = -160.0f;
+			
+		}
+		float y = Lerp(5, 1.3f, (std::fabs(cameraTranslate.x) - 140) / (160 - 140));
+		offsetZ_ = Lerp(-30, -12, (std::fabs(cameraTranslate.x) - 140) / (160 - 140));
+		cameraTranslate.y = y;
+	}
+	
+
+	if (cameraTranslate.z >= 140.0f) {
+
+		if (cameraTranslate.z > 160.0f) {
+			cameraTranslate.z = 160.0f;
+	
+		}
+		float y = Lerp(5, 1.3f, (cameraTranslate.z - 140) / (160 - 140));
+		offsetZ_ = Lerp(-30, -12, (cameraTranslate.z - 140) / (160 - 140));
+		cameraTranslate.y = y;
+
+	}
+	else if (cameraTranslate.z <= -140.0f) {
+		if (cameraTranslate.z < -160.0f) {
+			cameraTranslate.z = -160.0f;
+		
+		}
+		float y = Lerp(5, 1.3f, (std::fabs(cameraTranslate.z) - 140) / (160 - 140));
+		offsetZ_ = Lerp(-30, -12, (std::fabs(cameraTranslate.z) - 140) / (160 - 140));
+		cameraTranslate.y = y;
+	}
+	camera_->SetTranslate(cameraTranslate);
+	if (
+		cameraTranslate.z > -140.0f && cameraTranslate.z < 140.0f&&
+		cameraTranslate.x > -140.0f && cameraTranslate.x < 140.0f) {
+		offsetZ_ = -30.0f;
+	}
 }
 
 void FollowCamera::SetTarget(const WorldTransform* target)

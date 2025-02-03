@@ -10,7 +10,7 @@
 class GameLoading
 {
 public:
-	void Init();
+	void Init(uint32_t jumpMode);
 	void Update();
 	void Draw();
 
@@ -26,7 +26,7 @@ private:
 
 	bool moveflag1 = false;
 	bool moveFlag2 = false;
-	uint32_t jumpNum_ = JUMPONE;
+	uint32_t jumpMode_ = JUMPONE;
 	uint32_t jumpRoopNum = 0;
 	float loadpos = 0;
 	uint32_t endTimer = 0;

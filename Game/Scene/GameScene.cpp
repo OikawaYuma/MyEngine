@@ -86,7 +86,7 @@ void GameScene::Init()
 
 	// Loading
 	loading_ = std::make_unique<GameLoading>();
-	loading_->Init();
+	loading_->Init(JUMPONE);
 
 	// Audio
 	gameBGM_ = Audio::GetInstance()->SoundLoadWave("Resources/game.wav");
