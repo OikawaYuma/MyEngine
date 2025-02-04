@@ -272,7 +272,7 @@ void GameScene::Update()
 		ground_->SetSpotLight(spotLight_);
 		ground_->Update();
 		skydome_->Update();
-		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A)|| Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_START)) {
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_START)) {
 			gameStateMode_ = POSEMENUGAME;
 			titleposeFlag1_ = true;
 
