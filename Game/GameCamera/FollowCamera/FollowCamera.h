@@ -9,6 +9,14 @@
 #include "WorldTransform.h"
 #include <memory>
 
+enum CameraEdgePos {
+	XPZP,
+	XPZM,
+	XMZP,
+	XMZM
+
+};
+
 // 
 class LockOn;
 class FollowCamera
