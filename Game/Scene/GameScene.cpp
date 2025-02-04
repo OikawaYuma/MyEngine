@@ -2,6 +2,7 @@
 #include "Loder.h"
 #include "ImGuiCommon.h"
 #include "Object3dManager.h"
+#include "Input.h"
 #include <Audio.h>
 void GameScene::Init()
 {
@@ -83,6 +84,27 @@ void GameScene::Init()
 		{ 0.5f,0.5f }, { 1.0f,1.0f,1.0,1.0 },
 		"Resources/noise1.png");
 	startEffectSpTex2_ = TextureManager::StoreTexture("Resources/StartSprite2.png");
+
+	// pose
+	titlepose_ = std::make_unique<Sprite>();
+	titlepose_->Init(
+		{0.0f,0.0f}, {1280, 720},
+		{ 0.0f,0.0f }, { 1.0f,1.0f,1.0,1.0 },
+		"Resources/noise1.png");
+	titleposeTex1_ = TextureManager::StoreTexture("Resources/titlePose.png");
+	titleposeFlag1_ = false;
+
+	titlepose2_ = std::make_unique<Sprite>();
+	titlepose2_->Init(
+		{0.0f,0.0f}, {1280, 720},
+		{ 0.0f,0.0f }, { 1.0f,1.0f,1.0,1.0 },
+		"Resources/noise1.png");
+	titleposeTex2_ = TextureManager::StoreTexture("Resources/titlePose2.png");
+	titleposeFlag2_ = false;
+
+
+
+
 
 	// Loading
 	loading_ = std::make_unique<GameLoading>();
@@ -240,6 +262,8 @@ void GameScene::Update()
 			gameStateMode_ = DEADGAME;
 			threPorM_ = -0.025f;	
 		}
+
+		
 		// ロックオン
 		lockOn_->Update(enemys_, followCamera_->GetCamera(), player_.get());
 		player_->SetSpotLight(spotLight_);
@@ -248,6 +272,11 @@ void GameScene::Update()
 		ground_->SetSpotLight(spotLight_);
 		ground_->Update();
 		skydome_->Update();
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_START)) {
+			gameStateMode_ = POSEMENUGAME;
+			titleposeFlag1_ = true;
+
+		}
 		// エネミーの弾発射処理
 		for (std::list<std::unique_ptr<BaseEnemy>>::iterator itr = enemys_.begin(); itr != enemys_.end(); itr++) {
 			(*itr)->Update();
@@ -291,6 +320,39 @@ void GameScene::Update()
 		postProcess_->SetThreshold(thre_);
 		break;
 	}
+	case POSEMENUGAME: {
+		Input::GetInstance()->GetJoystickState();
+		if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X) && titleposeFlag1_) {
+			titleposeFlag1_ = false;
+			titleposeFlag2_ = true;
+		}
+		else if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A)&&titleposeFlag1_) {
+			titleposeFlag1_ = false;
+			gameStateMode_ = PLAYGAME;
+		}
+		else if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_X) && titleposeFlag2_) {
+			gameStateMode_ = TITLEGAME;
+			Audio::SoundStopWave(gameBGM_);
+			postProcess_->SetDissolveInfo({ 1.0f, 0.984313f, 0.643f });
+			postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(followCamera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 1.0f, 0.984313f, 0.643f } , .weightSize = dissolveOutlineInfo.weightSize });
+			threPorM_ = -0.025f;
+			titleposeFlag2_ = false;
+		}
+		else if (Input::GetInstance()->TriggerJoyButton(XINPUT_GAMEPAD_A) && titleposeFlag2_) {
+			titleposeFlag2_ = false;
+			gameStateMode_ = PLAYGAME;
+		}
+		break;
+	}
+	case TITLEGAME: {
+		thre_ -= threPorM_;;
+		if (thre_ >= 1.2f) {
+			IScene::SetSceneNo(TITLE);
+		}
+
+		postProcess_->SetThreshold(thre_);
+		break;
+	}
 	}
 	
 	
@@ -303,6 +365,7 @@ void GameScene::Draw()
 	ground_->Draw();
 	player_->Draw(followCamera_->GetCamera());
 	Object3dManager::GetInstance()->Draw(followCamera_->GetCamera());
+	
 	
 	
 	lockOn_->Draw();
@@ -318,11 +381,20 @@ void GameScene::Draw2d()
 		gameTimer_->Draw();
 		score_->Draw();
 		player_->DrawUI();
+		startEffectSp_->Draw(startEffectSpTex_, { 1.0f,1.0f,1.0f,1.0f });
+		startEffectSp2_->Draw(startEffectSpTex2_, { 1.0f,1.0f,1.0f,1.0f });
 		break;
 	}
+	
 	loading_->Draw();
-	startEffectSp_->Draw(startEffectSpTex_, { 1.0f,1.0f,1.0f,1.0f });
-	startEffectSp2_->Draw(startEffectSpTex2_, { 1.0f,1.0f,1.0f,1.0f });
+
+	if (titleposeFlag1_) {
+		titlepose_->Draw(titleposeTex1_, { 1.0f,1.0f,1.0f,1.0f });
+	}
+
+	if (titleposeFlag2_) {
+		titlepose2_->Draw(titleposeTex2_, { 1.0f,1.0f,1.0f,1.0f });
+	}
 }
 
 void GameScene::PostDraw()
