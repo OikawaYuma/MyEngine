@@ -32,7 +32,9 @@ enum GameState {
 	STARTGAME,
 	PLAYGAME,
 	CLEARGAME,
-	DEADGAME
+	DEADGAME,
+	POSEMENUGAME,
+	TITLEGAME,
 };
 
 
@@ -115,6 +117,16 @@ private:
 	// クリア条件
 	int clearFlagCount_ = 0;
 	EnemyApear enemyApear_;
+
+public: //posemenu
+	std::unique_ptr<Sprite> titlepose_;
+	std::unique_ptr<Sprite> titlepose2_;
+
+	uint32_t titleposeTex1_;
+	uint32_t titleposeTex2_;
+	bool titleposeFlag1_;
+
+	bool titleposeFlag2_;
 
 private: // Audio
 	uint32_t gameBGM_;
