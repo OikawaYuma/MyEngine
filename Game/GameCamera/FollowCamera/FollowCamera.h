@@ -9,12 +9,12 @@
 #include "WorldTransform.h"
 #include <memory>
 
-enum CameraEdgePos {
-	XPZP,
-	XPZM,
-	XMZP,
-	XMZM
-
+enum CamreraDirection {
+	XP,
+	XM,
+	ZP,
+	ZM,
+	NONEDIRECTION
 };
 
 // 
@@ -32,6 +32,8 @@ public:
 
 	// 画面端のカメラ調整
 	void EndPosAdustment();
+
+	float NormalizeAngle(float angle);
 	
 
 public: // Getter
@@ -52,6 +54,7 @@ private:
 	Vector3 interarget_ = {};
 
 	float offsetZ_ = 0.0f;
+	float preOffsetZ_ = 0.0f;
 
 	float cameraTime_ = 1.0f;
 	bool isDash_ = false;
@@ -59,5 +62,10 @@ private:
 
 	bool resetAngleFlag = false;
 	float resetAngleTime_ = 0.0f;
+
+	uint32_t cameraDirection_ = NONEDIRECTION;
+
+	float cameraChanegeTimer_ = 0.0f;
+	Vector3 preCameraTranslate_ {};
 };
 
