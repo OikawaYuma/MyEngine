@@ -80,7 +80,7 @@ void FollowCamera::Upadate()
 		Vector3 offset = { 0,2,offsetZ_ };
 		offset = TransformNormal(offset, camera_->GetCameraMatrix());
 		camera_->SetTranslate(Add(interarget_, offset));
-		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
+		camera_->SetTranslate(camera_->GetTranslate());
 	}
 
 
@@ -109,7 +109,7 @@ void FollowCamera::Reset()
 	Vector3 offset = { 0,2,offsetZ_ };
 	offset = TransformNormal(offset, camera_->GetCameraMatrix());
 	camera_->SetTranslate(Add(interarget_, offset));
-	camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
+	camera_->SetTranslate(camera_->GetTranslate());
 }
 
 void FollowCamera::PosAdustment()
@@ -118,7 +118,7 @@ void FollowCamera::PosAdustment()
 		Vector3 offset = { 0,2,	offsetZ_ };
 		offset = TransformNormal(offset, camera_->GetCameraMatrix());
 		camera_->SetTranslate(Add(target_->translation_, offset));
-		camera_->SetTranslate({ camera_->GetTranslate().x,5,camera_->GetTranslate().z });
+		camera_->SetTranslate(camera_->GetTranslate());
 	}
 	camera_->Update();
 }
