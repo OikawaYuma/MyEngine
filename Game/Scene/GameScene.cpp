@@ -3,7 +3,9 @@
 #include "ImGuiCommon.h"
 #include "Object3dManager.h"
 #include "Input.h"
-#include <Audio.h>
+#include "Audio.h"
+#include "GlobalVariables/GlobalVariables.h"
+
 void GameScene::Init()
 {
 	
@@ -102,10 +104,6 @@ void GameScene::Init()
 	titleposeTex2_ = TextureManager::StoreTexture("Resources/titlePose2.png");
 	titleposeFlag2_ = false;
 
-
-
-
-
 	// Loading
 	loading_ = std::make_unique<GameLoading>();
 	loading_->Init(JUMPONE);
@@ -117,8 +115,10 @@ void GameScene::Init()
 
 	// スコア
 	score_ = std::make_unique<Score>();
-	score_->Init();
+	score_->Init({32.0f,96.0f},{64.0f,64.0f},true,36.0f);
 	killCount_ = 0;
+
+	GlobalVariables::GetInstance()->LoadFileScore();
 	// ゲームタイマー
 	gameTimer_ = std::make_unique<GameTimer>();
 	gameTimer_->Init();
@@ -249,6 +249,8 @@ void GameScene::Update()
 			Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), gameClearSE_, false);
 			gameStateMode_ = CLEARGAME;
 			threPorM_ = -0.025f;
+			// ゲームスコアを記録
+			GlobalVariables::GetInstance()->AddScore(score_->GetSumScore());
 
 		}
 		// 現状のゲームオーバー条件

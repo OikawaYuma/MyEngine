@@ -2,9 +2,10 @@
 #include "ImGuiCommon.h"
 #include "TextureManager.h"
 #include "Input.h"
-#include <Loder.h>
-#include <Audio.h>
+#include "Loder.h"
+#include "Audio.h"
 #include "Object3dManager.h"
+#include "GlobalVariables/GlobalVariables.h"
 void ClearScene::Init()
 {
 	Object3dManager::GetInstance()->Init();
@@ -68,12 +69,19 @@ void ClearScene::Init()
 	Audio::SoundPlayWave(Audio::GetInstance()->GetIXAudio().Get(), clearBGM_, true);
 	pushSE_ = Audio::GetInstance()->SoundLoadWave("Resources/slimePush.wav");
 
+	// Score
+	// 今回のスコアを取得
+	resultScore_ = GlobalVariables::GetInstance()->GetInstance()->GetNowScore();
+	// Score関連の初期化
+	score_ = std::make_unique<Score>();
+	score_->Init({470,256},{128,128},false,72.0f);
+	score_->SetSumScore(resultScore_);
+
 	// 透明、不透明の条件でソートを掛ける
 	Object3dManager::ObjectSort();
 }
 void ClearScene::Update()
 {
-	
 	skydome_->Update();
 	camera_->Update();
 	player_->Update();
@@ -130,6 +138,8 @@ void ClearScene::Update()
 	{
 		pushSpriteAlphaPorM_ *= -1.0f;
 	}
+
+	score_->Update(0,0);
 	postProcess_->SerDissolveOutline({ .projectionInverse = Inverse(camera_->GetCamera()->GetProjectionMatrix()),.threshold = thre_,.discardColor = { 1.0f, 0.984313f, 0.643f } , .weightSize = 100 });
 	pushSpriteAlpha_ += pushSpriteAlphaPorM_;
 	//sprite->SetColor({ 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
@@ -147,6 +157,7 @@ void ClearScene::Draw()
 	// マネジャーに積んだObjectのDraw
 	Object3dManager::GetInstance()->Draw(camera_->GetCamera());
 	// 2D
+	score_->Draw();
 	pushASp_->Draw(pushATex_, { 1.0f,1.0f,1.0f,pushSpriteAlpha_ });
 	clearBer_->Draw(clearTex_, { 1.0f,1.0f,1.0f,1.0f });
 }

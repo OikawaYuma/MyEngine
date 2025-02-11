@@ -19,7 +19,7 @@
 #include "Character/Enemy/BaseEnemy.h"
 #include "Item/PlayerItem.h"
 #include "WorldDesign/WorldDesign.h"
-
+#include "Score/Score.h"
 enum class BehaviorGameClear {
 	kStart,
 	kMain,
@@ -79,6 +79,11 @@ private:
 private: //Audio
 	uint32_t clearBGM_ = 0;
 	uint32_t pushSE_ = 0;
+
+private: // スコア
+	std::unique_ptr<Score> score_ = nullptr;
+	// 今回のスコア結果
+	int32_t resultScore_ = 0;
 };
 ;
 

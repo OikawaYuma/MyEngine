@@ -3,6 +3,7 @@
 #include "ImGuiCommon.h"
 #include <fstream>
 #include <WinUser.h>
+#include <iostream>
 
 GlobalVariables* GlobalVariables::GetInstance()
 {
@@ -350,4 +351,67 @@ Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std
 		throw std::runtime_error("Item is not of type Vector3");
 	}
 }
+
+void GlobalVariables::AddScore(int32_t score)
+{
+	scores_.push_back(score);
+	json j;
+	// JSONオブジェクトに新しいスコアを追加
+	j["scores"] = scores_;
+	std::string filePath = kDirectoryPath + "score.json";
+	// JSONファイルに書き出し（上書き）
+	std::ofstream file(filePath);
+	if (file.is_open()) {
+		file << j.dump(4);  // 4はインデントのスペース数
+		file.close();
+		std::cout << "JSONファイルに新しいスコアを書き込みました。" << std::endl;
+	}
+	else {
+		std::cerr << "ファイルを開けませんでした。" << std::endl;
+	}
+
+	// 今回のスコアを更新
+	nowScore_ = score;
+}
+
+void GlobalVariables::LoadFileScore()
+{
+	// JSONオブジェクトに新しいスコアを追加
+	//j["scores"] = times_;
+	std::string filePath = kDirectoryPath + "score.json";
+	// JSONファイルを開く
+	std::ifstream file(filePath);
+	if (!file.is_open()) {
+		std::cerr << "ファイルを開けませんでした。" << std::endl;
+		return;
+	}
+
+	// JSONオブジェクトにパース
+	json j;
+	file >> j;
+	file.close();
+
+	// JSONからスコアを読み込む
+	try {
+		if (j.contains("scores") && j["scores"].is_array()) {
+			scores_ = j["scores"].get<std::vector<int32_t>>();
+		}
+		else {
+			std::cerr << "JSONに 'scores' キーが含まれていないか、配列ではありません。" << std::endl;
+			return;
+		}
+	}
+	catch (const json::exception& e) {
+		std::cerr << "JSONのパースエラー: " << e.what() << std::endl;
+		return;
+	}
+
+	// スコアを表示
+	std::cout << "読み込んだスコア:" << std::endl;
+	for (int score : scores_) {
+		std::cout << score << std::endl;
+	}
+}
+
+
 

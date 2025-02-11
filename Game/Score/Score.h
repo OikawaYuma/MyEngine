@@ -20,15 +20,24 @@ enum ScoreDigit {
 class Score
 {
 public:
-	void Init();
+	void Init(Vector2 pos, Vector2 size, bool isSum,float width);
 	void Update(const int &time, const int& killCount);
 	void Draw();
+
+public: // Getter
+    int32_t GetSumScore() { return sumScore_; }
+
+public: // Setter 
+    void SetSumScore(int32_t score) { sumScore_ = score; }
 private:
 	int gameNumber_[10];
     std::unique_ptr<Sprite> scoreSprite_[6];
 
     int digitScore_[6];
 
-    int sumScore_;
+    int32_t sumScore_;
+
+    // スコアが加算されるか
+    bool isSum_ = false;
 };
 

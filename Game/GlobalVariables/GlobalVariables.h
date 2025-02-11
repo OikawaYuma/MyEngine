@@ -74,13 +74,20 @@ public:
 	// 項目の追加()
 	void AddItme(const std::string& groupName, const std::string& key, const Vector3& value);
 
+	// 
+
 	// 値の取得
 	int32_t GetIntValue(const std::string& groupName, const std::string& key)const ;
 	float GetFloatValue(const std::string& groupName, const std::string& key)const ;
 	Vector3 GetVector3Value(const std::string& groupName, const std::string& key)const;
 
-public: // Timer記録関数
-	void AddTime();
+public: // Score記録関数
+	void AddScore(int32_t score);
+	// シーンで読み込む
+	void LoadFileScore();
+public: // Score取得関数
+	std::vector<int32_t> GetScores() { return scores_; }
+	int32_t GetNowScore() { return nowScore_; }
 
 private:
 	GlobalVariables() = default;
@@ -91,4 +98,9 @@ private:
 	std::map<std::string, Group> datas_;
 	// グローバル変数の保存先ファイルパス
 	const std::string kDirectoryPath = "Resources/GlobalVariables/";
+
+	// スコアデータ
+	std::vector<int32_t> scores_;
+	// 最後のスコア
+	int32_t nowScore_ = 0;
 };

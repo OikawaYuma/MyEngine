@@ -1,6 +1,6 @@
 #include "Score.h"
 #include "TextureManager.h"
-void Score::Init()
+void Score::Init(Vector2 pos, Vector2 size, bool isSum,float width)
 {
 	for (int i = 0; i < 10;i++) {
 		gameNumber_[i] = TextureManager::GetInstance()->StoreTexture("Resources/number/number" + std::to_string(i)+".png");
@@ -9,17 +9,20 @@ void Score::Init()
 	for (int i = 0; i < 6; i++) {
 		scoreSprite_[i] = std::make_unique<Sprite>();
 		scoreSprite_[i]->Init(
-			{ i * 36.0f + 32.0f,96.0f },
-			{ 64.0, 64.0f },
+			{ i * width + pos.x,pos.y }, // gameScene x 32 y 96
+			size,
 			{ 0.5f , 0.5f },
 			{ 1.0f, 1.0f, 1.0f, 1.0f },
 			"Resources/Reticle.png");
 	}
+	isSum_ = isSum;
 }
 
 void Score::Update(const int& time, const int& killCount)
 {
-	sumScore_ = (60 - time) * 10 + killCount *50;
+	if (isSum_) {
+		sumScore_ = (60 - time) * 10 + killCount * 50;
+	}
 	
 
 	for (int i = 0; i < 6; i++) {
