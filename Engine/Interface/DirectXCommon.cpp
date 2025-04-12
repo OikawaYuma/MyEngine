@@ -243,9 +243,13 @@ void DirectXCommon::ViewChange() {
 
 
 void DirectXCommon::Release() {
-	ImGuiCommon::GetInstance()->Release();
+	
+	/*renderTextureResource_.Reset();
+	swapChainResources_[0].Reset();
+	swapChainResources_[1].Reset();*/
 	CloseHandle(fenceEvent_);
 	CloseWindow(sWinAPI_->GetHwnd());
+	//ImGuiCommon::GetInstance()->Release();
 }
 
 

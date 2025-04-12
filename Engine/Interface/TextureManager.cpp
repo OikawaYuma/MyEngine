@@ -13,7 +13,7 @@ int TextureManager::kParIndez = 10;
 
 // テクスチャ生成に必要なデータを定義
 std::unordered_map<std::string, TextureData> TextureManager::textureDatas_;
-Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::intermediateResource_[kNumDescriptors] = { nullptr };
+//Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::intermediateResource_[kNumDescriptors] = { nullptr };
 
 void TextureManager::Init()
 {
@@ -35,7 +35,7 @@ int TextureManager::StoreTexture(const std::string& filePath) {
 	textureData.srvIndex = SRVManager::Allocate();
 	textureData.metaData = mipImages_.GetMetadata();
 	textureData.resource = CreateTextureResource(sDirectXCommon->GetDevice().Get(), textureData.metaData);
-	intermediateResource_[textureData.srvIndex] = UploadTextureData(textureData.resource.Get(), mipImages_);
+	TextureManager::GetInstance()->intermediateResource_[textureData.srvIndex] = UploadTextureData(textureData.resource.Get(), mipImages_);
 	// SRVを作成するDescriptorHeapの場所を決める
 	textureData.textureSrvHandleCPU = SRVManager::GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.textureSrvHandleGPU = SRVManager::GetGPUDescriptorHandle(textureData.srvIndex);
@@ -52,6 +52,16 @@ int  TextureManager::PlusIndex() {
 	return kParIndez;
 }
 void TextureManager::Release() {
+	for (auto& pair : textureDatas_) {
+		auto& textureData = pair.second;
+		textureData.resource.Reset();  // ComPtr は自動的に解放するので、これで十分
+		// srvIndex や他のリソースも適切に解放する必要があれば、ここで行う
+	}
+
+	// 必要なら、その他のリソースも解放
+	for (int i = 0; i < kNumDescriptors; ++i) {
+		intermediateResource_[i].Reset();
+	}
 }
 
 

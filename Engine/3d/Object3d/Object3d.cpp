@@ -80,13 +80,10 @@ void Object3d::Init()
 
 void Object3d::Update()
 {
-	/*for (uint32_t index = 0; index < kNumMaxInstance_; ++index) {
-		instancingData_[index].World = worldTransform_.matWorld_;
-		instancingData_[index].WVP = instancingData_[index].World;
-		instancingData_[index].WorldInverseTranspose = MakeIdentity4x4();
-	}*/
+	
 
-	if (instancingWorld_[0]) {
+	
+	/*if (instancingWorld_[0]) {
 		for (uint32_t index = 0; index < objectNum_; ++index) {
 			instancingData_[index].World =instancingWorld_[index]->matWorld_;
 			instancingData_[index].WVP = instancingData_[index].World;
@@ -106,7 +103,26 @@ void Object3d::Update()
 			instancingData_[0].WorldInverseTranspose = MakeIdentity4x4();
 			instancingData_[0].color = { 1.0f,1.0f,1.0f,1.0f };
 		
-	}
+	}*/
+	
+	 numInstance_ = 0;
+		for (std::list<std::shared_ptr<ObjectPram>>::iterator objectPtamIterator = objectParms_.begin(); objectPtamIterator != objectParms_.end();) {
+			if ((*objectPtamIterator)->isAlive == false) {
+				objectPtamIterator = objectParms_.erase(objectPtamIterator);
+				continue;
+			}
+			if (numInstance_ < kNumMaxInstance_) {
+
+				instancingData_[numInstance_].World = (*objectPtamIterator)->worldTransform.matWorld_;
+				instancingData_[numInstance_].WVP = instancingData_[numInstance_].World;
+				instancingData_[numInstance_].color = (*objectPtamIterator)->color;
+			}
+			numInstance_++;
+			++objectPtamIterator;
+		}
+	
+
+
 	worldTransform_.UpdateMatrix();
 	if (animationModel_) {
 		animationModel_->Update();
@@ -120,27 +136,46 @@ void Object3d::Update()
 
 void Object3d::Draw(Camera* camera )
 {
-	if (instancingWorld_[0]) {
-		for (uint32_t index = 0; index < objectNum_; ++index) {
-			instancingData_[index].World = instancingWorld_[index]->matWorld_;
-			instancingData_[index].WVP = Multiply(instancingData_[index].World, camera->GetViewprojectionMatrix());
-			instancingData_[index].WorldInverseTranspose = Inverse(Transpose(instancingData_[index].World));
-			instancingData_[index].color = Vector4(
-				instancingColor_[index]->x,
-				instancingColor_[index]->y,
-				instancingColor_[index]->z,
-				instancingColor_[index]->w);
+	numInstance_ = 0;
+	//if (objectParms_.size() == 0) {
+
+
+		/*if (instancingWorld_[0]) {
+			for (uint32_t index = 0; index < objectNum_; ++index) {
+				instancingData_[index].World = instancingWorld_[index]->matWorld_;
+				instancingData_[index].WVP = Multiply(instancingData_[index].World, camera->GetViewprojectionMatrix());
+				instancingData_[index].WorldInverseTranspose = Inverse(Transpose(instancingData_[index].World));
+				instancingData_[index].color = Vector4(
+					instancingColor_[index]->x,
+					instancingColor_[index]->y,
+					instancingColor_[index]->z,
+					instancingColor_[index]->w);
+			}
 		}
-	}
-	else if (!instancingWorld_[0]) {
-		
+		else if (!instancingWorld_[0]) {
+
 			instancingData_[0].World = worldTransform_.matWorld_;
 			instancingData_[0].WVP = Multiply(instancingData_[0].World, camera->GetViewprojectionMatrix());
 			instancingData_[0].WorldInverseTranspose = Inverse(Transpose(instancingData_[0].World));
 			instancingData_[0].color = { 1.0f,1.0f,1.0f,1.0f };
-		
-	}
 
+		}*/
+	//}
+	
+		for (std::list<std::shared_ptr<ObjectPram>>::iterator objectPtamIterator = objectParms_.begin(); objectPtamIterator != objectParms_.end();) {
+			if ((*objectPtamIterator)->isAlive == false) {
+				objectPtamIterator = objectParms_.erase(objectPtamIterator);
+				continue;
+			}
+			if (numInstance_ < kNumMaxInstance_) {
+				instancingData_[numInstance_].World = (*objectPtamIterator)->worldTransform.matWorld_;
+				instancingData_[numInstance_].WVP = Multiply(instancingData_[numInstance_].World, camera->GetViewprojectionMatrix());;
+				instancingData_[numInstance_].color = (*objectPtamIterator)->color;
+			}
+			numInstance_++;
+			++objectPtamIterator;
+		}
+	
 	cameraForGPUData_->worldPosition = camera->GetTransform().translate;
 	DirectXCommon* directXCommon = DirectXCommon::GetInstance();
 	if (animationModel_) {
@@ -185,7 +220,7 @@ void Object3d::Draw(Camera* camera )
 	}
 	else if (model_) {
 		
-		model_->Draw(skinTex_,objectNum_);
+		model_->Draw(skinTex_,numInstance_);
 
 	}
 	else if (skybox_) {
@@ -197,6 +232,18 @@ void Object3d::Draw(Camera* camera )
 
 void Object3d::Release()
 {
+	//for (auto& pair : textureDatas_) {
+	//	auto& textureData = pair.second;
+	//	textureData.resource.Reset();  // ComPtr は自動的に解放するので、これで十分
+	//	// srvIndex や他のリソースも適切に解放する必要があれば、ここで行う
+	//}
+
+	//// 必要なら、その他のリソースも解放
+	//for (int i = 0; i < kNumDescriptors; ++i) {
+	//	intermediateResource_[i].Reset();
+	//}
+
+	object3dData_.instancingResource.Reset();
 	
 }
 
@@ -324,4 +371,9 @@ MaterialData Object3d::LoadMaterialTemplateFile(const std::string& directoryPath
 	}
 
 	return materialData;
+}
+
+void Object3d::AddListPram(std::shared_ptr<ObjectPram > objectParm)
+{
+	objectParms_.push_back(objectParm);
 }

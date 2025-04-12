@@ -15,18 +15,20 @@
 class WorldDesign
 {
 public:
+	~WorldDesign();
 	void Init(const Vector3& scale, const Vector3& translate, const std::string filename);
 	void Update();
-	void Draw(Camera* camera);
 public: // Getter
-	Object3d* GetWorldDesignObject() { return object_.get(); };
+
 
 	void SetSpotLight(const SpotLight& spotLight) { spotLight_ = spotLight; }
+
+	void SetObjectPram();
 private:
-	std::unique_ptr<Object3d> object_;
 	std::unique_ptr<PlaneProjectionShadow> shadowObject_;
+	std::weak_ptr<ObjectPram> objectPram_{};
+	std::weak_ptr<ObjectPram> shadowObjectPram_{};
 	uint32_t floorTex_ = 0;
-	WorldTransform worldTransform_;
 	Camera* camera_ = nullptr;
 
 	Vector4 color_;

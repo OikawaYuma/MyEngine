@@ -124,6 +124,7 @@ void Audio::SoundPlayWave(IXAudio2* xAudio2,uint32_t audioHandle,bool loopFlag)
 
 	// 波形データの再生
 	result = pSourceVoice[audioHandle]->SubmitSourceBuffer(&buf);
+	result = pSourceVoice[audioHandle]->SetVolume(0.5f);
 	result = pSourceVoice[audioHandle]->Start();
 }
 

@@ -30,6 +30,7 @@
 #include "Matrix4x4.h"
 #include "Transform.h"
 #include "mathFunction.h"
+#include <Object3dManager.h>
 
 // コンストラクタ
 GameManager::GameManager() {
@@ -181,8 +182,8 @@ int GameManager::Run() {
 
 	sModelManager->Finalize();
 	sWinAPI->Finalize();
-	//delete sWinAPI;
+	//Object3dManager::GetInstance()->Release();
+	TextureManager::GetInstance()->Release();
 	sDirctX->Release();
-
 	return 0;
 }

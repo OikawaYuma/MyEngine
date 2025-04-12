@@ -388,7 +388,7 @@ void Model::Draw(uint32_t texture, uint32_t instance) {
 	if (instance) {
 		directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), instance, 0, 0, 0);
 	}
-	else {
+	/*else {
 		directXCommon_->GetCommandList()->DrawIndexedInstanced(static_cast<uint32_t>(modelData_.indices.size()), 1, 0, 0, 0);
-	}
+	}*/
 }

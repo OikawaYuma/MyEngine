@@ -24,7 +24,7 @@
 #include "Skybox/Skybox.h"
 #include "Ground/Ground.h"
 #include "Character/Player/Player.h"
-
+#include "WorldDesign/WorldDesign.h"
 
 class DemoScene : public IScene
 {
@@ -47,31 +47,13 @@ private:
 	
 	
 	std::unique_ptr<PostProcess> postProcess_;
-	
+	// Clearシーン用Camera
+	std::unique_ptr<Camera> camera_ = nullptr;
 	Vector3 hsv = {1.0f,1.0f,1.0f};
 
-	std::unique_ptr<Camera> camera_;
-	std::unique_ptr<Player> obj_;
-	std::unique_ptr<Ground> ground_;
+	// 背景オブジェクト
+	std::unique_ptr<WorldDesign> wood_;
 
-	std::unique_ptr<Particle> particle_;
-	Emitter emitter_{};
-	RandRangePro randRangePro_;
 
-	std::unique_ptr<Object3d> obj2_;
-	uint32_t tex_;
-	WorldTransform worldtransform_;
-	SpotLight spotLight_{};
-	Vector3 move_;
-	float gravity_;
-
-	float preGravity_;
-	float prePower_;
-	Vector3 preParticleScale_;
-
-	Material material_{};
-
-	uint32_t gameBGM_;
-	uint32_t slimeDeadSE_;
 };
 

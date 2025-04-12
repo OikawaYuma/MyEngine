@@ -48,6 +48,13 @@ struct Object3dForGPU {
 	Matrix4x4 WorldInverseTranspose;
 	Vector4 color;
 };
+
+struct ObjectPram{
+	bool isAlive;
+	WorldTransform worldTransform;
+	Vector4 color;
+};
+
 enum Transparency {
 	Opaque, // 不透明
 	Transparent, //透明
@@ -86,12 +93,17 @@ public: // Getter
 	Material GetMaterial() { return *materialData_; }
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+public: 
+	void AddListPram(std::shared_ptr<ObjectPram > objectParm);
+
 private:
 	Object3dCommon* objectCommon_ = nullptr;
 
 	Object3dData object3dData_;
-	const static uint32_t kNumMaxInstance_ = 10000; // インスタンス数
 
+	const static uint32_t kNumMaxInstance_ = 10000; // インスタンス数
+	uint32_t numInstance_ = 0;
+	std::list<std::shared_ptr<ObjectPram>> objectParms_;
 
 	uint32_t objectNum_ = 0;
 	WorldTransform* instancingWorld_[kNumMaxInstance_]{nullptr};

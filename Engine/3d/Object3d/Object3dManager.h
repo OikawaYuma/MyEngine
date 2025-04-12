@@ -20,6 +20,7 @@ public:
 	static void Init();
 	static void Update();
 	static void Draw(Camera* camera);
+	static void Release();
 
 public: //ソート用関数
 	static void ObjectSort();
@@ -31,13 +32,16 @@ public:
 	static void CreateObject(const std::string& objectName);
 	static uint32_t StoreObject(const std::string& objectName,WorldTransform* worldTransform,uint32_t skinTex, Vector4* color,uint32_t transparency);
 
+public: 
+	static std::shared_ptr<ObjectPram> StoreObject2(const std::string& objectName, uint32_t skinTex, uint32_t transparency);
+
 public: // Getter
 
 	static Object3dManager* GetInstance();
 
 private:
 	//std::map<std::string, Object3dData> objectDatas_;
-	static std::list<std::unique_ptr<Object3d>> objects_;
+	std::list<std::unique_ptr<Object3d>> objects_;
 	static std::string objectName_;
 	//ModelData modelData_;
 };

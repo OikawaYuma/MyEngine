@@ -38,12 +38,12 @@ public: //Setter
 	void SetFarClip(const float& clip) { farClip_ = clip; }
 
 private:
-	Transform transform_;
-	Matrix4x4 worldmatrix_;
-	Matrix4x4 cameraMatrix_;
-	Matrix4x4 viewMatrix_;
-	Matrix4x4 projectionMatrix_;
-	Matrix4x4 viewProjectionMatrix_;
+	Transform transform_{};
+	Matrix4x4 worldmatrix_{};
+	Matrix4x4 cameraMatrix_{};
+	Matrix4x4 viewMatrix_{};
+	Matrix4x4 projectionMatrix_{};
+	Matrix4x4 viewProjectionMatrix_{};
 	float fovY_ = 0.45f;
 	float asepectRatio_ = float(WinAPI::kClientWidth_) / float(WinAPI::kClientHeight_);
 	float nearClip_ = 0.1f;

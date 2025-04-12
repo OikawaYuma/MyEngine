@@ -7,6 +7,14 @@ PostProcess::PostProcess()
 }
 PostProcess::~PostProcess()
 {
+	vertexResourceSprite_.Reset();
+	transformationMatrixResouceSprite.Reset();
+	indexResourceSprite.Reset();
+	materialResource.Reset();
+	directionalLightResource.Reset();
+	depthStencilResource.Reset();
+
+
 }
 void PostProcess::Init()
 {

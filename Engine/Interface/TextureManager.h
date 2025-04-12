@@ -71,6 +71,6 @@ private:
 
 	// テクスチャデータ
 	static std::unordered_map<std::string, TextureData> textureDatas_;
-	static Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource_[kNumDescriptors];
+	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource_[kNumDescriptors];
 };
 
